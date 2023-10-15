@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "led.h": "c",
+        "led_spy.h": "c",
+        "user_led.h": "c",
+        "stdint.h": "c",
+        "stdbool.h": "c",
+        "string.h": "c"
+    }
+}
