@@ -5,6 +5,7 @@
         "user_led.h": "c",
         "stdint.h": "c",
         "stdbool.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "random": "cpp"
     }
 }
