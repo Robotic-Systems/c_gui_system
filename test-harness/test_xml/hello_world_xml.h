@@ -11,11 +11,6 @@ const char* gui = "
         <type>uint16_t</type>
         <value>0</value>
     </variable>
-    <variable>
-        <name>time</name>
-        <type>float</type>
-        <value>0.0</value>
-    </variable>
 </globalVariables>
 <pages>
     <page>
