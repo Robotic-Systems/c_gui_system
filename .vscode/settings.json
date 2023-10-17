@@ -6,6 +6,15 @@
         "stdint.h": "c",
         "stdbool.h": "c",
         "string.h": "c",
-        "random": "cpp"
+        "random": "cpp",
+        "optional": "cpp",
+        "ratio": "cpp",
+        "system_error": "cpp",
+        "array": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "variant": "cpp"
     }
 }

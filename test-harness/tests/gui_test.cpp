@@ -94,7 +94,7 @@ TEST(GUITest, when_passed_a_xml_two_pages_the_page_count_is_two)
     // init gui 
     gui_init(lcd_spy_write, helloWorldGui);
     // parse for pages 
-    gui_parse_for_pages(); // !!!NOTE this already called during the init, however it is brought into the test just for explicitness
+    gui_parse_xml(); // !!!NOTE this already called during the init, however it is brought into the test just for explicitness
     // Check page count
     int16_t pageCount = gui_get_page_count();
     LONGS_EQUAL(2,pageCount);
@@ -113,8 +113,8 @@ TEST(GUITest, gui_get_page_position_returns_page_0_start_and_end)
     CHECK(helloWorldGui[startIndex] == '>');
     CHECK(helloWorldGui[endIndex] == '<');
 
-    LONGS_EQUAL(210,startIndex);
-    LONGS_EQUAL(3729,endIndex);
+    LONGS_EQUAL(198,startIndex);
+    LONGS_EQUAL(3717,endIndex);
 }
 
 TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
@@ -129,8 +129,8 @@ TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
     CHECK(helloWorldGui[startIndex] == '>');
     CHECK(helloWorldGui[endIndex] == '<');
 
-    LONGS_EQUAL(3746,startIndex);
-    LONGS_EQUAL(3932,endIndex);
+    LONGS_EQUAL(3734,startIndex);
+    LONGS_EQUAL(3920,endIndex);
 }
 
 // if gui_get_page_position is called on page that does not exist then error is returned 
@@ -145,20 +145,57 @@ TEST(GUITest, error_if_page_doesnt_exist)
     LONGS_EQUAL(GUI_ERR, getStatus);
 }
 
+// when passed a xml with one variables the variable count is set to 1
+TEST(GUITest, one_xml_defined_var_increments_var_count_by_one)
+{
+    // init gui 
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Check page count 
+    int16_t varCount = gui_get_variable_count();
+    LONGS_EQUAL(1,varCount);
+}
+
+// after init the page index variable exists and is set to 0
+TEST(GUITest, variable_exists_and_is_set_to_its_default)
+{
+    // init gui 
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Fetch variable value 
+    uint16_t value = 5; // set to non zero value 
+    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(0, value);
+}
+
 /**
  * One:
- * - if initted with xml with a page with no closing brace then error is thrown
- * - if initted with an xml with only a page closing brace then error is thrown 
- * 
- * - when passed a xml with one variables the variable count is set to 1
- * - after init the page index variable exists and is set to 0
  * - the page index variable can be changed using gui_variable_update("pageIndex",10)
  * 
+ * - if initted with xml with a page with no closing brace then error is thrown
+ * - if initted with an xml with only a page closing brace then error is thrown 
+ * - if initted with xml with a variable with no closing brace then error is thrown
+ * - if initted with an xml with only a variable closing brace then error is thrown 
+ * - if a page exists outside the <pages> tag an error is thrown  
+ * - if a variable exists outside the <variables> tag an error is thrown  
+ * - error is thrown if variable name is bigger then allowed
  * 
  * - When gui_update() is called the page 0 bitmap is written to the spy 
  * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
  * - Changing page number to a page that does not exist then calling gui_update() sets error and the spy page does not change
  * - User defines are defined in an untracked file 
+ * 
+ * - Transitions (pre defined actions that tie variables to page changes i.e when the is_upPressed is true
+ * the cursor changes position to the next variable)
+ * - Additional options, Variable refresh rates/partial screen refreshes 
  */
 
 // Many
+
+/**
+ * ToDo:
+ * - Can use int16_t as variables 
+ * - Can use floats as variables 
+ * - Can use uint32_t as variables 
+ * - Can use int32_t as variables 
+ * 
+ */

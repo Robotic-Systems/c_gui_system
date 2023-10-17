@@ -13,7 +13,8 @@
  * @brief Maximum defines 
  * 
 */
-#define MAX_PAGE_COUNT 50 /** Maximum number of supported pages*/
+#define MAX_PAGE_COUNT 50        /** Maximum number of supported pages*/
+#define MAX_TAG_DATA_LENGTH 64   /** Maximum length of data strings that is not displayed on gui */
 /**
  * @brief User defines that will be moved to a user code file in near future 
  * 
@@ -37,6 +38,15 @@ typedef enum{
     GUI_OK,   /** The function executed succesfuly */
     GUI_ERR   /** The function failed */
 }gui_status_t;
+
+
+/**
+ * @brief For describing execution status of variable operations
+ */
+typedef enum{
+    GUI_VAR_OK,    /** The variable operation executed successfuly*/
+    GUI_VAR_ERR,   /** The variable operation failed */
+}gui_variable_status_t;
 
 /**
  * @brief For storing page parameters 
@@ -81,12 +91,13 @@ int16_t gui_get_variable_count();
 
 
 /**
- * @brief Parses the "guiXml" for pages, then saves the pages start and end index to a private variable,
+ * @brief Parses the "guiXml" for pages and variables, saves the pages indexs and also creates the variables hasmap 
+ * this is also where high level xml formatting check will take place.
  * @note The start of a page is defined as "<page>" the index where the ">" occurs and end is </page> where the "<" occurs 
  * 
  * @return gui_status_t 
  */
-gui_status_t gui_parse_for_pages();
+gui_status_t gui_parse_xml();
 
 /**
  * @brief Returns page information 
@@ -97,4 +108,13 @@ gui_status_t gui_parse_for_pages();
  * @return gui_status_t 
  */
 gui_status_t gui_get_page_position(int16_t pageNumber, uint32_t * p_startIndex , uint32_t * p_endIndex);
+
+/**
+ * @brief Querys the uint16_t hashmap for the variableKey and returns its value
+ * 
+ * @param [in] variableKey - Name associated with the variable as defined in the xml 
+ * @param [out] p_value - Variable value  
+ * @return gui_variable_status_t 
+ */
+gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_value);
 #endif

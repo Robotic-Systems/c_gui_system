@@ -9,13 +9,13 @@ const char* zeroGui =
 
 const char* helloWorldGui = 
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<globalVariables>\n"
+"<variables>\n"
 "    <variable>\n"
 "        <name>pageIndex</name>\n"
 "        <type>uint16_t</type>\n"
 "        <value>0</value>\n"
 "    </variable>\n"
-"</globalVariables>\n"
+"</variables>\n"
 "<pages>\n" 
 "    <page>\n"
 "        <name>0</name>\n"
