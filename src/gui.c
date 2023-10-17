@@ -63,12 +63,12 @@ gui_status_t gui_parse_xml()
     // Tag idx parameters 
     uint32_t varStartIdx __attribute__((unused)) = {0}; // Position where the last variable tag was found 
     uint32_t varEndIdx   __attribute__((unused)) = {0}; // Position where the last variable end tag was found 
-    const char *nameSrtIdx  __attribute__((unused)) = {0}; // Position where the last name start tag was found 
-    const char *nameEndIdx  __attribute__((unused)) = {0}; // Position where the last name end tag was found 
-    uint32_t valueSrtIdx __attribute__((unused)) = {0}; // Position where the last value start tag was found 
-    uint32_t valueEndIdx __attribute__((unused)) = {0}; // Position where the last value end tag was found 
-    uint32_t typeSrtIdx  __attribute__((unused)) = {0}; // Position where the last type start tag was found 
-    uint32_t typeEndIdx  __attribute__((unused)) = {0}; // Position where the last type end tag was found 
+    const char *nameSrtIdx  = {0}; // Position where the last name start tag was found 
+    const char *nameEndIdx  = {0}; // Position where the last name end tag was found 
+    const char *valueSrtIdx = {0}; // Position where the last value start tag was found 
+    const char *valueEndIdx = {0}; // Position where the last value end tag was found 
+    const char *typeSrtIdx  = {0}; // Position where the last type start tag was found 
+    const char *typeEndIdx  = {0}; // Position where the last type end tag was found 
 
     // Tag string parameters
     char lastName[MAX_TAG_DATA_LENGTH]  __attribute__((unused)) = {0};  // Last string that was read from within name tags
@@ -85,17 +85,18 @@ gui_status_t gui_parse_xml()
      * It is fine for the proof of concept for now
      * 
      */
-    while (*guiXml != '\0') {
+    const char*xmlCopy = guiXml;
+    while (*xmlCopy != '\0') {
 
 
         // VARIABLE TAG CHECK 
         ///////////////////// 
-        if (strncmp(guiXml, "<variable>", 10) == 0) 
+        if (strncmp(xmlCopy, "<variable>", 10) == 0) 
         {
             varStartIdx = currentIndex + 9;
             b_isInVar   = true;
         }
-        else if (strncmp(guiXml, "</variable>", 11) == 0) 
+        else if (strncmp(xmlCopy, "</variable>", 11) == 0) 
         {
             if (b_isInVar) 
             {
@@ -108,12 +109,12 @@ gui_status_t gui_parse_xml()
 
         // PAGE TAG CHECK 
         ///////////////// 
-        if (strncmp(guiXml, "<page>", 6) == 0) 
+        if (strncmp(xmlCopy, "<page>", 6) == 0) 
         {
             b_isInPage = true;
             pages[pageCount].startIndex = currentIndex + 5;
         } 
-        else if (strncmp(guiXml, "</page>", 7) == 0) 
+        else if (strncmp(xmlCopy, "</page>", 7) == 0) 
         {
             if (b_isInPage) 
             {
@@ -125,63 +126,80 @@ gui_status_t gui_parse_xml()
 
         // NAME TAG CHECK 
         /////////////////
-        if (strncmp(guiXml, "<name>", 6) == 0) 
+        if (strncmp(xmlCopy, "<name>", 6) == 0) 
         {
             b_isInTag = true;
-            nameSrtIdx = guiXml + 6;
+            nameSrtIdx = xmlCopy + 6;
         } 
-        else if (strncmp(guiXml, "</name>", 7) == 0) 
+        else if (strncmp(xmlCopy, "</name>", 7) == 0) 
         {
             if (b_isInTag) 
             {
-                nameEndIdx = guiXml;
+                nameEndIdx = xmlCopy;
                 b_isInTag  = false;
                 // Extract name
-                if ((nameSrtIdx >= 0) && (nameEndIdx >= nameSrtIdx)) {
+                if ((nameSrtIdx >= 0) && (nameEndIdx >= nameSrtIdx)) 
+                {
                     int nameLength = nameEndIdx - nameSrtIdx;
                     if (nameLength < MAX_TAG_DATA_LENGTH) {
                         strncpy(lastName, nameSrtIdx, nameLength);
                         lastName[nameLength] = '\0';  // Null-terminate the string
                     }
-                    printf("NAME FOUND: %s \n",lastName);
-
                 }
             }
         }
 
-        // // VALUE TAG CHECK 
-        // //////////////////
-        // if (strncmp(guiXml, "<value>", 7) == 0) 
-        // {
-        //     b_isInTag = true;
-        //     valueSrtIdx = currentIndex + 6;
-        // } 
-        // else if (strncmp(guiXml, "</value>", 8) == 0) 
-        // {
-        //     if (b_isInTag) 
-        //     {
-        //         valueEndIdx = currentIndex;
-        //         b_isInTag = false;
-        //     }
-        // }
+        // VALUE TAG CHECK 
+        //////////////////
+        if (strncmp(xmlCopy, "<value>", 7) == 0) 
+        {
+            b_isInTag = true;
+            valueSrtIdx = xmlCopy + 7;
+        } 
+        else if (strncmp(xmlCopy, "</value>", 8) == 0) 
+        {
+            if (b_isInTag) 
+            {
+                valueEndIdx = xmlCopy;
+                b_isInTag = false;
+            }
+            // Extract Value 
+            if ((valueSrtIdx >= 0) && (valueEndIdx >= valueSrtIdx)) 
+            {
+                int valueLength = valueEndIdx - valueSrtIdx;
+                if (valueLength < MAX_TAG_DATA_LENGTH) {
+                    strncpy(lastValue, valueSrtIdx, valueLength);
+                    lastValue[valueLength] = '\0';  // Null-terminate the string
+                }
+            }
+        }
 
-        // // TYPE TAG CHECK 
-        // //////////////////
-        // if (strncmp(guiXml, "<type>", 6) == 0) 
-        // {
-        //     b_isInTag = true;
-        //     typeSrtIdx = currentIndex + 5;
-        // } 
-        // else if (strncmp(guiXml, "</type>", 7) == 0) 
-        // {
-        //     if (b_isInTag) 
-        //     {
-        //         typeEndIdx = currentIndex;
-        //         b_isInTag = false;
-        //     }
-        // }
+        // TYPE TAG CHECK 
+        //////////////////
+        if (strncmp(xmlCopy, "<type>", 6) == 0) 
+        {
+            b_isInTag = true;
+            typeSrtIdx = xmlCopy + 6;
+        } 
+        else if (strncmp(xmlCopy, "</type>", 7) == 0) 
+        {
+            if (b_isInTag) 
+            {
+                typeEndIdx = xmlCopy;
+                b_isInTag = false;
+                // Extract Type 
+                if ((typeSrtIdx >= 0) && (typeEndIdx >= typeSrtIdx)) 
+                {
+                    int typeLength = typeEndIdx - typeSrtIdx;
+                    if (typeLength < MAX_TAG_DATA_LENGTH) {
+                        strncpy(lastType, typeSrtIdx, typeLength);
+                        lastType[typeLength] = '\0';  // Null-terminate the string
+                    }
+                }
+            }
+        }
 
-        guiXml++;
+        xmlCopy++;
         currentIndex++;
     }
 

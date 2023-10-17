@@ -93,8 +93,6 @@ TEST(GUITest, when_passed_a_xml_two_pages_the_page_count_is_two)
 {
     // init gui 
     gui_init(lcd_spy_write, helloWorldGui);
-    // parse for pages 
-    gui_parse_xml(); // !!!NOTE this already called during the init, however it is brought into the test just for explicitness
     // Check page count
     int16_t pageCount = gui_get_page_count();
     LONGS_EQUAL(2,pageCount);
@@ -155,22 +153,42 @@ TEST(GUITest, one_xml_defined_var_increments_var_count_by_one)
     LONGS_EQUAL(1,varCount);
 }
 
-// after init the page index variable exists and is set to 0
-TEST(GUITest, variable_exists_and_is_set_to_its_default)
+// can call gui_variable_create() and created an uint16 variable 
+TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
 {
     // init gui 
     gui_init(lcd_spy_write, helloWorldGui);
-    // Fetch variable value 
-    uint16_t value = 5; // set to non zero value 
+    // Create variable definition strings
+    char lastName[64]  = "testVar\0"; 
+    char lastValue[64] = "10\0"; 
+    char lastType[64]  = "uint16_t\0";  
+    // Call variable create 
+    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+    LONGS_EQUAL(GUI_VAR_OK, createStatus);
+    // Check operation was successful 
     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
-    LONGS_EQUAL(0, value);
+    LONGS_EQUAL(10, value);
 }
+// // after init the page index variable exists and is set to 0
+// TEST(GUITest, variable_exists_and_is_set_to_its_default)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // Fetch variable value 
+//     uint16_t value = 5; // set to non zero value 
+//     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+//     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+//     LONGS_EQUAL(0, value);
+// }
 
 /**
  * One:
  * - the page index variable can be changed using gui_variable_update("pageIndex",10)
  * 
+ * - add in logger output support 
+ * 
+ * - feeding a garbled type, value or name into a variable create causes error 
  * - if initted with xml with a page with no closing brace then error is thrown
  * - if initted with an xml with only a page closing brace then error is thrown 
  * - if initted with xml with a variable with no closing brace then error is thrown
