@@ -63,4 +63,14 @@ const char* helloWorldGui =
 "    </page>\n"
 "</pages>";
 
+const char* singleVarGui = 
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<variables>\n"
+"    <variable>\n"
+"        <name>pageIndex</name>\n"
+"        <type>uint16_t</type>\n"
+"        <value>55</value>\n"
+"    </variable>\n"
+"</variables>\n";
+
 #endif

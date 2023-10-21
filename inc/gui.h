@@ -13,8 +13,10 @@
  * @brief Maximum defines 
  * 
 */
+#define HASH_MAX_VARS 20         /** Maximum amount of variables that can be stored in hashmap */
 #define MAX_PAGE_COUNT 50        /** Maximum number of supported pages*/
 #define MAX_TAG_DATA_LENGTH 64   /** Maximum length of data strings that is not displayed on gui */
+#define MAX_KEY_LENGTH 20        /** Maximum length key strings  */
 /**
  * @brief User defines that will be moved to a user code file in near future 
  * 
@@ -57,6 +59,7 @@ typedef struct
     uint32_t startIndex;   /** The start index of the page */
     uint32_t endIndex;     /** The end index of the page */
 }page_params_t;
+
 
 /********************/
 /* PUBLIC VARIABLES */
@@ -108,6 +111,17 @@ gui_status_t gui_parse_xml();
  * @return gui_status_t 
  */
 gui_status_t gui_get_page_position(int16_t pageNumber, uint32_t * p_startIndex , uint32_t * p_endIndex);
+
+/**
+ * @brief Takes in string inputs of a variable name, type and value and create a hasmap instance 
+ * of those details 
+ * 
+ * @param [in] variableName     - Desied variable name string 
+ * @param [in] variableType     - Desied variable type string, if inputted type is not supported will return error  
+ * @param [in] variableValue    - Desied variable value string  
+ * @return gui_variable_status_t - creation status code 
+ */
+gui_variable_status_t gui_create_var(const char *variableName,const char *variableType,const char *variableValue);
 
 /**
  * @brief Querys the uint16_t hashmap for the variableKey and returns its value

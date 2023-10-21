@@ -7,6 +7,12 @@
 /*****************/
 /* PRIVATE TYPES */
 /*****************/
+typedef struct KeyValuePairUint16
+{
+    char key[MAX_KEY_LENGTH];
+    uint16_t value;
+    bool b_isUsed;
+} KeyValuePairUint16;
 
 /*********************/
 /* PRIVATE VARIABLES */
@@ -15,14 +21,28 @@ int16_t pageCount = 0;     /** Number of pages found in xml after parsing*/
 int16_t varCount  = 0;     /** Number of Variables found in xml after parsing*/
 const char* guiXml = NULL; /** XML string that contains the whole menu system*/
 page_params_t pages[MAX_PAGE_COUNT] = {0};
+
+KeyValuePairUint16 HashMapUint16[HASH_MAX_VARS];  /** Hash map for uint16_t menu variables*/
+
+
 /*********************************/
 /* PRIVATE FUNCTION DECLARATIONS */
 /*********************************/
+uint32_t hash_index(const char * key); /** Generates a hash index from a key */
+// hash_update(map, 'key', value)
 
 /********************************/
 /* PRIVATE FUNCTION DEFINITIONS */
 /********************************/
-
+uint32_t hash_index(const char * key)
+{
+    uint32_t hash = 0;
+    while (*key) {
+        hash = (hash * 31) + (*key);
+        key++;
+    }
+    return hash % HASH_MAX_VARS;
+}
 /*******************************/
 /* PUBLIC FUNCTION DEFINITIONS */
 /*******************************/
@@ -37,10 +57,17 @@ gui_status_t gui_init(write_function p_lcdWrite, const char* xmlString)
     pageCount = 0;
     varCount  = 0;
 
-    // Parsing the XML and creating hashmap and 
-    // page index
-    gui_parse_xml();
+   
 
+    // Initalise hashmap 
+    for (int i = 0; i < HASH_MAX_VARS; i++) {
+        strncpy(HashMapUint16[i].key, "Nothing", MAX_KEY_LENGTH - 1);
+        HashMapUint16[i].b_isUsed = false;
+        HashMapUint16[i].value = 0;
+    }
+    
+    // Parsing the XML and creating hashmap and page index
+    gui_parse_xml();
     return GUI_OK;
 
 }
@@ -103,6 +130,9 @@ gui_status_t gui_parse_xml()
                 varEndIdx = currentIndex;
                 b_isInVar = false;
                 varCount++;
+                // Creating Variable 
+                gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+                if(createStatus != GUI_VAR_OK){return GUI_ERR;}
             }
         }
         
@@ -203,6 +233,7 @@ gui_status_t gui_parse_xml()
         currentIndex++;
     }
 
+
     return GUI_OK;
 }
 
@@ -214,12 +245,44 @@ gui_status_t gui_get_page_position(int16_t pageNumber, uint32_t * p_startIndex ,
         return GUI_ERR;
     }
     *p_startIndex = pages[pageNumber].startIndex;
-    *p_endIndex = pages[pageNumber].endIndex;
+    *p_endIndex   = pages[pageNumber].endIndex;
     return GUI_OK;
+}
+
+gui_variable_status_t gui_create_var(const char *variableName,const char *variableType,const char *variableValue)
+{
+
+    uint32_t index = hash_index(variableName);
+
+    if (strncmp(variableType, "uint16_t", 9) == 0) {
+        // Extracting value 
+        uint16_t value = (uint16_t)atoi(variableValue);
+        // Linear probing
+        while (HashMapUint16[index].b_isUsed) 
+        {
+            index = (index + 1) % HASH_MAX_VARS;
+        }
+        // Statically allocated memory
+        HashMapUint16[index].b_isUsed = true;
+        strncpy(HashMapUint16[index].key, variableName, MAX_KEY_LENGTH - 1);
+        HashMapUint16[index].key[MAX_KEY_LENGTH - 1] = '\0'; // Null-terminate the string
+        HashMapUint16[index].value = value;
+    }
+
+    return GUI_VAR_OK;
 }
 
 gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_value)
 {
-    return GUI_VAR_ERR;
+    uint32_t index = hash_index(variableKey);
+    while (index < HASH_MAX_VARS)
+     {
+        if (HashMapUint16[index].b_isUsed && strcmp(HashMapUint16[index].key, variableKey) == 0) {
+            *p_value = HashMapUint16[index].value;
+            return GUI_VAR_OK;
+        }
+        index++;
+    }
+    return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
 }
     

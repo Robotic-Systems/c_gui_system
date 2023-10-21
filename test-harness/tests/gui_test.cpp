@@ -159,34 +159,46 @@ TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
     // init gui 
     gui_init(lcd_spy_write, helloWorldGui);
     // Create variable definition strings
-    char lastName[64]  = "testVar\0"; 
-    char lastValue[64] = "10\0"; 
-    char lastType[64]  = "uint16_t\0";  
+    char lastName[64]  = "testVar"; 
+    char lastValue[64] = "10"; 
+    char lastType[64]  = "uint16_t";  
     // Call variable create 
     gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
     LONGS_EQUAL(GUI_VAR_OK, createStatus);
     // Check operation was successful 
-    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+    uint16_t value = 0;
+    gui_variable_status_t fetchStatus = gui_get_uint16_var(lastName, &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
     LONGS_EQUAL(10, value);
 }
-// // after init the page index variable exists and is set to 0
-// TEST(GUITest, variable_exists_and_is_set_to_its_default)
-// {
-//     // init gui 
-//     gui_init(lcd_spy_write, helloWorldGui);
-//     // Fetch variable value 
-//     uint16_t value = 5; // set to non zero value 
-//     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
-//     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
-//     LONGS_EQUAL(0, value);
-// }
+// after init the page index variable exists and is set to 0
+TEST(GUITest, variable_exists_and_is_set_to_its_default)
+{
+    // init gui 
+    gui_init(lcd_spy_write, singleVarGui);
+    // Fetch variable value 
+    uint16_t value = 0; // set to non zero value 
+    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(55, value);
+}
 
+// the page index variable can be changed using gui_variable_update("pageIndex",10)
+TEST(GUITest, variable_exists_and_is_set_to_its_default)
+{
+    // init gui 
+    gui_init(lcd_spy_write, singleVarGui);
+    // Fetch variable value 
+    uint16_t value = 0; // set to non zero value 
+    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(55, value);
+}
 /**
  * One:
- * - the page index variable can be changed using gui_variable_update("pageIndex",10)
+ * - 
  * 
- * - add in logger output support 
+ * 
  * 
  * - feeding a garbled type, value or name into a variable create causes error 
  * - if initted with xml with a page with no closing brace then error is thrown
@@ -211,9 +223,12 @@ TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
 
 /**
  * ToDo:
+ * - Hash table can handle collisions through Open Addressing
+ * - Can't create two variables of same name 
  * - Can use int16_t as variables 
  * - Can use floats as variables 
  * - Can use uint32_t as variables 
  * - Can use int32_t as variables 
  * 
+ * - add in logger output support 
  */
