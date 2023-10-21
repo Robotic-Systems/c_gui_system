@@ -13,6 +13,7 @@ TEST_GROUP(GUITest)
     void setup()
     {
         lcd_spy_init();
+        gui_init(lcd_spy_write, zeroGui);
     }
 
     void teardown()
@@ -184,32 +185,65 @@ TEST(GUITest, variable_exists_and_is_set_to_its_default)
 }
 
 // the page index variable can be changed using gui_variable_update("pageIndex",10)
-TEST(GUITest, variable_exists_and_is_set_to_its_default)
+TEST(GUITest, uint16_variables_can_be_updated)
 {
     // init gui 
     gui_init(lcd_spy_write, singleVarGui);
+    // Update Variable 
+    gui_update_uint16_var("pageIndex",10);
     // Fetch variable value 
     uint16_t value = 0; // set to non zero value 
     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
-    LONGS_EQUAL(55, value);
+    LONGS_EQUAL(10, value);
+}
+
+TEST(GUITest, feeding_a_garbled_type_causes_error)
+{
+    // init gui 
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Create variable definition strings
+    char lastName[64]  = "testVar"; 
+    char lastValue[64] = "10"; 
+    char lastType[64]  = "uint6_t";  // Create garbled type
+    // Call variable create 
+    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+    LONGS_EQUAL(GUI_VAR_ERR, createStatus);
+}
+
+TEST(GUITest, feeding_in_a_value_with_name_greater_then_max_causes_error)
+{
+    // Create variable definition strings
+    char lastName[64]  = "ghjopasd;lkfjas;ldkfjas;ldfkja;sldfkjas;dlfkjas"; 
+    char lastValue[64] = "10"; 
+    char lastType[64]  = "uint16_t";  // Create garbled type
+    // Call variable create 
+    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+    LONGS_EQUAL(GUI_VAR_ERR, createStatus);
+}
+
+//  if not pages brace exists then no pages are created 
+TEST(GUITest, if_not_pages_brace_exists_then_no_pages_are_created)
+{
+        // init gui 
+    gui_init(lcd_spy_write, noPagesBrace);
+    // Check page count
+    int16_t pageCount = gui_get_page_count();
+    LONGS_EQUAL(0,pageCount);
 }
 /**
  * One:
- * - 
- * 
- * 
- * 
- * - feeding a garbled type, value or name into a variable create causes error 
+
+ * - if a page exists outside the <pages> tag an error is thrown  
  * - if initted with xml with a page with no closing brace then error is thrown
  * - if initted with an xml with only a page closing brace then error is thrown 
  * - if initted with xml with a variable with no closing brace then error is thrown
  * - if initted with an xml with only a variable closing brace then error is thrown 
- * - if a page exists outside the <pages> tag an error is thrown  
  * - if a variable exists outside the <variables> tag an error is thrown  
  * - error is thrown if variable name is bigger then allowed
  * 
- * - When gui_update() is called the page 0 bitmap is written to the spy 
+ * - gui_update() writes page 0 to spy 
+ * - If gui is initilaise with no pageIndex var then error occurs 
  * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
  * - Changing page number to a page that does not exist then calling gui_update() sets error and the spy page does not change
  * - User defines are defined in an untracked file 
@@ -224,11 +258,10 @@ TEST(GUITest, variable_exists_and_is_set_to_its_default)
 /**
  * ToDo:
  * - Hash table can handle collisions through Open Addressing
- * - Can't create two variables of same name 
  * - Can use int16_t as variables 
  * - Can use floats as variables 
  * - Can use uint32_t as variables 
  * - Can use int32_t as variables 
- * 
+ * - Can't create two variables of same name 
  * - add in logger output support 
  */

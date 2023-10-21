@@ -131,4 +131,13 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
  * @return gui_variable_status_t 
  */
 gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_value);
+
+/**
+ * @brief Can update uint16_t variables from there variable key 
+ * 
+ * @param [in] variableKey - Key of variable to be updated 
+ * @param [in] value - Value to update variable to 
+ * @return gui_variable_status_t 
+ */
+gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t value);
 #endif

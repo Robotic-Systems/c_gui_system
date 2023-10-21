@@ -136,7 +136,7 @@ gui_status_t gui_parse_xml()
             }
         }
         
-
+        
         // PAGE TAG CHECK 
         ///////////////// 
         if (strncmp(xmlCopy, "<page>", 6) == 0) 
@@ -251,7 +251,10 @@ gui_status_t gui_get_page_position(int16_t pageNumber, uint32_t * p_startIndex ,
 
 gui_variable_status_t gui_create_var(const char *variableName,const char *variableType,const char *variableValue)
 {
-
+    if(strlen(variableName)>MAX_KEY_LENGTH-1)
+    {
+        return GUI_VAR_ERR;
+    }
     uint32_t index = hash_index(variableName);
 
     if (strncmp(variableType, "uint16_t", 9) == 0) {
@@ -267,9 +270,10 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
         strncpy(HashMapUint16[index].key, variableName, MAX_KEY_LENGTH - 1);
         HashMapUint16[index].key[MAX_KEY_LENGTH - 1] = '\0'; // Null-terminate the string
         HashMapUint16[index].value = value;
+        return GUI_VAR_OK;
     }
 
-    return GUI_VAR_OK;
+    return GUI_VAR_ERR;
 }
 
 gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_value)
@@ -286,3 +290,16 @@ gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_val
     return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
 }
     
+gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t value)
+{
+    uint32_t index = hash_index(variableKey);
+    while (index < HASH_MAX_VARS)
+     {
+        if (HashMapUint16[index].b_isUsed && strcmp(HashMapUint16[index].key, variableKey) == 0) {
+            HashMapUint16[index].value = value;
+            return GUI_VAR_OK;
+        }
+        index++;
+    }
+    return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
+}

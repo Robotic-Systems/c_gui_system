@@ -73,4 +73,9 @@ const char* singleVarGui =
 "    </variable>\n"
 "</variables>\n";
 
+const char * noPagesBrace =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"    <page>\n"
+"        <name>0</name>\n"
+"    </page>\n";
 #endif
