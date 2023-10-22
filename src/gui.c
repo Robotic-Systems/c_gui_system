@@ -312,7 +312,30 @@ gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t val
 
 gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapString)
 {
-    return GUI_VAR_ERR;
+    char *str = strdup(bitmapString);
+    if (strncmp(str, "<bitMap>", 8) != 0) 
+    {
+        return GUI_VAR_ERR;
+    }
+    // Tokenise the input string 
+    str += 8;
+    char* token = strtok(str, ",");
+    // Loop 
+    for(int iter_row = 0; iter_row < ROWS; iter_row++)
+    {
+        for(int iter_col = 0; iter_col < COLUMNS; iter_col++)
+        {
+            printf("%d, %s \n",atoi(token), token);
+            bitMap[iter_col][iter_row] = atoi(token);
+            token = strtok(NULL, ",");
+            if(token == NULL)
+            {
+                return GUI_VAR_ERR;
+            }
+        }
+        break;
+    }
+    return GUI_VAR_OK;
 }
 
 gui_status_t gui_update()

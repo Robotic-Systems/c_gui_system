@@ -31,6 +31,26 @@ TEST_GROUP(GUITest)
             } \
         } while (0)
 
+    #define IS_BIT_MAP_EQUAL_BIT(num1, num2) do { \
+        for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
+            for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
+                char str[64]; \
+                snprintf(str, 64, "MISMATCH ON Row: %d, Col: %d", ith_row, ith_col); \
+                LONGS_EQUAL_TEXT(num1[ith_col][ith_row], num2[ith_col][ith_row], str); \
+            } \
+        } \
+    } while (0)
+
+    #define PRINT_BIT_MAP(rows, cols, bitMap) do { \
+        printf("\n");\
+        for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
+            for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
+                printf("%d, ",bitMap[ith_col][ith_row]); \
+            } \
+            printf("\n");\
+        } \
+    } while (0)
+
     #define IS_LCD_EQUAL_BIT(num) do { \
         uint8_t currentFrame[COLUMNS][ROWS] = {0}; \
             lcd_spy_get_Frame(currentFrame); \
@@ -259,18 +279,25 @@ TEST(GUITest, if_initted_with_an_xml_with_only_a_variable_closing_brace_then_err
 }
 TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
 {
-    // Create bitmap string 
-    FAIL("COMPLETE THIS TEST");
-    // Create test bitmap 
-
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap;
+    // Create Empty 2D array
+    uint8_t outputMap[COLUMNS][ROWS] = {99};
     // Call gui_render_bitmap 
-
+    gui_render_bitmap(outputMap,strBitMapCopy);
     // Check that bitmaps match 
+    PRINT_BIT_MAP(ROWS,COLUMNS,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap);
 }
 /* <bitMap> rendering tests
- * - if <bitMap> is too large returns error 
+ * - if no <bitMap> tag is found returns error
  * - if no <\bitmap> tag is found then gui_render_bitmap returns an error
  * - if gui_render_bitmap finds a non-bitmapable chacter then returns error 
+ * - bitmaps position can be changed
+ * - bitmaps can be located partially on screen using negitive or overflow positions
+ * - position can be set using variables
+ * - if <bitMap> cols is too large returns error 
+ * - if <bitMap> rows is too large returns error
 */
 
 /* <text> rendering tests
