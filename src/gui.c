@@ -67,8 +67,7 @@ gui_status_t gui_init(write_function p_lcdWrite, const char* xmlString)
     }
     
     // Parsing the XML and creating hashmap and page index
-    gui_parse_xml();
-    return GUI_OK;
+    return gui_parse_xml();
 
 }
 
@@ -133,7 +132,7 @@ gui_status_t gui_parse_xml()
                 // Creating Variable 
                 gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
                 if(createStatus != GUI_VAR_OK){return GUI_ERR;}
-            }
+            }else{return GUI_INIT_VAR_BRACE;}
         }
         
         
@@ -151,7 +150,7 @@ gui_status_t gui_parse_xml()
                 pages[pageCount].endIndex = currentIndex;
                 pageCount++;
                 b_isInPage = false;
-            }
+            }else{return GUI_INIT_PGE_BRACE;}
         }
 
         // NAME TAG CHECK 
@@ -233,7 +232,15 @@ gui_status_t gui_parse_xml()
         currentIndex++;
     }
 
-
+    // Checking for mimatched braces
+    if(b_isInPage)
+    {
+        return GUI_INIT_PGE_BRACE;
+    }
+    if(b_isInVar)
+    {
+        return GUI_INIT_VAR_BRACE;
+    }
     return GUI_OK;
 }
 
@@ -302,4 +309,31 @@ gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t val
         index++;
     }
     return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
+}
+
+gui_status_t gui_update()
+{
+    // Getting page index
+    uint16_t pageIndex = 0;
+    gui_status_t indexStatus = gui_get_uint16_var("pageIndex",&pageIndex);
+    if(indexStatus != GUI_OK)
+    {
+        return indexStatus;
+    }
+    // Create copy of xml 
+    const char*xmlCopy = guiXml;
+    xmlCopy += pages[pageIndex].startIndex;
+    uint16_t pageLength = pages[pageIndex].startIndex - pages[pageIndex].endIndex;
+    // Loop over page 
+    for (int i = 0; i < pageLength; i++) 
+    {
+    char currentChar = xmlCopy[i];
+    
+    }
+
+    // Check what type page is
+
+    // Render page  
+
+    return GUI_VAR_ERR;
 }

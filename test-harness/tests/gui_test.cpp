@@ -5,6 +5,7 @@ extern "C"
     #include "../spies/lcd_spy.h"
     #include "gui.h"
     #include "../test_xml/test_xml.h"
+    #include "../test_xml/test_bitmaps.h"
 }
 
 
@@ -26,6 +27,16 @@ TEST_GROUP(GUITest)
             for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
                 for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
                     LONGS_EQUAL_TEXT(num, currentFrame[ith_col][ith_row], "MISMATCH"); \
+                } \
+            } \
+        } while (0)
+
+    #define IS_LCD_EQUAL_BIT(num) do { \
+        uint8_t currentFrame[COLUMNS][ROWS] = {0}; \
+            lcd_spy_get_Frame(currentFrame); \
+            for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
+                for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
+                    LONGS_EQUAL_TEXT(num[ith_col][ith_row], currentFrame[ith_col][ith_row], "MISMATCH"); \
                 } \
             } \
         } while (0)
@@ -222,32 +233,51 @@ TEST(GUITest, feeding_in_a_value_with_name_greater_then_max_causes_error)
     LONGS_EQUAL(GUI_VAR_ERR, createStatus);
 }
 
-//  if not pages brace exists then no pages are created 
-TEST(GUITest, if_not_pages_brace_exists_then_no_pages_are_created)
+TEST(GUITest, if_initted_with_xml_with_a_page_with_no_closing_brace_then_error_is_thrown)
 {
-        // init gui 
-    gui_init(lcd_spy_write, noPagesBrace);
-    // Check page count
-    int16_t pageCount = gui_get_page_count();
-    LONGS_EQUAL(0,pageCount);
+    // init gui 
+    gui_status_t initStatus = gui_init(lcd_spy_write, noPageEndBrace);
+    LONGS_EQUAL(GUI_INIT_PGE_BRACE, initStatus);
+}
+TEST(GUITest, if_initted_with_an_xml_with_only_a_page_closing_brace_then_error_is_thrown )
+{
+    // init gui 
+    gui_status_t initStatus = gui_init(lcd_spy_write, noPageStrtBrace);
+    LONGS_EQUAL(GUI_INIT_PGE_BRACE, initStatus);
+}
+TEST(GUITest, if_initted_with_xml_with_a_variable_with_no_closing_brace_then_error_is_thrown )
+{
+    // init gui 
+    gui_status_t initStatus = gui_init(lcd_spy_write, noVarEndBrace);
+    LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
+}
+TEST(GUITest, if_initted_with_an_xml_with_only_a_variable_closing_brace_then_error_is_thrown  )
+{
+    // init gui 
+    gui_status_t initStatus = gui_init(lcd_spy_write, noVarStrtBrace);
+    LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
+}
+TEST(GUITest, bitmaps_can_be_written_to_screen)
+{
+    // init gui 
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Update to set the first frame 
+    gui_update();
+    IS_LCD_EQUAL_BIT(beautifulBitMap);
 }
 /**
  * One:
-
- * - if a page exists outside the <pages> tag an error is thrown  
- * - if initted with xml with a page with no closing brace then error is thrown
- * - if initted with an xml with only a page closing brace then error is thrown 
- * - if initted with xml with a variable with no closing brace then error is thrown
- * - if initted with an xml with only a variable closing brace then error is thrown 
- * - if a variable exists outside the <variables> tag an error is thrown  
- * - error is thrown if variable name is bigger then allowed
- * 
- * - gui_update() writes page 0 to spy 
- * - If gui is initilaise with no pageIndex var then error occurs 
- * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
+ * - gui system rendurs text default size left justifed starting at top of screen
+ * - gui system can render horizontially centered text 
+ * - gui system can render vertically centered text 
+ * - gui system can render horz and vert centered text 
+ * - gui system can render diffrent sized text 
+ * - 
+ * -
+ * -
  * - Changing page number to a page that does not exist then calling gui_update() sets error and the spy page does not change
  * - User defines are defined in an untracked file 
- * 
+ * - If gui is initilaise with no pageIndex var then error occurs 
  * - Transitions (pre defined actions that tie variables to page changes i.e when the is_upPressed is true
  * the cursor changes position to the next variable)
  * - Additional options, Variable refresh rates/partial screen refreshes 
@@ -264,4 +294,16 @@ TEST(GUITest, if_not_pages_brace_exists_then_no_pages_are_created)
  * - Can use int32_t as variables 
  * - Can't create two variables of same name 
  * - add in logger output support 
+ */
+
+
+
+
+/**
+ * Pedantic checks 
+ * - if not pages brace exists then no pages are created 
+ * - if a page exists outside the <pages> tag an error is thrown 
+ * - if a variable exists outside the <variables> tag an error is thrown  
+ * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
+
  */

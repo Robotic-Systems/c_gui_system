@@ -37,8 +37,10 @@ typedef void (*write_function)(uint8_t bitMap[][ROWS], uint16_t columns, uint16_
  * @brief For describing execution status of function.
  */
 typedef enum{
-    GUI_OK,   /** The function executed succesfuly */
-    GUI_ERR   /** The function failed */
+    GUI_OK,              /** The function executed succesfuly */
+    GUI_ERR,             /** The function failed */
+    GUI_INIT_PGE_BRACE,  /** There was a mismatch in page start or end braces */
+    GUI_INIT_VAR_BRACE,  /** There was a mismatch in variable start or end braces */
 }gui_status_t;
 
 
@@ -140,4 +142,11 @@ gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_val
  * @return gui_variable_status_t 
  */
 gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t value);
+
+/**
+ * @brief Updates the gui, should be placed in a callback function and called periodically 
+ * 
+ * @return gui_status_t 
+ */
+gui_status_t gui_update();
 #endif

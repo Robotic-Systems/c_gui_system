@@ -73,9 +73,25 @@ const char* singleVarGui =
 "    </variable>\n"
 "</variables>\n";
 
-const char * noPagesBrace =
+const char * noPageStrtBrace =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"    <page>\n"
 "        <name>0</name>\n"
 "    </page>\n";
+
+const char * noPageEndBrace =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"    <page>\n"
+"        <name>0</name>\n";
+
+const char * noVarStrtBrace =
+"        <name>pageIndex</name>\n"
+"        <type>uint16_t</type>\n"
+"        <value>0</value>\n"
+"    </variable>\n";
+
+const char * noVarEndBrace =
+"    <variable>\n"
+"        <name>pageIndex</name>\n"
+"        <type>uint16_t</type>\n"
+"        <value>0</value>\n";
 #endif
