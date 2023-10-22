@@ -68,7 +68,6 @@ gui_status_t gui_init(write_function p_lcdWrite, const char* xmlString)
     
     // Parsing the XML and creating hashmap and page index
     return gui_parse_xml();
-
 }
 
 int16_t gui_get_page_count()
@@ -311,29 +310,38 @@ gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t val
     return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
 }
 
+gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapString)
+{
+    return GUI_VAR_ERR;
+}
+
 gui_status_t gui_update()
 {
-    // Getting page index
-    uint16_t pageIndex = 0;
-    gui_status_t indexStatus = gui_get_uint16_var("pageIndex",&pageIndex);
-    if(indexStatus != GUI_OK)
-    {
-        return indexStatus;
-    }
-    // Create copy of xml 
-    const char*xmlCopy = guiXml;
-    xmlCopy += pages[pageIndex].startIndex;
-    uint16_t pageLength = pages[pageIndex].startIndex - pages[pageIndex].endIndex;
-    // Loop over page 
-    for (int i = 0; i < pageLength; i++) 
-    {
-    char currentChar = xmlCopy[i];
+    // // Getting page index
+    // uint16_t pageIndex = 0;
+    // gui_status_t indexStatus = gui_get_uint16_var("pageIndex",&pageIndex);
+    // if(indexStatus != GUI_OK)
+    // {
+    //     return indexStatus;
+    // }
+    // // Create copy of xml 
+    // const char*xmlCopy = guiXml;
+    // xmlCopy += pages[pageIndex].startIndex;
+    // uint16_t pageLength = pages[pageIndex].startIndex - pages[pageIndex].endIndex;
+    // // Create Empty bitmap 
+    // uint8_t bitMap[COLUMNS][ROWS] = {0};
+    // // Loop over page 
+    // for (int i = 0; i < pageLength; i++) 
+    // {
+    //     // Check for headings 
+    //     if (strncmp(xmlCopy, "<bitMap>", 8) == 0) 
+    //     {
+    //         xmlCopy += 7;
+    //     }
     
-    }
+    // }
 
-    // Check what type page is
-
-    // Render page  
+    // // Render page  
 
     return GUI_VAR_ERR;
 }

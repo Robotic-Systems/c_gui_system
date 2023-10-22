@@ -145,8 +145,20 @@ gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t val
 
 /**
  * @brief Updates the gui, should be placed in a callback function and called periodically 
- * 
+ * @note The gui renders by each parent item on the page, for example if you have a page with a 
+ * <bitMap> and then a <text> element, then the text will render over the top of the bitmap.
+ * you must format items correctly the driver will not save you
  * @return gui_status_t 
  */
 gui_status_t gui_update();
+
+/**
+ * @brief Take a text string that contains a bitMap and renders that bitmap onto the passed in
+ * bitmap.
+ * 
+ * @param [out] bitMap      - The output bit map 
+ * @param [in] bitmapString - String that contains the bitmap in xml format 
+ * @return gui_status_t - execution status  
+ */
+gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapString);
 #endif

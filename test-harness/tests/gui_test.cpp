@@ -257,24 +257,44 @@ TEST(GUITest, if_initted_with_an_xml_with_only_a_variable_closing_brace_then_err
     gui_status_t initStatus = gui_init(lcd_spy_write, noVarStrtBrace);
     LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
 }
-TEST(GUITest, bitmaps_can_be_written_to_screen)
+TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
 {
-    // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Update to set the first frame 
-    gui_update();
-    IS_LCD_EQUAL_BIT(beautifulBitMap);
+    // Create bitmap string 
+    FAIL("COMPLETE THIS TEST");
+    // Create test bitmap 
+
+    // Call gui_render_bitmap 
+
+    // Check that bitmaps match 
 }
-/**
- * One:
+/* <bitMap> rendering tests
+ * - if <bitMap> is too large returns error 
+ * - if no <\bitmap> tag is found then gui_render_bitmap returns an error
+ * - if gui_render_bitmap finds a non-bitmapable chacter then returns error 
+*/
+
+/* <text> rendering tests
+ * - CHANGE FORMATING OF STRINGS TO STANDARD C STYLE, XML FORMAT MAKES LIFE HARDER
  * - gui system rendurs text default size left justifed starting at top of screen
  * - gui system can render horizontially centered text 
  * - gui system can render vertically centered text 
  * - gui system can render horz and vert centered text 
  * - gui system can render diffrent sized text 
- * - 
- * -
- * -
+*/
+
+
+// TEST(GUITest, bitmaps_can_be_written_to_screen)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // Update to set the first frame 
+//     gui_update();
+//     IS_LCD_EQUAL_BIT(beautifulBitMap);
+// }
+
+
+/**
+ * One:
  * - Changing page number to a page that does not exist then calling gui_update() sets error and the spy page does not change
  * - User defines are defined in an untracked file 
  * - If gui is initilaise with no pageIndex var then error occurs 
@@ -305,5 +325,4 @@ TEST(GUITest, bitmaps_can_be_written_to_screen)
  * - if a page exists outside the <pages> tag an error is thrown 
  * - if a variable exists outside the <variables> tag an error is thrown  
  * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
-
  */
