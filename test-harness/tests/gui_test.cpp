@@ -144,7 +144,7 @@ TEST(GUITest, gui_get_page_position_returns_page_0_start_and_end)
     CHECK(helloWorldGui[endIndex] == '<');
 
     LONGS_EQUAL(198,startIndex);
-    LONGS_EQUAL(3717,endIndex);
+    LONGS_EQUAL(3918,endIndex);
 }
 
 TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
@@ -159,8 +159,8 @@ TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
     CHECK(helloWorldGui[startIndex] == '>');
     CHECK(helloWorldGui[endIndex] == '<');
 
-    LONGS_EQUAL(3734,startIndex);
-    LONGS_EQUAL(3920,endIndex);
+    LONGS_EQUAL(3935,startIndex);
+    LONGS_EQUAL(4192,endIndex);
 }
 
 // if gui_get_page_position is called on page that does not exist then error is returned 
@@ -277,6 +277,10 @@ TEST(GUITest, if_initted_with_an_xml_with_only_a_variable_closing_brace_then_err
     gui_status_t initStatus = gui_init(lcd_spy_write, noVarStrtBrace);
     LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ONE: BIT-MAP RENDER
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
 {
     // Get bitmap string 
@@ -289,28 +293,36 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
     PRINT_BIT_MAP(ROWS,COLUMNS,outputMap);
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap);
 }
+
 /* <bitMap> rendering tests
  * - if no <bitMap> tag is found returns error
  * - if no <\bitmap> tag is found then gui_render_bitmap returns an error
+ * - if no <position> is found then error is returned 
+ * - if no <size> is found then error is returned 
  * - if gui_render_bitmap finds a non-bitmapable chacter then returns error 
  * - bitmaps position can be changed
  * - bitmaps can be located partially on screen using negitive or overflow positions
  * - position can be set using variables
- * - if <bitMap> cols is too large returns error 
- * - if <bitMap> rows is too large returns error
 */
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ONE: TEXT RENDER 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /* <text> rendering tests
  * - CHANGE FORMATING OF STRINGS TO STANDARD C STYLE, XML FORMAT MAKES LIFE HARDER
- * - gui system rendurs text default size left justifed starting at top of screen
+ * - gui system rendurs text default size at specified position 
  * - gui system can render horizontially centered text 
  * - gui system can render vertically centered text 
  * - gui system can render horz and vert centered text 
- * - gui system can render diffrent sized text 
+ * - gui system can render diffrent sized text on same page 
 */
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ONE: PAGE RENDER 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TEST(GUITest, bitmaps_can_be_written_to_screen)
+// TEST(GUITest, pages_can_be_written_to_screen)
 // {
 //     // init gui 
 //     gui_init(lcd_spy_write, helloWorldGui);
@@ -319,19 +331,37 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
 //     IS_LCD_EQUAL_BIT(beautifulBitMap);
 // }
 
-
 /**
- * One:
+ * <page>
  * - Changing page number to a page that does not exist then calling gui_update() sets error and the spy page does not change
  * - User defines are defined in an untracked file 
  * - If gui is initilaise with no pageIndex var then error occurs 
- * - Transitions (pre defined actions that tie variables to page changes i.e when the is_upPressed is true
- * the cursor changes position to the next variable)
  * - Additional options, Variable refresh rates/partial screen refreshes 
  */
 
-// Many
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ONE: OPERANDS 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * - operand, will be restricted to:
+ *  <if>
+ *      <var>b_variable<value>true</value></var>
+ *  <then>
+ *      <var>pageIndex<value>10</value></var>
+ *  <else>
+ *          
+ *  </if>
+ * if b_variable is true then set pageIndex to 10, will be able to add else condition 
+ * 
+/*
 
+
+
+
+
+
+
+// Many
 /**
  * ToDo:
  * - Hash table can handle collisions through Open Addressing

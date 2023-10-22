@@ -337,34 +337,3 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
     }
     return GUI_VAR_OK;
 }
-
-gui_status_t gui_update()
-{
-    // // Getting page index
-    // uint16_t pageIndex = 0;
-    // gui_status_t indexStatus = gui_get_uint16_var("pageIndex",&pageIndex);
-    // if(indexStatus != GUI_OK)
-    // {
-    //     return indexStatus;
-    // }
-    // // Create copy of xml 
-    // const char*xmlCopy = guiXml;
-    // xmlCopy += pages[pageIndex].startIndex;
-    // uint16_t pageLength = pages[pageIndex].startIndex - pages[pageIndex].endIndex;
-    // // Create Empty bitmap 
-    // uint8_t bitMap[COLUMNS][ROWS] = {0};
-    // // Loop over page 
-    // for (int i = 0; i < pageLength; i++) 
-    // {
-    //     // Check for headings 
-    //     if (strncmp(xmlCopy, "<bitMap>", 8) == 0) 
-    //     {
-    //         xmlCopy += 7;
-    //     }
-    
-    // }
-
-    // // Render page  
-
-    return GUI_VAR_ERR;
-}
