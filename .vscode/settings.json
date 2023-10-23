@@ -16,6 +16,8 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "variant": "cpp",
-        "compare": "cpp"
+        "compare": "cpp",
+        "*.tcc": "cpp",
+        "sstream": "c"
     }
 }

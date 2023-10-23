@@ -312,28 +312,73 @@ gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t val
 
 gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapString)
 {
-    char *str = strdup(bitmapString);
-    if (strncmp(str, "<bitMap>", 8) != 0) 
+    const char*strBitmap = bitmapString;
+    if (strncmp(strBitmap, "<bitMap>", 8) != 0) 
     {
         return GUI_VAR_ERR;
     }
-    // Tokenise the input string 
-    str += 8;
-    char* token = strtok(str, ",");
-    // Loop 
-    for(int iter_row = 0; iter_row < ROWS; iter_row++)
+
+    // Creating loop variables 
+    uint16_t width  = {0}; /** Width of bitmap in pixels */
+    uint16_t height = {0}; /** Height of bitmap in pixels */
+    int16_t posX    = {0}; /** What column to place the top left corner of bitmap in  */
+    int16_t posY    = {0}; /** What row to place the top left corner of bitmap in  */
+    bool b_haveFoundSize = false; 
+    bool b_haveFoundPosi = false; 
+    while (*strBitmap != '\0')
     {
-        for(int iter_col = 0; iter_col < COLUMNS; iter_col++)
+        // SIZE TAG CHECK 
+        ////////////////// 
+        if (strncmp(strBitmap, "<size>", 6) == 0) 
         {
-            printf("%d, %s \n",atoi(token), token);
-            bitMap[iter_col][iter_row] = atoi(token);
-            token = strtok(NULL, ",");
-            if(token == NULL)
+            if (sscanf(strBitmap, "<size>%hu,%hu</size>", &width, &height) == 2) 
             {
-                return GUI_VAR_ERR;
+                b_haveFoundSize = true;
             }
         }
-        break;
+
+        // POSITION TAG CHECK 
+        ///////////////////// 
+        else if (strncmp(strBitmap, "<position>", 10) == 0) 
+        {
+            if (sscanf(strBitmap, "<position>%hd,%hd</position>", &posX, &posY) == 2) 
+            {
+                b_haveFoundPosi = true;
+            }
+        }
+        // DATA TAG CHECK
+        /////////////////
+        else if (strncmp(strBitmap, "<data>", 6) == 0) 
+        {
+            if(b_haveFoundSize && b_haveFoundPosi)
+            {
+                printf("Extracting data\n");
+                break;
+            }
+        }
+        strBitmap++;
     }
-    return GUI_VAR_OK;
+
+    // Extracting bitmap data 
+    printf("Current Char %c\n", *strBitmap);
+    strBitmap += 6;
+    // Row iterator 
+    for(uint16_t itr_row = posX; itr_row < height; itr_row++)
+    {
+        for(uint16_t itr_col = posY; itr_col < width; itr_col++)
+        {
+            // Skipping white-space chars 
+            while (*strBitmap == ' ' || *strBitmap == '\n' || *strBitmap == ',' || *strBitmap == '\r' || *strBitmap == '\t') 
+            {
+                strBitmap++;
+            }
+            // Extracting ith data point 
+            if (sscanf(strBitmap-1, "%hhd", &bitMap[itr_col][itr_row]) != 1) 
+            {
+                printf("FAIL %hhd\n", bitMap[itr_col][itr_row]);
+                return GUI_VAR_ERR;   
+            }
+        }
+    }
+    return GUI_ERR;
 }

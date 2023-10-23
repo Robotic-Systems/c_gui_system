@@ -146,7 +146,7 @@ gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t val
 /**
  * @brief Take a text string that contains a bitMap and renders that bitmap onto the passed in
  * bitmap.
- * 
+ * @note The bitmap settings MUST be placed before the data in XML otherwise error will be thrown 
  * @param [out] bitMap      - The output bit map 
  * @param [in] bitmapString - String that contains the bitmap in xml format 
  * @return gui_status_t - execution status  

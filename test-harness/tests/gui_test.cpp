@@ -31,12 +31,12 @@ TEST_GROUP(GUITest)
             } \
         } while (0)
 
-    #define IS_BIT_MAP_EQUAL_BIT(num1, num2) do { \
-        for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
-            for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
+    #define IS_BIT_MAP_EQUAL_BIT(bitMap, mainMap,posX,posY,width,height) do { \
+        for (int ith_row = posY; ith_row < height; ith_row++) { \
+            for (int ith_col = posX; ith_col < width; ith_col++) { \
                 char str[64]; \
                 snprintf(str, 64, "MISMATCH ON Row: %d, Col: %d", ith_row, ith_col); \
-                LONGS_EQUAL_TEXT(num1[ith_col][ith_row], num2[ith_col][ith_row], str); \
+                LONGS_EQUAL_TEXT(bitMap[ith_col][ith_row], mainMap[ith_col][ith_row], str); \
             } \
         } \
     } while (0)
@@ -288,10 +288,11 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
     // Create Empty 2D array
     uint8_t outputMap[COLUMNS][ROWS] = {99};
     // Call gui_render_bitmap 
-    gui_render_bitmap(outputMap,strBitMapCopy);
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that bitmaps match 
-    PRINT_BIT_MAP(ROWS,COLUMNS,outputMap);
-    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap);
+    // PRINT_BIT_MAP(ROWS,COLUMNS,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
 }
 
 /* <bitMap> rendering tests
@@ -353,7 +354,7 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
  *  </if>
  * if b_variable is true then set pageIndex to 10, will be able to add else condition 
  * 
-/*
+*/
 
 
 
