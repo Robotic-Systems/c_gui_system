@@ -21,12 +21,14 @@ TEST_GROUP(GUITest)
     {
     }
 
+
+
     #define IS_LCD_EQUAL_TO(num) do { \
         uint8_t currentFrame[COLUMNS][ROWS] = {0}; \
             lcd_spy_get_Frame(currentFrame); \
             for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
                 for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
-                    LONGS_EQUAL_TEXT(num, currentFrame[ith_col][ith_row], "MISMATCH"); \
+                    LONGS_EQUAL_TEXT(num, currentFrame[ith_row][ith_col], "MISMATCH"); \
                 } \
             } \
         } while (0)
@@ -36,27 +38,35 @@ TEST_GROUP(GUITest)
             for (int ith_col = posX; ith_col < width; ith_col++) { \
                 char str[64]; \
                 snprintf(str, 64, "MISMATCH ON Row: %d, Col: %d", ith_row, ith_col); \
-                LONGS_EQUAL_TEXT(bitMap[ith_col][ith_row], mainMap[ith_col][ith_row], str); \
+                LONGS_EQUAL_TEXT(bitMap[ith_row][ith_col], mainMap[ith_row][ith_col], str); \
             } \
         } \
     } while (0)
 
     #define PRINT_BIT_MAP(rows, cols, bitMap) do { \
         printf("\n");\
-        for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
-            for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
-                printf("%d, ",bitMap[ith_col][ith_row]); \
+        for (int ith_row = 0; ith_row < rows; ith_row++) { \
+            for (int ith_col = 0; ith_col < cols; ith_col++) { \
+                printf("%d, ",bitMap[ith_row][ith_col]); \
             } \
             printf("\n");\
         } \
     } while (0)
+
+    #define PRINT_ROW(rowNum, bitMap1, bitMap2)\
+        printf("\n");\
+        for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
+            printf("%d: %d, %d \n",ith_col, bitMap1[ith_row][ith_col], bitMap2[ith_row][ith_col]); \
+        } \
+        printf("\n");\
+
 
     #define IS_LCD_EQUAL_BIT(num) do { \
         uint8_t currentFrame[COLUMNS][ROWS] = {0}; \
             lcd_spy_get_Frame(currentFrame); \
             for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
                 for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
-                    LONGS_EQUAL_TEXT(num[ith_col][ith_row], currentFrame[ith_col][ith_row], "MISMATCH"); \
+                    LONGS_EQUAL_TEXT(num[ith_row][ith_col], currentFrame[ith_row][ith_col], "MISMATCH"); \
                 } \
             } \
         } while (0)
@@ -291,7 +301,6 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
     LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that bitmaps match 
-    // PRINT_BIT_MAP(ROWS,COLUMNS,outputMap);
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
 }
 

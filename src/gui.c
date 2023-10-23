@@ -360,7 +360,6 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
     }
 
     // Extracting bitmap data 
-    printf("Current Char %c\n", *strBitmap);
     strBitmap += 6;
     // Row iterator 
     for(uint16_t itr_row = posX; itr_row < height; itr_row++)
@@ -373,12 +372,13 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
                 strBitmap++;
             }
             // Extracting ith data point 
-            if (sscanf(strBitmap-1, "%hhd", &bitMap[itr_col][itr_row]) != 1) 
+            if (sscanf(strBitmap, "%hhd", &bitMap[itr_row][itr_col]) != 1) 
             {
-                printf("FAIL %hhd\n", bitMap[itr_col][itr_row]);
+                printf("FAIL %hhd\n", bitMap[itr_row][itr_col]);
                 return GUI_VAR_ERR;   
             }
+            strBitmap++;
         }
     }
-    return GUI_ERR;
+    return GUI_OK;
 }

@@ -8,7 +8,7 @@ void lcd_spy_init()
 {
     for (int ith_col = 0; ith_col < COLUMNS; ith_col++) {
         for (int ith_row = 0; ith_row < ROWS; ith_row++) {
-            lcdFrame[ith_col][ith_row] = LCD_UNDEFINED;
+            lcdFrame[ith_row][ith_col] = LCD_UNDEFINED;
         }
     }
     return;
