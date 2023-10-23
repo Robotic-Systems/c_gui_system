@@ -375,7 +375,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
             if (sscanf(strBitmap, "%hhd", &bitMap[itr_row][itr_col]) != 1) 
             {
                 printf("FAIL %hhd\n", bitMap[itr_row][itr_col]);
-                return GUI_VAR_ERR;   
+                return GUI_ERR;   
             }
             strBitmap++;
         }

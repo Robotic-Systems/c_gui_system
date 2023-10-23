@@ -305,7 +305,7 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
 }
 
 /* <bitMap> rendering tests
- * - if no <bitMap> tag is found returns error
+ * - if no <bitMap> tag is found returns bitmap error
  * - if no <\bitmap> tag is found then gui_render_bitmap returns an error
  * - if no <position> is found then error is returned 
  * - if no <size> is found then error is returned 
@@ -326,6 +326,8 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
  * - gui system can render vertically centered text 
  * - gui system can render horz and vert centered text 
  * - gui system can render diffrent sized text on same page 
+ * - need a options menu 
+ * 
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -343,7 +345,7 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
 
 /**
  * <page>
- * - Changing page number to a page that does not exist then calling gui_update() sets error and the spy page does not change
+ * - Changing page number to a page that does not exist then calling gui_update() returns error and the spy page does not change
  * - User defines are defined in an untracked file 
  * - If gui is initilaise with no pageIndex var then error occurs 
  * - Additional options, Variable refresh rates/partial screen refreshes 
@@ -352,7 +354,8 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: OPERANDS 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
+/**
+ * <operand>
  * - operand, will be restricted to:
  *  <if>
  *      <var>b_variable<value>true</value></var>
@@ -362,6 +365,9 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
  *          
  *  </if>
  * if b_variable is true then set pageIndex to 10, will be able to add else condition 
+ * Operands will be performed when they are reached when passing the page as to give the most 
+ * flexibility in behaviour. Sometimes you'll want it to happen before operation, sometimes 
+ * after. Will need to have cascading if statement to realy get complex behaviour 
  * 
 */
 
@@ -369,27 +375,44 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
 
 
 
-
-
-// Many
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MANY: HASHMAP 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * ToDo:
+ * <variable>
  * - Hash table can handle collisions through Open Addressing
  * - Can use int16_t as variables 
  * - Can use floats as variables 
  * - Can use uint32_t as variables 
  * - Can use int32_t as variables 
  * - Can't create two variables of same name 
- * - add in logger output support 
  */
 
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MANY: BIT-MAP RENDER 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Pedantic checks 
+ * <bitMaps>
+ * - Can render multiple bitmaps to the screen 
+ */
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MANY: TEXT RENDER 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MANY: OPERANDS 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// OTHER 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
  * - if not pages brace exists then no pages are created 
  * - if a page exists outside the <pages> tag an error is thrown 
  * - if a variable exists outside the <variables> tag an error is thrown  
  * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
+ * - add in logger output support 
  */
