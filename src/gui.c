@@ -364,10 +364,11 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
 
     // Extracting bitmap data 
     strBitmap += 6;
+    // Position & Height Logic 
     // Row iterator 
-    for(uint16_t itr_row = posX; itr_row < height; itr_row++)
+    for(int32_t itr_row = posX; itr_row < height; itr_row++)
     {
-        for(uint16_t itr_col = posY; itr_col < width; itr_col++)
+        for(int32_t itr_col = posY; itr_col < width; itr_col++)
         {
             // Skipping white-space chars 
             while (*strBitmap == ' ' || *strBitmap == '\n' || *strBitmap == ',' || *strBitmap == '\r' || *strBitmap == '\t') 
@@ -375,11 +376,20 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
                 strBitmap++;
             }
             // Extracting ith data point 
-            if (sscanf(strBitmap, "%hhd", &bitMap[itr_row][itr_col]) != 1) 
+            uint8_t bit = 0;
+            if (sscanf(strBitmap, "%hhd", &bit) != 1) 
             {
+                printf("PosX = %d \n", posX);
+                printf("PosY = %d \n", posY);
                 return GUI_ERR;   
             }
             strBitmap++;
+
+            if((itr_col < 0)||(itr_row<0))
+            {
+                continue;
+            }
+            bitMap[itr_row][itr_col] = bit;
         }
     }
     // Looking for the final braces. 

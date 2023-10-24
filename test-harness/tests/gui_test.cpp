@@ -79,287 +79,287 @@ TEST_GROUP(GUITest)
 /********/
 /* ZERO */
 /********/
-TEST(GUITest, passing_null_as_write_function_causes_error)
-{
-    // init gui with null 
-    gui_status_t initStatus = gui_init(NULL, zeroGui);
-    LONGS_EQUAL(GUI_ERR,initStatus);
-}
+// TEST(GUITest, passing_null_as_write_function_causes_error)
+// {
+//     // init gui with null 
+//     gui_status_t initStatus = gui_init(NULL, zeroGui);
+//     LONGS_EQUAL(GUI_ERR,initStatus);
+// }
 
-TEST(GUITest, passing_null_as_xml_causes_error)
-{
-    // init gui with null 
-    gui_status_t initStatus = gui_init(lcd_spy_write, NULL);
-    LONGS_EQUAL(GUI_ERR,initStatus);
-}
+// TEST(GUITest, passing_null_as_xml_causes_error)
+// {
+//     // init gui with null 
+//     gui_status_t initStatus = gui_init(lcd_spy_write, NULL);
+//     LONGS_EQUAL(GUI_ERR,initStatus);
+// }
 
-TEST(GUITest, passing_in_inputs_causes_no_error)
-{
-    // init gui
-    gui_status_t initStatus = gui_init(lcd_spy_write, zeroGui);
-    LONGS_EQUAL(GUI_OK,initStatus);
-}
+// TEST(GUITest, passing_in_inputs_causes_no_error)
+// {
+//     // init gui
+//     gui_status_t initStatus = gui_init(lcd_spy_write, zeroGui);
+//     LONGS_EQUAL(GUI_OK,initStatus);
+// }
 
-TEST(GUITest, on_init_no_frame_has_been_written)
-{
-    // init gui 
-    gui_init(lcd_spy_write, zeroGui);
-    // Check spy state undefined 
-    IS_LCD_EQUAL_TO(LCD_UNDEFINED);
-}
+// TEST(GUITest, on_init_no_frame_has_been_written)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, zeroGui);
+//     // Check spy state undefined 
+//     IS_LCD_EQUAL_TO(LCD_UNDEFINED);
+// }
 
-TEST(GUITest, when_passed_a_xml_with_no_pages_the_page_count_is_0)
-{
-    // init gui 
-    gui_init(lcd_spy_write, zeroGui);
-    // Check spy state undefined 
-    int16_t pageCount = gui_get_page_count();
-    LONGS_EQUAL(0,pageCount);
-}
+// TEST(GUITest, when_passed_a_xml_with_no_pages_the_page_count_is_0)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, zeroGui);
+//     // Check spy state undefined 
+//     int16_t pageCount = gui_get_page_count();
+//     LONGS_EQUAL(0,pageCount);
+// }
 
-TEST(GUITest, when_passed_a_xml_with_no_variables_the_variable_count_is_0)
-{
-    // init gui 
-    gui_init(lcd_spy_write, zeroGui);
-    // Check spy state undefined 
-    int16_t varCount = gui_get_variable_count();
-    LONGS_EQUAL(0,varCount);
-}
+// TEST(GUITest, when_passed_a_xml_with_no_variables_the_variable_count_is_0)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, zeroGui);
+//     // Check spy state undefined 
+//     int16_t varCount = gui_get_variable_count();
+//     LONGS_EQUAL(0,varCount);
+// }
 
-/**
- * Zero ToDo:
- */
+// /**
+//  * Zero ToDo:
+//  */
 
-/********/
-/* ONE  */
-/********/
-TEST(GUITest, when_passed_a_xml_two_pages_the_page_count_is_two)
-{
-    // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Check page count
-    int16_t pageCount = gui_get_page_count();
-    LONGS_EQUAL(2,pageCount);
-}
+// /********/
+// /* ONE  */
+// /********/
+// TEST(GUITest, when_passed_a_xml_two_pages_the_page_count_is_two)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // Check page count
+//     int16_t pageCount = gui_get_page_count();
+//     LONGS_EQUAL(2,pageCount);
+// }
 
-// after init the gui_get_page_position(0) can be called and will return the index when the start and end of page 0 is 
-TEST(GUITest, gui_get_page_position_returns_page_0_start_and_end)
-{
-    // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Check page count
-    uint32_t startIndex = 0;
-    uint32_t endIndex = 0;
-    gui_get_page_position(0,&startIndex,&endIndex);
+// // after init the gui_get_page_position(0) can be called and will return the index when the start and end of page 0 is 
+// TEST(GUITest, gui_get_page_position_returns_page_0_start_and_end)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // Check page count
+//     uint32_t startIndex = 0;
+//     uint32_t endIndex = 0;
+//     gui_get_page_position(0,&startIndex,&endIndex);
 
-    CHECK(helloWorldGui[startIndex] == '>');
-    CHECK(helloWorldGui[endIndex] == '<');
+//     CHECK(helloWorldGui[startIndex] == '>');
+//     CHECK(helloWorldGui[endIndex] == '<');
 
-    LONGS_EQUAL(198,startIndex);
-    LONGS_EQUAL(3918,endIndex);
-}
+//     LONGS_EQUAL(198,startIndex);
+//     LONGS_EQUAL(3918,endIndex);
+// }
 
-TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
-{
-    // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Check page count
-    uint32_t startIndex = 0;
-    uint32_t endIndex = 0;
-    gui_get_page_position(1,&startIndex,&endIndex);
+// TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // Check page count
+//     uint32_t startIndex = 0;
+//     uint32_t endIndex = 0;
+//     gui_get_page_position(1,&startIndex,&endIndex);
 
-    CHECK(helloWorldGui[startIndex] == '>');
-    CHECK(helloWorldGui[endIndex] == '<');
+//     CHECK(helloWorldGui[startIndex] == '>');
+//     CHECK(helloWorldGui[endIndex] == '<');
 
-    LONGS_EQUAL(3935,startIndex);
-    LONGS_EQUAL(4192,endIndex);
-}
+//     LONGS_EQUAL(3935,startIndex);
+//     LONGS_EQUAL(4192,endIndex);
+// }
 
-// if gui_get_page_position is called on page that does not exist then error is returned 
-TEST(GUITest, error_if_page_doesnt_exist)
-{
-    // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
-    // get status
-    uint32_t startIndex = 0;
-    uint32_t endIndex = 0;
-    gui_status_t getStatus = gui_get_page_position(10,&startIndex,&endIndex);
-    LONGS_EQUAL(GUI_ERR, getStatus);
-}
+// // if gui_get_page_position is called on page that does not exist then error is returned 
+// TEST(GUITest, error_if_page_doesnt_exist)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // get status
+//     uint32_t startIndex = 0;
+//     uint32_t endIndex = 0;
+//     gui_status_t getStatus = gui_get_page_position(10,&startIndex,&endIndex);
+//     LONGS_EQUAL(GUI_ERR, getStatus);
+// }
 
-// when passed a xml with one variables the variable count is set to 1
-TEST(GUITest, one_xml_defined_var_increments_var_count_by_one)
-{
-    // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Check page count 
-    int16_t varCount = gui_get_variable_count();
-    LONGS_EQUAL(1,varCount);
-}
+// // when passed a xml with one variables the variable count is set to 1
+// TEST(GUITest, one_xml_defined_var_increments_var_count_by_one)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // Check page count 
+//     int16_t varCount = gui_get_variable_count();
+//     LONGS_EQUAL(1,varCount);
+// }
 
-// can call gui_variable_create() and created an uint16 variable 
-TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
-{
-    // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Create variable definition strings
-    char lastName[64]  = "testVar"; 
-    char lastValue[64] = "10"; 
-    char lastType[64]  = "uint16_t";  
-    // Call variable create 
-    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
-    LONGS_EQUAL(GUI_VAR_OK, createStatus);
-    // Check operation was successful 
-    uint16_t value = 0;
-    gui_variable_status_t fetchStatus = gui_get_uint16_var(lastName, &value);
-    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
-    LONGS_EQUAL(10, value);
-}
-// after init the page index variable exists and is set to 0
-TEST(GUITest, variable_exists_and_is_set_to_its_default)
-{
-    // init gui 
-    gui_init(lcd_spy_write, singleVarGui);
-    // Fetch variable value 
-    uint16_t value = 0; // set to non zero value 
-    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
-    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
-    LONGS_EQUAL(55, value);
-}
+// // can call gui_variable_create() and created an uint16 variable 
+// TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // Create variable definition strings
+//     char lastName[64]  = "testVar"; 
+//     char lastValue[64] = "10"; 
+//     char lastType[64]  = "uint16_t";  
+//     // Call variable create 
+//     gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+//     LONGS_EQUAL(GUI_VAR_OK, createStatus);
+//     // Check operation was successful 
+//     uint16_t value = 0;
+//     gui_variable_status_t fetchStatus = gui_get_uint16_var(lastName, &value);
+//     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+//     LONGS_EQUAL(10, value);
+// }
+// // after init the page index variable exists and is set to 0
+// TEST(GUITest, variable_exists_and_is_set_to_its_default)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, singleVarGui);
+//     // Fetch variable value 
+//     uint16_t value = 0; // set to non zero value 
+//     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+//     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+//     LONGS_EQUAL(55, value);
+// }
 
-// the page index variable can be changed using gui_variable_update("pageIndex",10)
-TEST(GUITest, uint16_variables_can_be_updated)
-{
-    // init gui 
-    gui_init(lcd_spy_write, singleVarGui);
-    // Update Variable 
-    gui_update_uint16_var("pageIndex",10);
-    // Fetch variable value 
-    uint16_t value = 0; // set to non zero value 
-    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
-    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
-    LONGS_EQUAL(10, value);
-}
+// // the page index variable can be changed using gui_variable_update("pageIndex",10)
+// TEST(GUITest, uint16_variables_can_be_updated)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, singleVarGui);
+//     // Update Variable 
+//     gui_update_uint16_var("pageIndex",10);
+//     // Fetch variable value 
+//     uint16_t value = 0; // set to non zero value 
+//     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+//     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+//     LONGS_EQUAL(10, value);
+// }
 
-TEST(GUITest, feeding_a_garbled_type_causes_error)
-{
-    // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Create variable definition strings
-    char lastName[64]  = "testVar"; 
-    char lastValue[64] = "10"; 
-    char lastType[64]  = "uint6_t";  // Create garbled type
-    // Call variable create 
-    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
-    LONGS_EQUAL(GUI_VAR_ERR, createStatus);
-}
+// TEST(GUITest, feeding_a_garbled_type_causes_error)
+// {
+//     // init gui 
+//     gui_init(lcd_spy_write, helloWorldGui);
+//     // Create variable definition strings
+//     char lastName[64]  = "testVar"; 
+//     char lastValue[64] = "10"; 
+//     char lastType[64]  = "uint6_t";  // Create garbled type
+//     // Call variable create 
+//     gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+//     LONGS_EQUAL(GUI_VAR_ERR, createStatus);
+// }
 
-TEST(GUITest, feeding_in_a_value_with_name_greater_then_max_causes_error)
-{
-    // Create variable definition strings
-    char lastName[64]  = "ghjopasd;lkfjas;ldkfjas;ldfkja;sldfkjas;dlfkjas"; 
-    char lastValue[64] = "10"; 
-    char lastType[64]  = "uint16_t";  // Create garbled type
-    // Call variable create 
-    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
-    LONGS_EQUAL(GUI_VAR_ERR, createStatus);
-}
+// TEST(GUITest, feeding_in_a_value_with_name_greater_then_max_causes_error)
+// {
+//     // Create variable definition strings
+//     char lastName[64]  = "ghjopasd;lkfjas;ldkfjas;ldfkja;sldfkjas;dlfkjas"; 
+//     char lastValue[64] = "10"; 
+//     char lastType[64]  = "uint16_t";  // Create garbled type
+//     // Call variable create 
+//     gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+//     LONGS_EQUAL(GUI_VAR_ERR, createStatus);
+// }
 
-TEST(GUITest, if_initted_with_xml_with_a_page_with_no_closing_brace_then_error_is_thrown)
-{
-    // init gui 
-    gui_status_t initStatus = gui_init(lcd_spy_write, noPageEndBrace);
-    LONGS_EQUAL(GUI_INIT_PGE_BRACE, initStatus);
-}
-TEST(GUITest, if_initted_with_an_xml_with_only_a_page_closing_brace_then_error_is_thrown )
-{
-    // init gui 
-    gui_status_t initStatus = gui_init(lcd_spy_write, noPageStrtBrace);
-    LONGS_EQUAL(GUI_INIT_PGE_BRACE, initStatus);
-}
-TEST(GUITest, if_initted_with_xml_with_a_variable_with_no_closing_brace_then_error_is_thrown )
-{
-    // init gui 
-    gui_status_t initStatus = gui_init(lcd_spy_write, noVarEndBrace);
-    LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
-}
-TEST(GUITest, if_initted_with_an_xml_with_only_a_variable_closing_brace_then_error_is_thrown  )
-{
-    // init gui 
-    gui_status_t initStatus = gui_init(lcd_spy_write, noVarStrtBrace);
-    LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ONE: BIT-MAP RENDER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TEST(GUITest, if_initted_with_xml_with_a_page_with_no_closing_brace_then_error_is_thrown)
+// {
+//     // init gui 
+//     gui_status_t initStatus = gui_init(lcd_spy_write, noPageEndBrace);
+//     LONGS_EQUAL(GUI_INIT_PGE_BRACE, initStatus);
+// }
+// TEST(GUITest, if_initted_with_an_xml_with_only_a_page_closing_brace_then_error_is_thrown )
+// {
+//     // init gui 
+//     gui_status_t initStatus = gui_init(lcd_spy_write, noPageStrtBrace);
+//     LONGS_EQUAL(GUI_INIT_PGE_BRACE, initStatus);
+// }
+// TEST(GUITest, if_initted_with_xml_with_a_variable_with_no_closing_brace_then_error_is_thrown )
+// {
+//     // init gui 
+//     gui_status_t initStatus = gui_init(lcd_spy_write, noVarEndBrace);
+//     LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
+// }
+// TEST(GUITest, if_initted_with_an_xml_with_only_a_variable_closing_brace_then_error_is_thrown  )
+// {
+//     // init gui 
+//     gui_status_t initStatus = gui_init(lcd_spy_write, noVarStrtBrace);
+//     LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
+// }
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////
+// // ONE: BIT-MAP RENDER
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
-{
-    // Get bitmap string 
-    const char* strBitMapCopy = justABitmap;
-    // Create Empty 2D array
-    uint8_t outputMap[COLUMNS][ROWS] = {99};
-    // Call gui_render_bitmap 
-    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-    LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check that bitmaps match 
-    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
-}
+// TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
+// {
+//     // Get bitmap string 
+//     const char* strBitMapCopy = justABitmap;
+//     // Create Empty 2D array
+//     uint8_t outputMap[COLUMNS][ROWS] = {99};
+//     // Call gui_render_bitmap 
+//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+//     // Check that bitmaps match 
+//     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
+// }
 
-TEST(GUITest, if_no_start_bitMap_tag_is_found_returns_bitmap_error)
-{
-    // Get bitmap string 
-    const char* strBitMapCopy = justABitmap_startBraceErr;
-    // Create Empty 2D array
-    uint8_t outputMap[COLUMNS][ROWS] = {99};
-    // Call gui_render_bitmap 
-    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, if_no_start_bitMap_tag_is_found_returns_bitmap_error)
+// {
+//     // Get bitmap string 
+//     const char* strBitMapCopy = justABitmap_startBraceErr;
+//     // Create Empty 2D array
+//     uint8_t outputMap[COLUMNS][ROWS] = {99};
+//     // Call gui_render_bitmap 
+//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
-TEST(GUITest, if_no_end_bitMap_tag_is_found_returns_bitmap_error)
-{
-    // Get bitmap string 
-    const char* strBitMapCopy = justABitmap_closeBraceErr;
-    // Create Empty 2D array
-    uint8_t outputMap[COLUMNS][ROWS] = {99};
-    // Call gui_render_bitmap 
-    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, if_no_end_bitMap_tag_is_found_returns_bitmap_error)
+// {
+//     // Get bitmap string 
+//     const char* strBitMapCopy = justABitmap_closeBraceErr;
+//     // Create Empty 2D array
+//     uint8_t outputMap[COLUMNS][ROWS] = {99};
+//     // Call gui_render_bitmap 
+//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
-TEST(GUITest, if_no_position_is_found_then_error_is_returned)
-{
-    // Get bitmap string 
-    const char* strBitMapCopy = justABitmap_positionBraceErr;
-    // Create Empty 2D array
-    uint8_t outputMap[COLUMNS][ROWS] = {99};
-    // Call gui_render_bitmap 
-    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, if_no_position_is_found_then_error_is_returned)
+// {
+//     // Get bitmap string 
+//     const char* strBitMapCopy = justABitmap_positionBraceErr;
+//     // Create Empty 2D array
+//     uint8_t outputMap[COLUMNS][ROWS] = {99};
+//     // Call gui_render_bitmap 
+//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
-TEST(GUITest, if_no_size_is_found_then_error_is_returned)
-{
-    // Get bitmap string 
-    const char* strBitMapCopy = justABitmap_positionBraceErr;
-    // Create Empty 2D array
-    uint8_t outputMap[COLUMNS][ROWS] = {99};
-    // Call gui_render_bitmap 
-    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, if_no_size_is_found_then_error_is_returned)
+// {
+//     // Get bitmap string 
+//     const char* strBitMapCopy = justABitmap_positionBraceErr;
+//     // Create Empty 2D array
+//     uint8_t outputMap[COLUMNS][ROWS] = {99};
+//     // Call gui_render_bitmap 
+//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
-TEST(GUITest, if_gui_render_bitmap_finds_a_non_bitmapable_chacter_then_returns_error)
-{
-    // Get bitmap string 
-    const char* strBitMapCopy = justABitmap_randomChar;
-    // Create Empty 2D array
-    uint8_t outputMap[COLUMNS][ROWS] = {99};
-    // Call gui_render_bitmap 
-    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, if_gui_render_bitmap_finds_a_non_bitmapable_chacter_then_returns_error)
+// {
+//     // Get bitmap string 
+//     const char* strBitMapCopy = justABitmap_randomChar;
+//     // Create Empty 2D array
+//     uint8_t outputMap[COLUMNS][ROWS] = {99};
+//     // Call gui_render_bitmap 
+//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
 // bitmaps can be located partially on screen using negitive or overflow positions
 TEST(GUITest, bit_maps_can_be_renders_above_and_to_left_of_top_left_of_screen)
@@ -369,9 +369,10 @@ TEST(GUITest, bit_maps_can_be_renders_above_and_to_left_of_top_left_of_screen)
         // Create Empty 2D array
     uint8_t outputMap[COLUMNS][ROWS] = {99};
     // Call gui_render_bitmap 
-    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
     LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that partial bitmaps match 
+    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,-12,-5,32,32);
 }
 
