@@ -352,8 +352,11 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
         {
             if(b_haveFoundSize && b_haveFoundPosi)
             {
-                printf("Extracting data\n");
                 break;
+            }
+            else 
+            {
+                return GUI_ERR;
             }
         }
         strBitmap++;
@@ -374,11 +377,28 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
             // Extracting ith data point 
             if (sscanf(strBitmap, "%hhd", &bitMap[itr_row][itr_col]) != 1) 
             {
-                printf("FAIL %hhd\n", bitMap[itr_row][itr_col]);
                 return GUI_ERR;   
             }
             strBitmap++;
         }
     }
-    return GUI_OK;
+    // Looking for the final braces. 
+    while (*strBitmap == ' ' || *strBitmap == '\n' || *strBitmap == ',' || *strBitmap == '\r' || *strBitmap == '\t') 
+    {
+        strBitmap++;
+    }
+    if (strncmp(strBitmap, "</data>", 7) == 0) 
+    {
+        strBitmap+=7;
+    }
+    while (*strBitmap == ' ' || *strBitmap == '\n' || *strBitmap == ',' || *strBitmap == '\r' || *strBitmap == '\t') 
+    {
+        strBitmap++;
+    }
+    if (strncmp(strBitmap, "</bitMap>", 9) == 0) 
+    {
+        return GUI_OK;
+    }
+    return GUI_ERR;
 }
+    

@@ -304,16 +304,46 @@ TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
 }
 
+TEST(GUITest, if_no_start_bitMap_tag_is_found_returns_bitmap_error)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_startBraceErr;
+    // Create Empty 2D array
+    uint8_t outputMap[COLUMNS][ROWS] = {99};
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+TEST(GUITest, if_no_end_bitMap_tag_is_found_returns_bitmap_error)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_closeBraceErr;
+    // Create Empty 2D array
+    uint8_t outputMap[COLUMNS][ROWS] = {99};
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+TEST(GUITest, if_no_position_is_found_then_error_is_returned)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_positionBraceErr;
+    // Create Empty 2D array
+    uint8_t outputMap[COLUMNS][ROWS] = {99};
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
 /* <bitMap> rendering tests
- * - if no <bitMap> tag is found returns bitmap error
- * - if no <\bitmap> tag is found then gui_render_bitmap returns an error
- * - if no <position> is found then error is returned 
  * - if no <size> is found then error is returned 
  * - if gui_render_bitmap finds a non-bitmapable chacter then returns error 
  * - bitmaps position can be changed
  * - bitmaps can be located partially on screen using negitive or overflow positions
  * - position can be set using variables
 */
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: TEXT RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
