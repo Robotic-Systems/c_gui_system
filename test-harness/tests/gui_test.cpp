@@ -5,6 +5,7 @@ extern "C"
     #include "../spies/lcd_spy.h"
     #include "gui.h"
     #include "../test_xml/test_xml.h"
+    #include "../test_xml/test_error_xml.h"
     #include "../test_xml/test_bitmaps.h"
 }
 
@@ -38,6 +39,7 @@ TEST_GROUP(GUITest)
             for (int ith_col = posX; ith_col < width; ith_col++) { \
                 char str[64]; \
                 snprintf(str, 64, "MISMATCH ON Row: %d, Col: %d", ith_row, ith_col); \
+                if((ith_row < 0)||(ith_col<0)){continue;}\
                 LONGS_EQUAL_TEXT(bitMap[ith_row][ith_col], mainMap[ith_row][ith_col], str); \
             } \
         } \
@@ -336,12 +338,46 @@ TEST(GUITest, if_no_position_is_found_then_error_is_returned)
     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
     LONGS_EQUAL(GUI_ERR, renderStatus);
 }
+
+TEST(GUITest, if_no_size_is_found_then_error_is_returned)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_positionBraceErr;
+    // Create Empty 2D array
+    uint8_t outputMap[COLUMNS][ROWS] = {99};
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+TEST(GUITest, if_gui_render_bitmap_finds_a_non_bitmapable_chacter_then_returns_error)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_randomChar;
+    // Create Empty 2D array
+    uint8_t outputMap[COLUMNS][ROWS] = {99};
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+// bitmaps can be located partially on screen using negitive or overflow positions
+TEST(GUITest, bit_maps_can_be_renders_above_and_to_left_of_top_left_of_screen)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = ABitmap_negitivePosition;
+        // Create Empty 2D array
+    uint8_t outputMap[COLUMNS][ROWS] = {99};
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that partial bitmaps match 
+    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,-12,-5,32,32);
+}
+
 /* <bitMap> rendering tests
- * - if no <size> is found then error is returned 
- * - if gui_render_bitmap finds a non-bitmapable chacter then returns error 
- * - bitmaps position can be changed
- * - bitmaps can be located partially on screen using negitive or overflow positions
- * - position can be set using variables
+ 
+ * - 
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -424,12 +460,17 @@ TEST(GUITest, if_no_position_is_found_then_error_is_returned)
 /**
  * <bitMaps>
  * - Can render multiple bitmaps to the screen 
+ * - bitmap position_can_be_set_using_variables_and_position_can_be_changed
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: TEXT RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * <bitMaps>
+ * - Can render multiple text elements to the screen 
+ * - text position_can_be_set_using_variables_and_position_can_be_changed
+ */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: OPERANDS 
