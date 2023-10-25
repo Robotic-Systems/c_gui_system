@@ -341,7 +341,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
         ///////////////////// 
         else if (strncmp(strBitmap, "<position>", 10) == 0) 
         {
-            if (sscanf(strBitmap, "<position>%hd,%hd</position>", &posX, &posY) == 2) 
+            if (sscanf(strBitmap, "<position>%hd,%hd</position>", &posY, &posX) == 2) 
             {
                 b_haveFoundPosi = true;
             }
@@ -366,9 +366,9 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
     strBitmap += 6;
     // Position & Height Logic 
     // Row iterator 
-    for(int32_t itr_row = posX; itr_row < height; itr_row++)
+    for(int32_t itr_row = posY; itr_row < (height+posY); itr_row++)
     {
-        for(int32_t itr_col = posY; itr_col < width; itr_col++)
+        for(int32_t itr_col = posX; itr_col < (width+posX); itr_col++)
         {
             // Skipping white-space chars 
             while (*strBitmap == ' ' || *strBitmap == '\n' || *strBitmap == ',' || *strBitmap == '\r' || *strBitmap == '\t') 
@@ -379,16 +379,22 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
             uint8_t bit = 0;
             if (sscanf(strBitmap, "%hhd", &bit) != 1) 
             {
+                char destination[11];  // Destination buffer to hold the copied characters
+                strncpy(destination, strBitmap, 10);
+                printf("%s \n", destination);
                 printf("PosX = %d \n", posX);
                 printf("PosY = %d \n", posY);
+                printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
                 return GUI_ERR;   
             }
             strBitmap++;
 
             if((itr_col < 0)||(itr_row<0))
             {
+                // 
                 continue;
             }
+            // printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
             bitMap[itr_row][itr_col] = bit;
         }
     }
