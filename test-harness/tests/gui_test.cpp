@@ -374,7 +374,7 @@ TEST(GUITest, bit_maps_can_be_renders_above_and_to_left_of_top_left_of_screen)
     gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
     LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that partial bitmaps match 
-    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,-12,-5,32,32);
 }
 
