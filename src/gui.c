@@ -379,22 +379,20 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
             uint8_t bit = 0;
             if (sscanf(strBitmap, "%hhd", &bit) != 1) 
             {
-                char destination[11];  // Destination buffer to hold the copied characters
-                strncpy(destination, strBitmap, 10);
-                printf("%s \n", destination);
-                printf("PosX = %d \n", posX);
-                printf("PosY = %d \n", posY);
-                printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
+                // char destination[11];  // Destination buffer to hold the copied characters
+                // strncpy(destination, strBitmap, 10);
+                // printf("%s \n", destination);
+                // printf("PosX = %d \n", posX);
+                // printf("PosY = %d \n", posY);
+                // printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
                 return GUI_ERR;   
             }
             strBitmap++;
 
             if((itr_col < 0)||(itr_row<0))
             {
-                // 
                 continue;
             }
-            // printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
             bitMap[itr_row][itr_col] = bit;
         }
     }
