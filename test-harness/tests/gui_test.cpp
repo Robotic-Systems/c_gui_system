@@ -38,7 +38,7 @@ TEST_GROUP(GUITest)
         for (int ith_row = posY; ith_row < (height+posY); ith_row++) { \
             for (int ith_col = posX; ith_col < (width+posX); ith_col++) { \
                 char str[64]; \
-                if((ith_row < 0)||(ith_col<0)){\
+                if(((ith_row < 0) && (ith_row >= ROWS))||((ith_col<0) && (ith_col >= COLUMNS))){\
                     continue;\
                 }\
                 snprintf(str, 64, "MISMATCH ON Row: %d, Col: %d, %d != %d", ith_row, ith_col, bitMap[ith_row-posY][ith_col-posX], mainMap[ith_row][ith_col]); \
@@ -383,14 +383,25 @@ TEST(GUITest, bit_maps_can_be_renders_above_and_to_left_of_top_left_of_screen)
     // Check that partial bitmaps match 
     // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,-12,-5,32,32);
-    // Check the rest of the bitmap is zero
-    FAIL("NEED TO CHECK THAT THE REST OF BITMAP IS ZERO");
+}
 
+TEST(GUITest, bit_maps_can_be_renders_below_and_to_right_of_screen)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = ABitmap_postivePosition;
+    // Create Empty 2D array
+    uint8_t outputMap[COLUMNS][ROWS] = {0};
+    memset(outputMap, 6, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that partial bitmaps match 
+    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,49,87,32,32);
 }
 
 /* <bitMap> rendering tests
- 
- * - Fix the werid bitmap alising bug
+* 
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
