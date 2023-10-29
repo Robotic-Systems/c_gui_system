@@ -389,11 +389,11 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapS
             }
             strBitmap++;
 
-            if(((itr_row < 0) && (itr_row >= ROWS))||((itr_col<0) && (itr_col >= COLUMNS)))
+            if((itr_row < 0) || (itr_row >= ROWS)||(itr_col<0) || (itr_col >= COLUMNS))
             {
                 continue;
             }
-            // printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
+            printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
             bitMap[itr_row][itr_col] = bit;
             // bitMap[itr_row][itr_col] = itr_col;
         }
