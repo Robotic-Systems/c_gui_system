@@ -129,7 +129,8 @@ CPPUTEST_CXXFLAGS += -Wno-c++14-compat
 CPPUTEST_CXXFLAGS += --std=c++11
 CPPUTEST_CXXFLAGS += -Wno-c++98-compat-pedantic
 CPPUTEST_CXXFLAGS += -Wno-c++98-compat
-
+CXXFLAGS += -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetectorNewMacros.h
+CFLAGS += -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetectorMallocMacros.h
 # gcov flags
 #CPPUTEST_CFLAGS += -fprofile-arcs -ftest-coverage asdasdsadsa
 
