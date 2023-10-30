@@ -162,7 +162,7 @@ const char * ABitmap_negitivePosition =
 const char * ABitmap_postivePosition =
 "<bitMap>\n"
 " <size>32,32</size>\n"
-" <position>87,49</position>"
+" <position>49,87</position>"
 " <data>\n"      
 "   1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" 
 "   1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" 
@@ -199,4 +199,13 @@ const char * ABitmap_postivePosition =
 " </data>\n"
 "</bitMap>\n";
 
+const char * ABitmap_singleOne =
+"<bitMap>\n"
+" <size>2,2</size>\n"
+" <position>62,100</position>"
+" <data>\n"      
+"   1, 1,\n"
+"   1, 1,\n"
+" </data>\n"
+"</bitMap>\n";
 #endif
