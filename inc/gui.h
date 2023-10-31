@@ -151,5 +151,5 @@ gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t val
  * @param [in] bitmapString - String that contains the bitmap in xml format 
  * @return gui_status_t - execution status  
  */
-gui_status_t gui_render_bitmap(uint8_t bitMap[COLUMNS][ROWS],const char *bitmapString);
+gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapString);
 #endif

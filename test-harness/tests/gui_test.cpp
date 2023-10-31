@@ -309,129 +309,127 @@ TEST(GUITest, if_initted_with_an_xml_with_only_a_variable_closing_brace_then_err
 // ONE: BIT-MAP RENDER
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
-// {
-//     // Get bitmap string 
-//     const char* strBitMapCopy = justABitmap;
-//     // Create Empty 2D array
-//     uint8_t outputMap[COLUMNS][ROWS] = {99};
-//     memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Call gui_render_bitmap 
-//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that bitmaps match 
-//     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
-// }
+TEST(GUITest, bitmaps_can_be_rendered_using_render_bitmap)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap;
+    // Create Empty 2D array
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that bitmaps match 
+    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
+}
 
-// TEST(GUITest, if_no_start_bitMap_tag_is_found_returns_bitmap_error)
-// {
-//     // Get bitmap string 
-//     const char* strBitMapCopy = justABitmap_startBraceErr;
-//     // Create Empty 2D array
-//     uint8_t outputMap[COLUMNS][ROWS] = {99};
-//     memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Call gui_render_bitmap 
-//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+TEST(GUITest, if_no_start_bitMap_tag_is_found_returns_bitmap_error)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_startBraceErr;
+    // Create Empty 2D array
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
 
-// TEST(GUITest, if_no_end_bitMap_tag_is_found_returns_bitmap_error)
-// {
-//     // Get bitmap string 
-//     const char* strBitMapCopy = justABitmap_closeBraceErr;
-//     // Create Empty 2D array
-//     uint8_t outputMap[COLUMNS][ROWS] = {99};
-//     memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Call gui_render_bitmap 
-//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+TEST(GUITest, if_no_end_bitMap_tag_is_found_returns_bitmap_error)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_closeBraceErr;
+    // Create Empty 2D array
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
 
-// TEST(GUITest, if_no_position_is_found_then_error_is_returned)
-// {
-//     // Get bitmap string 
-//     const char* strBitMapCopy = justABitmap_positionBraceErr;
-//     // Create Empty 2D array
-//     uint8_t outputMap[COLUMNS][ROWS] = {99};
-//     memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Call gui_render_bitmap 
-//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+TEST(GUITest, if_no_position_is_found_then_error_is_returned)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_positionBraceErr;
+    // Create Empty 2D array
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
 
-// TEST(GUITest, if_no_size_is_found_then_error_is_returned)
-// {
-//     // Get bitmap string 
-//     const char* strBitMapCopy = justABitmap_positionBraceErr;
-//     // Create Empty 2D array
-//     uint8_t outputMap[COLUMNS][ROWS] = {99};
-//     memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Call gui_render_bitmap 
-//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+TEST(GUITest, if_no_size_is_found_then_error_is_returned)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_positionBraceErr;
+    // Create Empty 2D array
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
 
-// TEST(GUITest, if_gui_render_bitmap_finds_a_non_bitmapable_chacter_then_returns_error)
-// {
-//     // Get bitmap string 
-//     const char* strBitMapCopy = justABitmap_randomChar;
-//     // Create Empty 2D array
-//     uint8_t outputMap[COLUMNS][ROWS] = {99};
-//     memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Call gui_render_bitmap 
-//     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+TEST(GUITest, if_gui_render_bitmap_finds_a_non_bitmapable_chacter_then_returns_error)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = justABitmap_randomChar;
+    // Create Empty 2D array
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
 
-// // bitmaps can be located partially on screen using negitive or overflow positions
-// TEST(GUITest, bit_maps_can_be_renders_above_and_to_left_of_top_left_of_screen)
-// {
-//     // Get bitmap string 
-//     const char* strBitMapCopy = ABitmap_negitivePosition;
-//         // Create Empty 2D array
-//     uint8_t outputMap[COLUMNS][ROWS] = {0};
-//     memset(outputMap, 6, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Call gui_render_bitmap 
-//     gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that partial bitmaps match 
-//     // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
-//     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,-12,-5,32,32);
-// }
+// bitmaps can be located partially on screen using negitive or overflow positions
+TEST(GUITest, bit_maps_can_be_renders_above_and_to_left_of_top_left_of_screen)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = ABitmap_negitivePosition;
+        // Create Empty 2D array
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 6, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that partial bitmaps match 
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,-12,-5,32,32);
+}
 
-// TEST(GUITest, bit_maps_can_be_renders_below_and_to_right_of_screen)
-// {
-//     // Get bitmap string 
-//     const char* strBitMapCopy = ABitmap_postivePosition;
-//     // Create Empty 2D array
-//     uint8_t outputMap[COLUMNS][ROWS] = {0};
-//     memset(outputMap, 6, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Call gui_render_bitmap 
-//     gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that partial bitmaps match 
-//     // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
-//     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,49,87,32,32);
-// }
+TEST(GUITest, bit_maps_can_be_renders_below_and_to_right_of_screen)
+{
+    // Get bitmap string 
+    const char* strBitMapCopy = ABitmap_postivePosition;
+    // Create Empty 2D array
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 6, COLUMNS * ROWS * sizeof(uint8_t));
+    // Call gui_render_bitmap 
+    gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that partial bitmaps match 
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,49,87,32,32);
+}
 
 TEST(GUITest, bit_maps_have_no_artifacts_when_written)
 {
     // Fetch bitmap that it offset so a single one is in frame
-    // const char* strBitMapCopy = ABitmap_singleOne;
+    const char* strBitMapCopy = ABitmap_singleOne;
     // Render the bitmap 
-    uint8_t outputMap[COLUMNS][ROWS] = {0};
+    uint8_t outputMap[ROWS][COLUMNS];
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    // gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
-    outputMap[62][101] = 1;
-    outputMap[63][100] = 1;
-    outputMap[63][101] = 1;
-    outputMap[62][100] = 1;
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    gui_status_t renderStatus =  gui_render_bitmap(outputMap,strBitMapCopy);
     // Check status is okay 
-    // LONGS_EQUAL(GUI_OK, renderStatus);
+    LONGS_EQUAL(GUI_OK, renderStatus);
     // Check the rest is the defualt value 
-    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
     // Check that one is there
-    // IS_BIT_MAP_EQUAL_BIT(simpleBitMap,outputMap,62,100,2,2);
+    IS_BIT_MAP_EQUAL_BIT(simpleBitMap,outputMap,62,100,2,2);
     IS_BIT_EQUAL_TO_UP_TO(0,outputMap,62,100);
 }
 
