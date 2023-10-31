@@ -443,6 +443,7 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
 
 
 /* <text> rendering tests
+ * - Font support will be 12pt(4.233mm) and 7.5pt(2.64mm)
  * - CHANGE FORMATING OF STRINGS TO STANDARD C STYLE, XML FORMAT MAKES LIFE HARDER
  * - gui system rendurs text default size at specified position 
  * - gui system can render horizontially centered text 
