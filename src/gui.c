@@ -397,8 +397,6 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
                 continue;
             }
             bitMap[itr_row][itr_col] = bit;
-            // printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
-            // bitMap[itr_row][itr_col] = itr_row;
         }
     }
     // Looking for the final braces. 

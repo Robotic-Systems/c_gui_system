@@ -1,6 +1,11 @@
 tool for creating bitmaps: https://tools.withcode.uk/bitmap/
 
 TODO:
--   Explain diffrence between error and test xml's
+- Explain diffrence between error and test xml's
 - Add in supported fonrts
 - Show xml formatting guide 
+- How to add additional fonts to the softwear
+
+**Fonts**
+The Supported Fonts will be 12pt and 7.5pt text height. Calibri 
+https://www.1001fonts.com/carlito-font.html
