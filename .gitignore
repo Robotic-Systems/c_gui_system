@@ -1,5 +1,5 @@
 *.code-workspace
 html
 latex
-/src/user_led.c
-/inc/user_led.h
+/src/user_gui.c
+/inc/user_gui.h

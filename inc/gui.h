@@ -5,28 +5,22 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
+#include "user_gui.h"
 /***********************/
 /* PUBLIC DEFINITIONS */
 /***********************/
-
 /**
  * @brief Maximum defines 
  * 
 */
-#define HASH_MAX_VARS 20         /** Maximum amount of variables that can be stored in hashmap */
+#define HASH_MAX_VARS 20         /** Maximum amount of variables that can be stored of each type hashmap */
 #define MAX_PAGE_COUNT 50        /** Maximum number of supported pages*/
 #define MAX_TAG_DATA_LENGTH 64   /** Maximum length of data strings that is not displayed on gui */
 #define MAX_KEY_LENGTH 20        /** Maximum length key strings  */
-/**
- * @brief User defines that will be moved to a user code file in near future 
- * 
-*/
-#define ROWS 64 /** LCD pixel rows */
-#define COLUMNS 102 /** LCD pixel columns */
+
 /****************/
 /* PUBLIC TYPES */
 /****************/
-
 /**
  * @brief Function Pointer type for the lcd write function 
 */

@@ -451,6 +451,7 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
  * - gui system can render vertically centered text 
  * - gui system can render horz and vert centered text 
  * - gui system can render diffrent sized text on same page 
+ * - gui system can render a hashmap variable value 
  * - need a options menu 
  * 
 */
