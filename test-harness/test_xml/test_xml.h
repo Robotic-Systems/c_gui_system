@@ -122,7 +122,7 @@ const char * justABitmap =
 const char * ABitmap_negitivePosition =
 "<bitMap>\n"
 " <size>32,32</size>\n"
-" <position>-12,-5</position>"
+" <position>-12,-5</position>\n"
 " <data>\n"      //^ -5  
 "   1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" 
 "   1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" 
@@ -162,7 +162,7 @@ const char * ABitmap_negitivePosition =
 const char * ABitmap_postivePosition =
 "<bitMap>\n"
 " <size>32,32</size>\n"
-" <position>49,87</position>"
+" <position>49,87</position>\n"
 " <data>\n"      
 "   1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" 
 "   1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" 
@@ -202,10 +202,19 @@ const char * ABitmap_postivePosition =
 const char * ABitmap_singleOne =
 "<bitMap>\n"
 " <size>2,2</size>\n"
-" <position>62,100</position>"
+" <position>62,100</position>\n"
 " <data>\n"      
 "   1, 1,\n"
 "   1, 1,\n"
 " </data>\n"
 "</bitMap>\n";
+
+const char * text_HelloWorld =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n"
 #endif

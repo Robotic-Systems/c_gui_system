@@ -441,8 +441,18 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
 // ONE: TEXT RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+TEST(GUITest, can_render_text_elements)
+{
+    // Fetch the xml text extract 
+
+    // Create empty bitmap 
+
+    // Render text
+
+    // Check that text rendered correctly 
+    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+}
 /* <text> rendering tests
- * - Font support will be 12pt(4.233mm) and 7.5pt(2.64mm)
  * - Finding the accosicated index of the chacter bitmap can be done using a lookup table 
  * - Will need a find string length function 
  * - CHANGE FORMATING OF STRINGS TO STANDARD C STYLE, XML FORMAT MAKES LIFE HARDER
@@ -531,6 +541,7 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
  * - Can render multiple text elements to the screen 
  * - text position_can_be_set_using_variables_and_position_can_be_changed
  * - Can use more then one font per gui 
+ * - Can set default font at the start of the page 
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -546,5 +557,5 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
  * - if a page exists outside the <pages> tag an error is thrown 
  * - if a variable exists outside the <variables> tag an error is thrown  
  * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
- * - add in logger output support 
+ * - add in logger output support for xml formating checks and feedback 
  */
