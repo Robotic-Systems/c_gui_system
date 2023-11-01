@@ -441,9 +441,10 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
 // ONE: TEXT RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 /* <text> rendering tests
  * - Font support will be 12pt(4.233mm) and 7.5pt(2.64mm)
+ * - Finding the accosicated index of the chacter bitmap can be done using a lookup table 
+ * - Will need a find string length function 
  * - CHANGE FORMATING OF STRINGS TO STANDARD C STYLE, XML FORMAT MAKES LIFE HARDER
  * - gui system rendurs text default size at specified position 
  * - gui system can render horizontially centered text 
@@ -528,6 +529,7 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
  * <bitMaps>
  * - Can render multiple text elements to the screen 
  * - text position_can_be_set_using_variables_and_position_can_be_changed
+ * - Can use more then one font per gui 
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

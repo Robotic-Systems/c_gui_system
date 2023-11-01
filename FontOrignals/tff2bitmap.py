@@ -1,8 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
 
 # Configuration
-output_width = 104  # Width of the output image
-output_height = 64  # Height of the output image
+output_width = 300  # Width of the output image
+output_height = 300  # Height of the output image
 font_size = 19  # Font size
 text_num = "0123456789"  # Text to convert to a bitmap
 text_lc  = "abcdefghijklmnopqrstuvwxyz"
@@ -19,7 +19,7 @@ draw = ImageDraw.Draw(image)
 
 # Load the font
 font = ImageFont.truetype(font_path, font_size)
-text = "Hello World!"
+text = text_lc + "\n" + text_uc + "\n" + text_sym +"\n" + text_num
 # Calculate the position to center the text
 text_bbox = draw.textbbox((0, 0), text, font)
 text_width = text_bbox[2] - text_bbox[0]
@@ -32,7 +32,8 @@ y = (output_height - text_height) / 2
 draw.text((x, y), text, fill="black", font=font)
 
 # Save the image as a bitmap
-image.save(output_file)
+# image.save(output_file)
+image.show()
 
 # Convert the image to greyscale
 image = image.convert('L')
