@@ -137,4 +137,69 @@ const char * justABitmap_randomChar =
 " </data>"
 "</bitMap>\n";
 
+const char * text_HelloWorld_error_start_brace =
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_error_no_font =
+"<text>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_error_no_font_size =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <alignment>center</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_error_no_alignment =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_error_no_position =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_error_no_content =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <position>32,51</position>\n"
+"</text>\n";
+
+const char * text_HelloWorld_error_font_does_not_exist =
+"<text>\n"
+"    <font>spaceMan</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_error_font_size_does_not_exist =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>20</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
 #endif

@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 
 # Configuration
-output_width = 104  # Width of the output image
+output_width = 102  # Width of the output image
 output_height = 64  # Height of the output image
 font_size = 19  # Font size
 text_num = "0123456789"  # Text to convert to a bitmap

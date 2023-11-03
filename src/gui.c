@@ -21,9 +21,8 @@ int16_t pageCount = 0;     /** Number of pages found in xml after parsing*/
 int16_t varCount  = 0;     /** Number of Variables found in xml after parsing*/
 const char* guiXml = NULL; /** XML string that contains the whole menu system*/
 page_params_t pages[MAX_PAGE_COUNT] = {0};
-
 KeyValuePairUint16 HashMapUint16[HASH_MAX_VARS];  /** Hash map for uint16_t menu variables*/
-
+extern font_list_t font_master_list[NUM_FONT_TYPES];
 
 /*********************************/
 /* PRIVATE FUNCTION DECLARATIONS */
@@ -86,8 +85,6 @@ gui_status_t gui_parse_xml()
     bool b_isInVar  = 0;  // 1 when inside a <variable> element
     bool b_isInTag  = 0;  // General bool for all other tags that should not contain any children tags
     // Tag idx parameters 
-    uint32_t varStartIdx __attribute__((unused)) = {0}; // Position where the last variable tag was found 
-    uint32_t varEndIdx   __attribute__((unused)) = {0}; // Position where the last variable end tag was found 
     const char *nameSrtIdx  = {0}; // Position where the last name start tag was found 
     const char *nameEndIdx  = {0}; // Position where the last name end tag was found 
     const char *valueSrtIdx = {0}; // Position where the last value start tag was found 
@@ -96,9 +93,9 @@ gui_status_t gui_parse_xml()
     const char *typeEndIdx  = {0}; // Position where the last type end tag was found 
 
     // Tag string parameters
-    char lastName[MAX_TAG_DATA_LENGTH]  __attribute__((unused)) = {0};  // Last string that was read from within name tags
-    char lastValue[MAX_TAG_DATA_LENGTH] __attribute__((unused)) = {0};  // Last string that was read from within value tags
-    char lastType[MAX_TAG_DATA_LENGTH]  __attribute__((unused)) = {0};  // Last string that was read from within type tags
+    char lastName[MAX_TAG_DATA_LENGTH]   = {0};  // Last string that was read from within name tags
+    char lastValue[MAX_TAG_DATA_LENGTH]  = {0};  // Last string that was read from within value tags
+    char lastType[MAX_TAG_DATA_LENGTH]   = {0};  // Last string that was read from within type tags
     uint32_t currentIndex = 0; // Initialize the current index
 
     /**
@@ -118,14 +115,12 @@ gui_status_t gui_parse_xml()
         ///////////////////// 
         if (strncmp(xmlCopy, "<variable>", 10) == 0) 
         {
-            varStartIdx = currentIndex + 9;
             b_isInVar   = true;
         }
         else if (strncmp(xmlCopy, "</variable>", 11) == 0) 
         {
             if (b_isInVar) 
             {
-                varEndIdx = currentIndex;
                 b_isInVar = false;
                 varCount++;
                 // Creating Variable 
@@ -315,7 +310,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     const char*strBitmap = bitmapString;
     if (strncmp(strBitmap, "<bitMap>", 8) != 0) 
     {
-        return GUI_VAR_ERR;
+        return GUI_ERR;
     }
 
     // Creating loop variables 
@@ -419,3 +414,84 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     return GUI_ERR;
 }
     
+
+gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjectString)
+{
+    if (strncmp(textObjectString, "<text>", 6) != 0) 
+    {
+        return GUI_ERR;
+    }
+
+
+    // Creating loop variables 
+    char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
+    bool b_haveFoundFont      = false; 
+    bool b_haveFoundFontSize  = false; 
+    bool b_haveFoundAlignment = false; 
+    bool b_haveFoundPosition  = false; 
+    bool b_haveFoundContent   = false; 
+
+
+    while (*textObjectString != '\0')
+    {
+        // FONT TAG CHECK 
+        ////////////////// 
+        if (strncmp(textObjectString, "<font>", 6) == 0) 
+        {
+            if (sscanf(textObjectString, "<font>%63[^<]", fontName) == 1) 
+            {
+                // check font master list for the font namme 
+                for(uint8_t iter_font = 0; iter_font < NUM_FONT_TYPES; iter_font ++)
+                {
+                    if(strncmp(fontName, font_master_list[iter_font].fontName, strlen(fontName)) == 0)
+                    {
+                        b_haveFoundFont = true;
+                        break;
+                    }
+                }
+                if(!b_haveFoundFont)
+                {
+                    return GUI_ERR;
+                }
+                
+            }
+        }
+        // FONT-SIZE TAG CHECK 
+        //////////////////////
+        if (strncmp(textObjectString, "<font-size>", 11) == 0) 
+        {
+            b_haveFoundFontSize = true;
+        }
+
+        // ALIGNMENT TAG CHECK 
+        //////////////////////
+        if (strncmp(textObjectString, "<alignment>", 11) == 0) 
+        {
+            b_haveFoundAlignment = true;
+        }
+
+        // POSITION TAG CHECK 
+        //////////////////////
+        if (strncmp(textObjectString, "<position>", 10) == 0) 
+        {
+            b_haveFoundPosition = true;
+        }
+
+        // CONTENT TAG CHECK 
+        //////////////////////
+        if (strncmp(textObjectString, "<content>", 9) == 0) 
+        {
+            b_haveFoundContent = true;
+        }
+
+
+        textObjectString++;
+    }
+
+    if(b_haveFoundFont && b_haveFoundFontSize && b_haveFoundAlignment && b_haveFoundPosition && b_haveFoundContent)
+    {
+        return GUI_OK;
+    }
+    return GUI_ERR;
+}
+

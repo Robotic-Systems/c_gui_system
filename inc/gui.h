@@ -146,4 +146,15 @@ gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t val
  * @return gui_status_t - execution status  
  */
 gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapString);
+
+
+/**
+ * @brief Takes text sting that contains a "<text>" tag, and renders that text onto screen 
+ * 
+ * @param [out] bitMap     - The output bit map 
+ * @param textObjectString - String that contains the Text in xml format  
+ * @return gui_status_t 
+ */
+gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjectString);
+
 #endif
