@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['endindex_0',['endIndex',['../structpage__params__t.html#af1805846bcad52e88c12a6e26c5db36f',1,'page_params_t']]]
+  ['alignmentname_0',['alignmentName',['../structtext__alignment__opt__t.html#af2d45aecc10be4f755f4a8bcd81fbca0',1,'text_alignment_opt_t']]]
 ];
