@@ -541,20 +541,34 @@ TEST(GUITest, text_render_returns_error_when_font_size_not_exist)
     LONGS_EQUAL(GUI_ERR, renderStatus);
 }
 
-// TEST(GUITest, can_render_text_elements)
-// {
-//     // Fetch the xml text extract 
-//     const char* strTextCopy = text_HelloWorld;
-//     // Create empty bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     // Render text
-//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-//     // Check status is okay 
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that text rendered correctly 
-//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
-//     PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
-// }
+TEST(GUITest, text_render_returns_error_when_alignment_is_not_defined)
+{
+    const char* strTextCopy = text_HelloWorld_error_alignment_does_not_exist;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+
+TEST(GUITest, can_render_text_elements)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+}
+
 /* <text> rendering tests
  * - Finding the accosicated index of the chacter bitmap can be done using a lookup table 
  * - Will need a find string length function 
@@ -640,7 +654,7 @@ TEST(GUITest, text_render_returns_error_when_font_size_not_exist)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * <bitMaps>
- * - Can render multiple text elements to the screen 
+ * - Can render multi line text elements to the screen 
  * - text position_can_be_set_using_variables_and_position_can_be_changed
  * - Can use more then one font per gui 
  * - Can set default font at the start of the page 

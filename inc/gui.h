@@ -17,6 +17,7 @@
 #define MAX_PAGE_COUNT 50        /** Maximum number of supported pages*/
 #define MAX_TAG_DATA_LENGTH 64   /** Maximum length of data strings that is not displayed on gui */
 #define MAX_KEY_LENGTH 20        /** Maximum length key strings  */
+#define TEXT_ALIGNMENT_OPTIONS 3        /** Number of text alignment options */
 
 /****************/
 /* PUBLIC TYPES */
@@ -55,6 +56,25 @@ typedef struct
     uint32_t startIndex;   /** The start index of the page */
     uint32_t endIndex;     /** The end index of the page */
 }page_params_t;
+
+/**
+ * @brief Text alignment enums 
+ * 
+ */
+typedef enum {
+    CENTERED,     /** Place text's center on the position*/
+    LEFT,         /** Place text's top left corner on the position*/
+    RIGHT,        /** Place text's top right corner on the position*/
+}text_alignment_enum_t;
+
+/**
+ * @brief Struct to create the text alignment dictionary 
+ * 
+ */
+typedef struct {
+    text_alignment_enum_t alignmentEnum; /** Enum accocaited with Alignment option*/
+    const char *alignmentName;      /** String accocaited with Alignment option*/
+} text_alignment_opt_t;
 
 
 /********************/

@@ -215,6 +215,6 @@ const char * text_HelloWorld =
 "    <font-size>19</font-size>\n"
 "    <alignment>center</alignment>\n"
 "    <position>32,51</position>\n"
-"    <content>\"Hello, World!\n\"</content>\n"
+"    <content>\"Hello, World!\"</content>\n"
 "</text>\n";
 #endif

@@ -202,4 +202,13 @@ const char * text_HelloWorld_error_font_size_does_not_exist =
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
+
+const char * text_HelloWorld_error_alignment_does_not_exist =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>backwards</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
 #endif

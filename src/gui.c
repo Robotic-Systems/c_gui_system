@@ -7,6 +7,9 @@
 /*****************/
 /* PRIVATE TYPES */
 /*****************/
+/**
+ * @brief Structure for the uint16_t Hashmap 
+*/
 typedef struct KeyValuePairUint16
 {
     char key[MAX_KEY_LENGTH];
@@ -14,6 +17,17 @@ typedef struct KeyValuePairUint16
     bool b_isUsed;
 } KeyValuePairUint16;
 
+
+/**
+ * @brief Dictionary used to map the text alignment from the enum to there 
+ * associated string used in xml 
+ * 
+ */
+text_alignment_opt_t txtAlignmentDic[TEXT_ALIGNMENT_OPTIONS] = {
+    {CENTERED, "center"},
+    {LEFT,     "left"},
+    {RIGHT,    "right"}
+};
 /*********************/
 /* PRIVATE VARIABLES */
 /*********************/
@@ -22,7 +36,7 @@ int16_t varCount  = 0;     /** Number of Variables found in xml after parsing*/
 const char* guiXml = NULL; /** XML string that contains the whole menu system*/
 page_params_t pages[MAX_PAGE_COUNT] = {0};
 KeyValuePairUint16 HashMapUint16[HASH_MAX_VARS];  /** Hash map for uint16_t menu variables*/
-extern font_list_t font_master_list[NUM_FONT_TYPES];
+extern font_list_t font_master_list[NUM_FONT_TYPES]; 
 
 /*********************************/
 /* PRIVATE FUNCTION DECLARATIONS */
@@ -425,6 +439,9 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 
     // Creating loop variables 
     char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
+    uint8_t fontSize = {0};
+    uint8_t fontIndex = 0;
+    // uint8_t alignmentOpt = 0;
     bool b_haveFoundFont      = false; 
     bool b_haveFoundFontSize  = false; 
     bool b_haveFoundAlignment = false; 
@@ -445,6 +462,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 {
                     if(strncmp(fontName, font_master_list[iter_font].fontName, strlen(fontName)) == 0)
                     {
+                        fontIndex = iter_font;
                         b_haveFoundFont = true;
                         break;
                     }
@@ -460,14 +478,44 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         //////////////////////
         if (strncmp(textObjectString, "<font-size>", 11) == 0) 
         {
-            b_haveFoundFontSize = true;
+            if ((sscanf(textObjectString, "<font-size>%hhu</font-size>", &fontSize) == 1)&&b_haveFoundFont) 
+            {
+                for(uint8_t iter_fontSize = 0; iter_fontSize < MAX_FONT_SIZES; iter_fontSize ++)
+                {
+                    if(font_master_list[fontIndex].sizes[iter_fontSize] == fontSize)
+                    {
+                        b_haveFoundFontSize = true;
+                        break;
+                    }
+                }   
+            }
+            if(!b_haveFoundFontSize)
+            {
+                return GUI_ERR;
+            }
         }
 
         // ALIGNMENT TAG CHECK 
         //////////////////////
         if (strncmp(textObjectString, "<alignment>", 11) == 0) 
         {
-            b_haveFoundAlignment = true;
+            char alignmentName[MAX_TAG_DATA_LENGTH] = {'\0'};
+            if ((sscanf(textObjectString, "<alignment>%63[^<]", alignmentName) == 1)&&b_haveFoundFont) 
+            {
+                for(uint8_t iter_txtOpt = 0; iter_txtOpt < TEXT_ALIGNMENT_OPTIONS; iter_txtOpt ++)
+                {
+                    if(strncmp(txtAlignmentDic[iter_txtOpt].alignmentName, alignmentName, strlen(fontName)) == 0)
+                    {
+                        b_haveFoundAlignment = true;
+                        // alignmentOpt = txtAlignmentDic[iter_txtOpt].alignmentEnum;
+                        break;
+                    }
+                }   
+            }
+            if(!b_haveFoundAlignment)
+            {
+                return GUI_ERR;
+            }
         }
 
         // POSITION TAG CHECK 
@@ -483,8 +531,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         {
             b_haveFoundContent = true;
         }
-
-
         textObjectString++;
     }
 
@@ -492,6 +538,13 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     {
         return GUI_OK;
     }
+
+    // Calculate string width 
+
+    // Using alignment tag, width and position, work out where top left corner needs to go 
+
+    // start rendering the bitmap letter by letter using letter width to do so 
+
     return GUI_ERR;
 }
 
