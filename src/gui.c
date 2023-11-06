@@ -540,10 +540,10 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     }
 
     // Calculate string width 
-
+    
     // Using alignment tag, width and position, work out where top left corner needs to go 
 
-    // start rendering the bitmap letter by letter using letter width to do so 
+    // start rendering the bitmap letter by letter indexing position by letter width
 
     return GUI_ERR;
 }
