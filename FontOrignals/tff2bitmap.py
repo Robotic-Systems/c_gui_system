@@ -5,12 +5,11 @@ output_width = 102  # Width of the output image
 output_height = 64  # Height of the output image
 font_size = 19  # Font size
 text_num = "0123456789"  # Text to convert to a bitmap
-text_lc  = "abcdefghijklmnopqrstuvwxyz"
-text_uc  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+text_lc = "abcdefghijklmnopqrstuvwxyz"
+text_uc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 text_sym = " `~!@#$%^&*()-_=+[]\{\}|;':\",./<>?"
 font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\jupiter-crash-brk.regular.ttf"  # Path to your font file
 
-# font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\calibri.regular.ttf"  # Path to your font file
 output_file = "output_bitmap.png"  # Output image file
 
 # Create a blank image with white background
@@ -19,36 +18,28 @@ draw = ImageDraw.Draw(image)
 
 # Load the font
 font = ImageFont.truetype(font_path, font_size)
-# text = text_lc + "\n" + text_uc + "\n" + text_sym +"\n" + text_num
-text = "Hello World"
+
 # Calculate the position to center the text
-text_bbox = draw.textbbox((0, 0), text, font)
-text_width = text_bbox[2] - text_bbox[0]
-text_height = text_bbox[3] - text_bbox[1]
+total_text_width = 0  # Total width of all characters
+text = text_lc + text_uc + text_sym + text_num
 
-x = (output_width - text_width) / 2
-y = (output_height - text_height) / 2
+for char in text:
+    char_bbox = draw.textbbox((0, 0), char, font)
+    char_width = char_bbox[2] - char_bbox[0]
+    total_text_width += char_width
 
-# Draw the text on the image
-draw.text((x, y), text, fill="black", font=font)
+x = (output_width - total_text_width) / 2
+y = (output_height - font_size) / 2  # Assuming font size is the maximum character height
+
+# Draw each character on the image and print its width
+for char in text:
+    char_bbox = draw.textbbox((0, 0), char, font)
+    char_width = char_bbox[2] - char_bbox[0]
+    draw.text((x, y), char, fill="black", font=font)
+    print(f"Character '{char}' width: {char_width} pixels")
+    x += char_width
 
 # Save the image as a bitmap
-# image.save(output_file)
-image.show()
-
-# Convert the image to greyscale
-image = image.convert('L')
-# Invert the grayscale image
-inverted_image = Image.eval(image, lambda x: 255 - x)
-
-# Save the inverted greyscale pixel values to a text file
-with open('output.txt', 'w') as text_file:
-    for row in range(output_height):
-        text_file.write('{')
-        for col in range(output_width):
-            pixel_value = inverted_image.getpixel((col, row))
-            text_file.write(f'{pixel_value:3d}, ')
-        text_file.write('},\n')
+image.save(output_file)
 
 print(f"Bitmap saved as {output_file}")
-
