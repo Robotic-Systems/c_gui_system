@@ -1,9 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np 
+import matplotlib.pyplot as plt
+
 # Configuration
-output_width = 102  # Width of the output image
-output_height = 64  # Height of the output image
-font_size = 19  # Font size
+font_size = 50  # Font size
 text_num = "0123456789"  # Text to convert to a bitmap
 text_lc = "abcdefghijklmnopqrstuvwxyz"
 text_uc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -39,23 +39,31 @@ bitmap_array = np.empty([font_size,np.amax(width_array),len(text)],np.uint8)
 # Initialize position for drawing text
 x = 0
 y = 0
-
+output_width = np.amax(width_array)
+output_height = font_size
 # Process and draw each character
-for i, char in enumerate(text_num + text_lc + text_uc + text_sym):
-    image = Image.new("L", (np.amax(width_array),19), "white")
+for i, char in enumerate(text_lc + text_uc + text_num +text_sym):
+
+    image = Image.new("RGB", (output_width,output_height), "black")
     draw = ImageDraw.Draw(image)
     # Get the bounding box of the character
-    char_bbox = draw.textbbox((x, y), char, font)
-    char_width = char_bbox[2] - char_bbox[0]
+    text_bbox = draw.textbbox((0, 0),char, font)
+    text_width = text_bbox[2] - text_bbox[0]
+    text_height = text_bbox[3] - text_bbox[1]
 
-    # Draw the character on the image
-    draw.text((x, y), char, fill="black", font=font)
+    x = (output_width - text_width) / 2
+    # y = (output_height - text_height) / 2
+    y=0
+
+    # Draw the text on the image
+    draw.text((x, y), char, fill="white", font=font)
 
     # Update the corresponding depth (layer) in the bitmap_array
+    image = image.convert('L')
+    plt.imshow(image)
+    plt.show()
     bitmap_array[:,: , i] = np.array(image)
 
-    # Move the drawing position for the next character
-    x += char_width
 bitmap_array = bitmap_array[1:]
 
 bitmap_layer = bitmap_array[:,:,10]
