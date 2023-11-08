@@ -78,8 +78,6 @@ for i, char in enumerate(text_lc + text_uc + text_num +text_sym):
 ##
 # Define the dimensions of the 3D array
 num_characters = len(text_lc + text_uc + text_num + text_sym)
-font_bitmap = np.empty((font_size, output_width, num_characters), dtype=np.uint8)
-
 # Open a C file for writing
 with open("font_"+font_name+"_.h", "w") as c_file:
     
@@ -109,7 +107,7 @@ with open("font_"+font_name+"_.h", "w") as c_file:
         for row in range(font_size):
             c_file.write("    {")
             for col in range(output_width):
-                c_file.write("0x{:02X}".format(font_bitmap[row, col, i]))
+                c_file.write("0x{:02X}".format(bitmap_array[row, col, i]))
                 if col < output_width - 1:
                     c_file.write(", ")
             c_file.write("}")

@@ -580,6 +580,7 @@ TEST(GUITest, can_render_text_elements)
  * - gui system can render diffrent sized text on same page 
  * - gui system can render a hashmap variable value 
  * - need a options menu 
+ * - Need to fix p's and q's and g's
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
