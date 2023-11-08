@@ -99,7 +99,7 @@ with open("font_"+font_name+"_.h", "w") as c_file:
     c_file.write("};\n\n")
 
     # Write the C array declaration for the 3D bitmap array
-    c_file.write("uint8_t fontMap[{}][{}][{}] = {{\n".format(font_size, output_width, num_characters))
+    c_file.write("uint8_t fontMap[{}][{}][{}] = {{\n".format(num_characters, font_size, output_width))
 
     # Write the bitmap data to the C file
     for i in range(num_characters):
