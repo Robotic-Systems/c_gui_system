@@ -582,26 +582,33 @@ TEST(GUITest, get_char_width_returns_corect_char_width_for_whole_glyph_set)
 
 }
 
-// TEST(GUITest, can_render_text_elements)
-// {
-//     // Fetch the xml text extract 
-//     const char* strTextCopy = text_HelloWorld;
-//     // Create empty bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Render text
-//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-//     // Check status is okay 
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that text rendered correctly 
-//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
-//     PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
-// }
+TEST(GUITest, unknown_chacters_return_0_for_width)
+{
+   // Get the width of x 
+    uint8_t c_width =  gui_get_char_width(1,0, 127);
+    // Check that width matches expectation 
+    LONGS_EQUAL(0,c_width);
+
+}
+
+
+TEST(GUITest, can_render_text_elements)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+}
 
 /* <text> rendering tests
- * - Finding the accosicated index of the chacter bitmap can be done using a lookup table 
- * - Will need a find string length function 
- * - CHANGE FORMATING OF STRINGS TO STANDARD C STYLE, XML FORMAT MAKES LIFE HARDER
  * - gui system rendurs text default size at specified position 
  * - gui system can render horizontially centered text 
  * - gui system can render vertically centered text 
