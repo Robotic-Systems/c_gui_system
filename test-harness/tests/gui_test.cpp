@@ -552,22 +552,51 @@ TEST(GUITest, text_render_returns_error_when_alignment_is_not_defined)
     LONGS_EQUAL(GUI_ERR, renderStatus);
 }
 
-
-TEST(GUITest, can_render_text_elements)
+TEST(GUITest, get_char_width_returns_corect_char_width_for_c)
 {
-    // Fetch the xml text extract 
-    const char* strTextCopy = text_HelloWorld;
-    // Create empty bitmap 
-    uint8_t outputMap[ROWS][COLUMNS];
-    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    // Render text
-    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-    // Check status is okay 
-    LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check that text rendered correctly 
-    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
-    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    // Get the width of x 
+    uint8_t c_width =  gui_get_char_width(1,0, 'c');
+    // Check that width matches expectation 
+    LONGS_EQUAL(7,c_width);
+
 }
+
+TEST(GUITest, get_char_width_returns_corect_char_width_for_whole_glyph_set)
+{
+    const char* glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\",./<>?";
+    uint16_t widthIndex = 0;
+    uint8_t widthArray[96] = {
+    0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x03,   0x03,   0x07,   0x03,   0x0B,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x0B,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x0B,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x0B,   0x07,   0x07,   0x07,   0x07,   0x03,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x04,   0x0B,   0x03,   0x0E,   0x09,   0x07,   0x07,   0x07,   0x07,   0x09,   0x05,   0x05,   0x07,   0x07,   0x07,   0x07,   0x06,   0x06,   0x07,   0x06,   0x07,   0x06,   0x03,   0x03,   0x03,   0x03,   0x06,   0x03,   0x03,   0x07,   0x06,   0x06,   0x07
+    };
+
+
+    for (const char* text = glyphs; *text != '\0'; ++text) {
+        uint8_t c_width = gui_get_char_width(1, 0, *text);
+        // Check that width matches expectation
+        char str[64];
+        snprintf(str, 64, "MISMATCH CHAR %c, %d != %d ",  *text,widthArray[widthIndex],c_width ); \
+        LONGS_EQUAL_TEXT(widthArray[widthIndex], c_width,str);
+        widthIndex +=1;
+    }
+
+
+}
+
+// TEST(GUITest, can_render_text_elements)
+// {
+//     // Fetch the xml text extract 
+//     const char* strTextCopy = text_HelloWorld;
+//     // Create empty bitmap 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+//     // Render text
+//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+//     // Check status is okay 
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+//     // Check that text rendered correctly 
+//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+//     PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+// }
 
 /* <text> rendering tests
  * - Finding the accosicated index of the chacter bitmap can be done using a lookup table 

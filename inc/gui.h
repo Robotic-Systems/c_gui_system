@@ -177,4 +177,13 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
  */
 gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjectString);
 
+/**
+ * @brief Returns the width in pixels of the input character for that specific font and size 
+ * 
+ * @param [in] fontNameIdx  - index of the fonts name in the font_master_list
+ * @param [in] fontSizeIdx  - index of the fonts size in the font_master_list
+ * @param [in] character    - Character for which to query the width  
+ * @return character width in pixels, will return 0 if request fails 
+ */
+uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char character);
 #endif

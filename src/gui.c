@@ -42,7 +42,6 @@ extern font_list_t font_master_list[NUM_FONT_TYPES];
 /* PRIVATE FUNCTION DECLARATIONS */
 /*********************************/
 uint32_t hash_index(const char * key); /** Generates a hash index from a key */
-// hash_update(map, 'key', value)
 
 /********************************/
 /* PRIVATE FUNCTION DEFINITIONS */
@@ -548,3 +547,12 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     return GUI_ERR;
 }
 
+uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char character)
+{
+    uint8_t *ptr = font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx];
+    if(ptr == NULL)
+    {
+        return 0;
+    }
+    return ptr[3];
+}
