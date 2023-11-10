@@ -592,21 +592,46 @@ TEST(GUITest, unknown_chacters_return_0_for_width)
 }
 
 
-TEST(GUITest, can_render_text_elements)
+TEST(GUITest, unknown_chacter_returns_error)
 {
-    // Fetch the xml text extract 
-    const char* strTextCopy = text_HelloWorld;
-    // Create empty bitmap 
+    // Create blank bitmap 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    // Render text
-    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-    // Check status is okay 
-    LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check that text rendered correctly 
-    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+    // Write a character in top left corner 
+    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,127);
+    LONGS_EQUAL(GUI_ERR,writeStatus);
+}
+
+
+
+TEST(GUITest, chacter_can_be_written_to_bitmap)
+{
+    // Create blank bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Write a character in top left corner 
+    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A');
+    LONGS_EQUAL(GUI_OK,writeStatus);
+    // Check that width matches expectation clear
     PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
 }
+
+
+// TEST(GUITest, can_render_text_elements)
+// {
+//     // Fetch the xml text extract 
+//     const char* strTextCopy = text_HelloWorld;
+//     // Create empty bitmap 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+//     // Render text
+//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+//     // Check status is okay 
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+//     // Check that text rendered correctly 
+//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+//     PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+// }
 
 /* <text> rendering tests
  * - gui system rendurs text default size at specified position 

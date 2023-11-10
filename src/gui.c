@@ -559,3 +559,21 @@ uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char charac
     }
     return ptr[found - glyphs];
 }
+
+gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, uint16_t row, uint16_t col, uint8_t bitMap[ROWS][COLUMNS], char character)
+{
+    // GETTING LOOP PARAMS
+    ////////////////////////
+    //Charactor width 
+    uint8_t charHeight = *font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx];
+    uint8_t charWidth  = gui_get_char_width(fontNameIdx, fontSizeIdx, character);
+    if(charWidth == 0)
+    {
+        return GUI_ERR;
+    }
+    //Charactor bitmap pointer 
+    uint8_t *p_charBitmap = (uint8_t *)font_master_list[fontNameIdx].p_charBitmaps[fontSizeIdx];
+
+    printf("Height %u, bm %u \n", charHeight, p_charBitmap[charHeight * COLUMNS * 96 + charWidth * 96 + 3]);
+    return GUI_OK;
+}

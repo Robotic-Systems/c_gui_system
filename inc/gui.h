@@ -186,4 +186,17 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
  * @return character width in pixels, will return 0 if request fails 
  */
 uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char character);
+
+/**
+ * @brief Takes inputs and writes chaacter to the bitmap 
+ * 
+ * @param [in] fontNameIdx - index of the fonts name in the font_master_list
+ * @param [in] fontSizeIdx - index of the fonts size in the font_master_list 
+ * @param [in] row         - Row to start writing the chacter bitmap on 
+ * @param [in] col         - Column to start writng chacter bitmap on 
+ * @param [out] bitMap     - the output bitmap 
+ * @param [in] character   - Chacter to be written to bitmap 
+ * @return gui_status_t - execution status 
+ */
+gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, uint16_t row, uint16_t col, uint8_t bitMap[ROWS][COLUMNS], char character);
 #endif
