@@ -388,12 +388,6 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
 
             if (sscanf(strBitmap, "%hhd", &bit) != 1) 
             {
-                // char destination[11];  // Destination buffer to hold the copied characters
-                // strncpy(destination, strBitmap, 10);
-                // printf("%s \n", destination);
-                // printf("PosX = %d \n", posX);
-                // printf("PosY = %d \n", posY);
-                // printf("[row, col] = [%d, %d] \n", itr_row,itr_col);
                 return GUI_ERR;   
             }
             strBitmap++;
@@ -571,12 +565,24 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, uint16_t r
     {
         return GUI_ERR;
     }
+    // Char layer index
+    const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\",./<>?";
+    const char *found = strchr(glyphs, character);
+    uint16_t layerIdx = (found - glyphs);
+
     // Charactor bitmap pointer 
     uint8_t *p_charBitmap = (uint8_t *)font_master_list[fontNameIdx].p_charBitmaps[fontSizeIdx];
-    // Indexing a chacter              [layer]      [row]  [col]
-    uint8_t value = *(p_charBitmap + 0*(19 + 14) + 10*(14) + 4);
+    // Indexing a chacter              
 
-    printf("Height %u, width %u \n", charHeight,charWidth);
-    printf("Value %u \n", value);
+    // PRINTING CHAR 2 BITMAP 
+    /////////////////////////
+    for(int32_t itr_row = 0; itr_row < charHeight; itr_row++)
+    {
+        for(int32_t itr_col = 0; itr_col < charWidth; itr_col++)
+        {
+            //                                          [     layer      ]   [    row   ]     [  col ]
+            bitMap[itr_row+row][itr_col+col] = *(p_charBitmap + layerIdx*(19 * 14) + itr_row*(14)  +  itr_col);
+        }
+    }
     return GUI_OK;
 }
