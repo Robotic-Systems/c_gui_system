@@ -432,8 +432,11 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 
     // Creating loop variables 
     char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
-    uint8_t fontSize = {0};
+    uint8_t fontSize  = {0};
     uint8_t fontIndex = 0;
+    int16_t posX      = {0}; /** What column to place text in  */
+    int16_t posY      = {0}; /** What row to place text in*/
+    char text[MAX_TAG_DATA_LENGTH] = {'\0'};
     // uint8_t alignmentOpt = 0;
     bool b_haveFoundFont      = false; 
     bool b_haveFoundFontSize  = false; 
@@ -515,27 +518,34 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         //////////////////////
         if (strncmp(textObjectString, "<position>", 10) == 0) 
         {
-            b_haveFoundPosition = true;
+            if (sscanf(textObjectString, "<position>%hd,%hd</position>", &posY, &posX) == 2) 
+            {
+                b_haveFoundPosition = true;
+            } 
         }
 
         // CONTENT TAG CHECK 
         //////////////////////
         if (strncmp(textObjectString, "<content>", 9) == 0) 
         {
-            b_haveFoundContent = true;
+            if ((sscanf(textObjectString, "<content>%63[^</]", text) == 1)) 
+            {
+                b_haveFoundContent = true;
+            }
         }
         textObjectString++;
     }
-
+    
+    gui_write_char(1, 0, 0, 0, bitMap, 'S');
     if(b_haveFoundFont && b_haveFoundFontSize && b_haveFoundAlignment && b_haveFoundPosition && b_haveFoundContent)
     {
         return GUI_OK;
     }
 
-    // Calculate string width 
-    
+    // Calculate string width
+     
     // Using alignment tag, width and position, work out where top left corner needs to go 
-
+    
     // start rendering the bitmap letter by letter indexing position by letter width
 
     return GUI_ERR;
@@ -554,7 +564,7 @@ uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char charac
     return ptr[found - glyphs];
 }
 
-gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, uint16_t row, uint16_t col, uint8_t bitMap[ROWS][COLUMNS], char character)
+gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t row, int16_t col, uint8_t bitMap[ROWS][COLUMNS], char character)
 {
     // GETTING LOOP PARAMS
     ////////////////////////
@@ -580,7 +590,12 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, uint16_t r
     {
         for(int32_t itr_col = 0; itr_col < charWidth; itr_col++)
         {
-            //                                          [     layer      ]   [    row   ]     [  col ]
+            // Checking write is within bounds
+            if(((itr_row+row) < 0) || ((itr_row+row) >= ROWS)||((itr_col+col)<0) || ((itr_col+col) >= COLUMNS))
+            {
+                continue;
+            }
+            //                                                  [     layer      ]   [    row   ]     [  col ]
             bitMap[itr_row+row][itr_col+col] = *(p_charBitmap + layerIdx*(19 * 14) + itr_row*(14)  +  itr_col);
         }
     }

@@ -198,5 +198,5 @@ uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char charac
  * @param [in] character   - Chacter to be written to bitmap 
  * @return gui_status_t - execution status 
  */
-gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, uint16_t row, uint16_t col, uint8_t bitMap[ROWS][COLUMNS], char character);
+gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t row, int16_t col, uint8_t bitMap[ROWS][COLUMNS], char character);
 #endif
