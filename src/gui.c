@@ -564,16 +564,19 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, uint16_t r
 {
     // GETTING LOOP PARAMS
     ////////////////////////
-    //Charactor width 
-    uint8_t charHeight = *font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx];
+    // Charactor width 
+    uint8_t charHeight = font_master_list[fontNameIdx].sizes[fontSizeIdx];
     uint8_t charWidth  = gui_get_char_width(fontNameIdx, fontSizeIdx, character);
     if(charWidth == 0)
     {
         return GUI_ERR;
     }
-    //Charactor bitmap pointer 
+    // Charactor bitmap pointer 
     uint8_t *p_charBitmap = (uint8_t *)font_master_list[fontNameIdx].p_charBitmaps[fontSizeIdx];
+    // Indexing a chacter              [layer]      [row]  [col]
+    uint8_t value = *(p_charBitmap + 0*(19 + 14) + 10*(14) + 4);
 
-    printf("Height %u, bm %u \n", charHeight, p_charBitmap[charHeight * COLUMNS * 96 + charWidth * 96 + 3]);
+    printf("Height %u, width %u \n", charHeight,charWidth);
+    printf("Value %u \n", value);
     return GUI_OK;
 }

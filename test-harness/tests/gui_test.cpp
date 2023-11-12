@@ -613,7 +613,7 @@ TEST(GUITest, chacter_can_be_written_to_bitmap)
     gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A');
     LONGS_EQUAL(GUI_OK,writeStatus);
     // Check that width matches expectation clear
-    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
 }
 
 
