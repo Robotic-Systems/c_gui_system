@@ -613,8 +613,29 @@ TEST(GUITest, chacter_can_be_written_to_bitmap)
     gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A');
     LONGS_EQUAL(GUI_OK,writeStatus);
     // Check that width matches expectation clear
-    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    uint8_t (*layer)[14] = juipiter_fontMap[26];
+    IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,14,19);
 }
+
+TEST(GUITest, every_glyf_can_be_written_to_bitmap)
+{
+    char glyphs[96] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\",./<>?";
+
+    for(int i = 0; i<94; i++)
+    {
+        // Create blank bitmap 
+        uint8_t outputMap[ROWS][COLUMNS];
+        memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+        // Write a character in top left corner 
+        gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,glyphs[i]);
+        LONGS_EQUAL(GUI_OK,writeStatus);
+        // Check that width matches expectation clear
+        uint8_t (*layer)[14] = juipiter_fontMap[i];
+        // printf("I = %u, char %c\n", i, glyphs[i]);
+        IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,14,19);
+    }
+}
+
 
 
 // TEST(GUITest, can_render_text_elements)
