@@ -566,8 +566,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         topLeftCol = (int16_t)(posX-txtPxWidth/2);
         topLeftRow = (int16_t)(posY-fontSize/2);
     }
-    
-    printf("row = %d, col = %d \n", topLeftRow,topLeftCol);
     // WRITING LOOP 
     int16_t colPos = topLeftCol;
     for(int itr_text = 0; itr_text < txtLen; itr_text++)

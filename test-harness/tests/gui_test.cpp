@@ -674,19 +674,14 @@ TEST(GUITest, can_render_text_elements_left)
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that text rendered correctly 
-    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
-    PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
 }
 
-/* <text> rendering tests
- * - gui system rendurs text default size at specified position 
- * - gui system can render horizontially centered text 
- * - gui system can render vertically centered text 
- * - gui system can render horz and vert centered text 
- * - gui system can render diffrent sized text on same page 
- * - gui system can render a hashmap variable value 
- * - need a options menu 
+/** <text> rendering tests
+ * - Can render left justified text
+ * - Can render right Justified text 
+ * - Can render multi-line text 
+ * - Can render variables in strings 
  * - Need to fix p's and q's and g's
 */
 

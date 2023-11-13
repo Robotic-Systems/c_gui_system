@@ -1,17 +1,11 @@
-# Code to turn some sting into a bitmap, is used to generate truth data for uint test cases
 from PIL import Image, ImageDraw, ImageFont
 
 # Configuration
 output_width = 102  # Width of the output image
 output_height = 64  # Height of the output image
 font_size = 19  # Font size
-text_num = "0123456789"  # Text to convert to a bitmap
-text_lc  = "abcdefghijklmnopqrstuvwxyz"
-text_uc  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-text_sym = " `~!@#$%^&*()-_=+[]\{\}|;':\",./<>?"
+text = "Hello World!"  # Text to convert to a bitmap
 font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\jupiter-crash-brk.regular.ttf"  # Path to your font file
-
-# font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\calibri.regular.ttf"  # Path to your font file
 output_file = "output_bitmap.png"  # Output image file
 
 # Create a blank image with white background
@@ -20,15 +14,13 @@ draw = ImageDraw.Draw(image)
 
 # Load the font
 font = ImageFont.truetype(font_path, font_size)
-# text = text_lc + "\n" + text_uc + "\n" + text_sym +"\n" + text_num
-text = "Hello World"
-# Calculate the position to center the text
-text_bbox = draw.textbbox((0, 0), text, font)
-text_width = text_bbox[2] - text_bbox[0]
-text_height = text_bbox[3] - text_bbox[1]
 
-x = (output_width - text_width) / 2
-y = (output_height - text_height) / 2
+# Calculate the size of the text to be placed
+text_size = draw.textsize(text, font=font)
+
+# Calculate the position to center the text
+x = (output_width - text_size[0]) / 2
+y = (output_height - text_size[1]) / 2
 
 # Draw the text on the image
 draw.text((x, y), text, fill="black", font=font)
