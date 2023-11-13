@@ -217,4 +217,30 @@ const char * text_HelloWorld =
 "    <position>32,51</position>\n"
 "    <content>\"Hello World!\"</content>\n"
 "</text>\n";
+
+const char * text_HelloWorld_left =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>left</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello World!\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_right =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>right</alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello World!\"</content>\n"
+"</text>\n";
+const char * text_HelloWorld_multiline=
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>left</alignment>\n"
+"    <position>0,0</position>\n"
+"    <content>\"Hello World!\nHow Are You?\"</content>\n"
+"</text>\n";
 #endif

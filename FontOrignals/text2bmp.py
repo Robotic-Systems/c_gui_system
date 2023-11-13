@@ -4,10 +4,10 @@ from PIL import Image, ImageDraw, ImageFont
 output_width = 102  # Width of the output image
 output_height = 64  # Height of the output image
 font_size = 19  # Font size
-text = "Hello World!"  # Text to convert to a bitmap
+text = "Hello World!\nHow Are You?"  # Text to convert to a bitmap
 font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\jupiter-crash-brk.regular.ttf"  # Path to your font file
 output_file = "output_bitmap.png"  # Output image file
-
+alignment = "left"
 # Create a blank image with white background
 image = Image.new("RGB", (output_width, output_height), "white")
 draw = ImageDraw.Draw(image)
@@ -16,11 +16,23 @@ draw = ImageDraw.Draw(image)
 font = ImageFont.truetype(font_path, font_size)
 
 # Calculate the size of the text to be placed
+
 text_size = draw.textsize(text, font=font)
 
 # Calculate the position to center the text
-x = (output_width - text_size[0]) / 2
-y = (output_height - text_size[1]) / 2
+
+input_x = 0
+input_y = 0
+if alignment == 'left':
+    x = 0  # Adjust as needed
+    y = 0  # Adjust as needed
+elif alignment == 'right':
+    # Calculate the coordinates for top right based on the given position
+    x = input_x - text_size[0]  # input_x is the x-coordinate for the top right corner
+    y = input_y    
+elif alignment == 'center':
+    x = (output_width - text_size[0]) / 2
+    y = (output_height - text_size[1]) / 2
 
 # Draw the text on the image
 draw.text((x, y), text, fill="black", font=font)

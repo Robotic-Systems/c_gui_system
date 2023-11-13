@@ -550,7 +550,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     uint16_t txtPxWidth = 0; /** The pixel width of the string */
     for(int itr_text = 0; itr_text < txtLen; itr_text++)
     {
-        if(text[itr_text] == '\"')
+        if((text[itr_text] == '\"') || (text[itr_text] == '\n'))
         {
             continue;
         }
@@ -566,16 +566,35 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         topLeftCol = (int16_t)(posX-txtPxWidth/2);
         topLeftRow = (int16_t)(posY-fontSize/2);
     }
+    else if(alignmentOpt == 1)
+    {
+        topLeftCol = (posX);
+        topLeftRow = (posY);
+    }
+    else if(alignmentOpt == 2)
+    {
+        topLeftCol = (posX-txtPxWidth);
+        topLeftRow = (posY);
+    }
     // WRITING LOOP 
     int16_t colPos = topLeftCol;
+    int16_t rowPos = topLeftRow;
     for(int itr_text = 0; itr_text < txtLen; itr_text++)
     {
         if(text[itr_text] == '\"')
         {
             continue;
         }
-        if(gui_write_char(fontIndex ,fontSizeIndex, topLeftRow, colPos, bitMap, text[itr_text]) != GUI_OK)
+        if(text[itr_text] == '\n')
         {
+            rowPos += fontSize+3; /** ToDo- Add the leading calculation here */
+            colPos = topLeftCol;
+            continue;
+        }
+        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, text[itr_text]) != GUI_OK)
+        {
+            printf("Render Error \n");
+            printf(">>%c<< \n",text[itr_text] );
             return GUI_ERR;
         }
         colPos += gui_get_char_width(fontIndex ,fontSizeIndex, text[itr_text]);
@@ -588,7 +607,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 
 uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char character)
 {
-    const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\",./<>?";
+    const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
     const char *found = strchr(glyphs, character);
 
     uint8_t *ptr = font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx];
@@ -611,10 +630,11 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
         return GUI_ERR;
     }
     // Char layer index
-    const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\",./<>?";
+    const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
     const char *found = strchr(glyphs, character);
     uint16_t layerIdx = (found - glyphs);
-
+    printf("char: %c, idx: %d \n",character, layerIdx);
+    layerIdx +=1;
     // Charactor bitmap pointer 
     uint8_t *p_charBitmap = (uint8_t *)font_master_list[fontNameIdx].p_charBitmaps[fontSizeIdx];
     // Indexing a chacter              
