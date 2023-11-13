@@ -65,7 +65,7 @@ TEST_GROUP(GUITest)
         printf("\n");\
         for (int ith_row = 0; ith_row < rows; ith_row++) { \
             for (int ith_col = 0; ith_col < cols; ith_col++) { \
-                printf("%d, ",bitMap[ith_row][ith_col]); \
+                printf("%3d, ",bitMap[ith_row][ith_col]); \
             } \
             printf("\n");\
         } \
@@ -662,7 +662,7 @@ TEST(GUITest, can_partially_render_chars_underflow)
     IS_BIT_MAP_EQUAL_BIT(layer,outputMap,-2,-2,14,19);
 }
 
-TEST(GUITest, can_render_text_elements_centerned)
+TEST(GUITest, can_render_text_elements_left)
 {
     // Fetch the xml text extract 
     const char* strTextCopy = text_HelloWorld;
@@ -696,7 +696,7 @@ TEST(GUITest, can_render_text_elements_centerned)
 
 // TEST(GUITest, pages_can_be_written_to_screen)
 // {
-//     // init gui 
+//     // init gui clear
 //     gui_init(lcd_spy_write, helloWorldGui);
 //     // Update to set the first frame 
 //     gui_update();

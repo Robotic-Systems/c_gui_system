@@ -433,11 +433,13 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     // Creating loop variables 
     char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
     uint8_t fontSize  = {0};
+    uint8_t fontSizeIndex  = {0};
     uint8_t fontIndex = 0;
     int16_t posX      = {0}; /** What column to place text in  */
     int16_t posY      = {0}; /** What row to place text in*/
     char text[MAX_TAG_DATA_LENGTH] = {'\0'};
-    // uint8_t alignmentOpt = 0;
+    uint8_t alignmentOpt = 0;
+    // Bools 
     bool b_haveFoundFont      = false; 
     bool b_haveFoundFontSize  = false; 
     bool b_haveFoundAlignment = false; 
@@ -481,6 +483,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                     if(font_master_list[fontIndex].sizes[iter_fontSize] == fontSize)
                     {
                         b_haveFoundFontSize = true;
+                        fontSizeIndex = iter_fontSize;
                         break;
                     }
                 }   
@@ -503,7 +506,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                     if(strncmp(txtAlignmentDic[iter_txtOpt].alignmentName, alignmentName, strlen(fontName)) == 0)
                     {
                         b_haveFoundAlignment = true;
-                        // alignmentOpt = txtAlignmentDic[iter_txtOpt].alignmentEnum;
+                        alignmentOpt = txtAlignmentDic[iter_txtOpt].alignmentEnum;
                         break;
                     }
                 }   
@@ -536,19 +539,53 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         textObjectString++;
     }
     
-    gui_write_char(1, 0, 0, 0, bitMap, 'S');
-    if(b_haveFoundFont && b_haveFoundFontSize && b_haveFoundAlignment && b_haveFoundPosition && b_haveFoundContent)
+    
+    if(!b_haveFoundFont || !b_haveFoundFontSize || !b_haveFoundAlignment || !b_haveFoundPosition || !b_haveFoundContent)
     {
-        return GUI_OK;
+        return GUI_ERR;
     }
 
-    // Calculate string width
-     
-    // Using alignment tag, width and position, work out where top left corner needs to go 
+    // WIDTH CALC
+    size_t txtLen = strlen(text);
+    uint16_t txtPxWidth = 0; /** The pixel width of the string */
+    for(int itr_text = 0; itr_text < txtLen; itr_text++)
+    {
+        if(text[itr_text] == '\"')
+        {
+            continue;
+        }
+        txtPxWidth += gui_get_char_width(fontIndex ,fontSizeIndex, text[itr_text]);
+    }
+
+    // ALIGNMENT CALC
+    int16_t topLeftCol =0; //18
+    int16_t topLeftRow =0; //29
+    if(alignmentOpt == 0)
+    {
+        // Calculate where top left would go 
+        topLeftCol = (int16_t)(posX-txtPxWidth/2);
+        topLeftRow = (int16_t)(posY-fontSize/2);
+    }
     
+    printf("row = %d, col = %d \n", topLeftRow,topLeftCol);
+    // WRITING LOOP 
+    int16_t colPos = topLeftCol;
+    for(int itr_text = 0; itr_text < txtLen; itr_text++)
+    {
+        if(text[itr_text] == '\"')
+        {
+            continue;
+        }
+        if(gui_write_char(fontIndex ,fontSizeIndex, topLeftRow, colPos, bitMap, text[itr_text]) != GUI_OK)
+        {
+            return GUI_ERR;
+        }
+        colPos += gui_get_char_width(fontIndex ,fontSizeIndex, text[itr_text]);
+        // printf("%c,%d ,%d  \n", text[itr_text],gui_get_char_width(fontIndex ,fontSizeIndex, text[itr_text]),colPos );
+    }
     // start rendering the bitmap letter by letter indexing position by letter width
 
-    return GUI_ERR;
+    return GUI_OK;
 }
 
 uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char character)
