@@ -211,4 +211,26 @@ const char * text_HelloWorld_error_alignment_does_not_exist =
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
+
+const char* helloWorldGui_no_page_index = 
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<variables>\n"
+"    <variable>\n"
+"        <name>othertIndex</name>\n"
+"        <type>uint16_t</type>\n"
+"        <value>0</value>\n"
+"    </variable>\n"
+"</variables>\n"
+"<pages>\n" 
+"    <page>\n"
+"        <name>1</name>\n"
+"        <text>\n"
+"            <font>jupiter</font>\n"
+"            <font-size>19</font-size>\n"
+"            <alignment>center</alignment>\n"
+"            <position>32,51</position>\n"
+"            <content>\"Hello World!\"</content>\n"
+"        </text>\n"
+"    </page>\n"
+"</pages>";
 #endif

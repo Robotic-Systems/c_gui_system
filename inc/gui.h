@@ -25,7 +25,7 @@
 /**
  * @brief Function Pointer type for the lcd write function 
 */
-typedef void (*write_function)(uint8_t bitMap[][ROWS], uint16_t columns, uint16_t rows);
+typedef void (*write_function)(uint8_t bitMap[ROWS][COLUMNS], uint16_t columns, uint16_t rows);
 
 
 /**
@@ -199,4 +199,12 @@ uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char charac
  * @return gui_status_t - execution status 
  */
 gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t row, int16_t col, uint8_t bitMap[ROWS][COLUMNS], char character);
+
+/**
+ * @brief When called reads the pageIndex variable and updates the gui, this is the only function that will 
+ * call the write_function defined when calling the init function.
+ * 
+ * @return gui_status_t - execution status of the update    
+ */
+gui_status_t gui_update();
 #endif

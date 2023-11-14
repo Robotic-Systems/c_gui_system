@@ -15,7 +15,7 @@ void lcd_spy_init();
  * @brief returns the last frame written to the spy
  * @param [in] pointer to array where which to store the current frame 
  */
-void lcd_spy_get_Frame(uint8_t frameOut[][ROWS]);
+void lcd_spy_get_Frame(uint8_t frameOut[ROWS][COLUMNS]);
 #endif
 
 /**
@@ -24,4 +24,4 @@ void lcd_spy_get_Frame(uint8_t frameOut[][ROWS]);
  * @param [in] colums - number of columns in bitmap 
  * @param [in] rows   - number of rows in bitmap 
  */
-void lcd_spy_write(uint8_t bitMap[][ROWS], uint16_t columns, uint16_t rows);
+void lcd_spy_write(uint8_t bitMap[ROWS][COLUMNS], uint16_t columns, uint16_t rows);

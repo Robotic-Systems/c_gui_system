@@ -8,8 +8,6 @@ extern "C"
     #include "../test_xml/test_error_xml.h"
     #include "../test_xml/test_bitmaps.h"
 }
-
-
 TEST_GROUP(GUITest) 
 {
     void setup()
@@ -25,7 +23,7 @@ TEST_GROUP(GUITest)
 
 
     #define IS_LCD_EQUAL_TO(num) do { \
-        uint8_t currentFrame[COLUMNS][ROWS] = {0}; \
+        uint8_t currentFrame[ROWS][COLUMNS] = {0}; \
             lcd_spy_get_Frame(currentFrame); \
             for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
                 for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
@@ -80,7 +78,7 @@ TEST_GROUP(GUITest)
 
 
     #define IS_LCD_EQUAL_BIT(num) do { \
-        uint8_t currentFrame[COLUMNS][ROWS] = {0}; \
+        uint8_t currentFrame[ROWS][COLUMNS] = {0}; \
             lcd_spy_get_Frame(currentFrame); \
             for (int ith_col = 0; ith_col < COLUMNS; ith_col++) { \
                 for (int ith_row = 0; ith_row < ROWS; ith_row++) { \
@@ -172,7 +170,7 @@ TEST(GUITest, gui_get_page_position_returns_page_0_start_and_end)
     CHECK(helloWorldGui[endIndex] == '<');
 
     LONGS_EQUAL(198,startIndex);
-    LONGS_EQUAL(3918,endIndex);
+    LONGS_EQUAL(3781,endIndex);
 }
 
 TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
@@ -187,8 +185,8 @@ TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
     CHECK(helloWorldGui[startIndex] == '>');
     CHECK(helloWorldGui[endIndex] == '<');
 
-    LONGS_EQUAL(3935,startIndex);
-    LONGS_EQUAL(4192,endIndex);
+    LONGS_EQUAL(3798,startIndex);
+    LONGS_EQUAL(4056,endIndex);
 }
 
 // if gui_get_page_position is called on page that does not exist then error is returned 
@@ -441,16 +439,16 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
 // ONE: TEXT RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TEST(GUITest, text_render_does_not_return_error_when_xml_is_errorless)
-// {
-//      const char* strTextCopy = text_HelloWorld;
-//     // Create empty bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     // Render text
-//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-//     // Check status is okay 
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-// }
+TEST(GUITest, text_render_does_not_return_error_when_xml_is_errorless)
+{
+     const char* strTextCopy = text_HelloWorld;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+}
 
 TEST(GUITest, text_render_returns_error_when_no_text_starting_brace_found)
 {
@@ -628,9 +626,9 @@ TEST(GUITest, question_can_be_written_to_bitmap)
     gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'?');
     LONGS_EQUAL(GUI_OK,writeStatus);
     // Check that width matches expectation clear
-    uint8_t (*layer)[14] = juipiter_fontMap[95];
-    PRINT_BIT_MAP(19,14,layer);
-    PRINT_BIT_MAP(19,14,outputMap);
+    uint8_t (*layer)[14] = juipiter_fontMap[94];
+    // PRINT_BIT_MAP(19,14,layer);
+    // PRINT_BIT_MAP(19,14,outputMap);
     IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,14,19);
 }
 
@@ -638,7 +636,7 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
 {
     char glyphs[96] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
 
-    for(int i = 0; i<96; i++)
+    for(int i = 0; i<95; i++)
     {
         // Create blank bitmap 
         uint8_t outputMap[ROWS][COLUMNS];
@@ -652,102 +650,123 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
     }
 }
 
-// TEST(GUITest, can_partially_render_chars_overflow)
-// {
-//     // Create blank bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Write a character in top left corner 
-//     gui_status_t writeStatus = gui_write_char(1,0,54,90,outputMap,'A');
-//     LONGS_EQUAL(GUI_OK,writeStatus);
-//     // Check that width matches expectation clear
-//     uint8_t (*layer)[14] = juipiter_fontMap[26];
-//     IS_BIT_MAP_EQUAL_BIT(layer,outputMap,54,90,14,19);
-// }
+TEST(GUITest, can_partially_render_chars_overflow)
+{
+    // Create blank bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Write a character in top left corner 
+    gui_status_t writeStatus = gui_write_char(1,0,54,90,outputMap,'A');
+    LONGS_EQUAL(GUI_OK,writeStatus);
+    // Check that width matches expectation clear
+    uint8_t (*layer)[14] = juipiter_fontMap[26];
+    IS_BIT_MAP_EQUAL_BIT(layer,outputMap,54,90,14,19);
+}
 
-// TEST(GUITest, can_partially_render_chars_underflow)
-// {
-//     // Create blank bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Write a character in top left corner 
-//     gui_status_t writeStatus = gui_write_char(1,0,-2,-2,outputMap,'A');
-//     LONGS_EQUAL(GUI_OK,writeStatus);
-//     // Check that width matches expectation clear
-//     uint8_t (*layer)[14] = juipiter_fontMap[26];
-//     IS_BIT_MAP_EQUAL_BIT(layer,outputMap,-2,-2,14,19);
-// }
+TEST(GUITest, can_partially_render_chars_underflow)
+{
+    // Create blank bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Write a character in top left corner 
+    gui_status_t writeStatus = gui_write_char(1,0,-2,-2,outputMap,'A');
+    LONGS_EQUAL(GUI_OK,writeStatus);
+    // Check that width matches expectation clear
+    uint8_t (*layer)[14] = juipiter_fontMap[26];
+    IS_BIT_MAP_EQUAL_BIT(layer,outputMap,-2,-2,14,19);
+}
 
-// TEST(GUITest, can_render_text_elements_left)
-// {
-//     // Fetch the xml text extract 
-//     const char* strTextCopy = text_HelloWorld_left;
-//     // Create empty bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Render text
-//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-//     // Check status is okay 
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that text rendered correctly 
-//     // PRINT_BIT_MAP(64,102,outputMap);
-//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_left,outputMap,0,0,102,64);
-// }
+TEST(GUITest, can_render_text_elements_left)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_left;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_left,outputMap,0,0,102,64);
+}
 
-// TEST(GUITest, can_render_text_elements_right)
-// {
-//     // Fetch the xml text extract 
-//     const char* strTextCopy = text_HelloWorld_right;
-//     // Create empty bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Render text
-//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-//     // Check status is okay 
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that text rendered correctly 
-//     // PRINT_BIT_MAP(64,102,outputMap);
-//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_right,outputMap,0,0,102,64);
-// }
+TEST(GUITest, can_render_text_elements_right)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_right;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_right,outputMap,0,0,102,64);
+}
 
-// TEST(GUITest, can_render_multiline_text)
-// {
-//     // Fetch the xml text extract 
-//     const char* strTextCopy = text_HelloWorld_multiline;
-//     // Create empty bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Render text
-//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-//     // Check status is okay 
-//     // PRINT_BIT_MAP(64,102,outputMap);
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that text rendered correctly 
-//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_multiline,outputMap,0,0,102,64);
-// }
+TEST(GUITest, can_render_multiline_text)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_multiline;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_multiline,outputMap,0,0,102,64);
+}
 
-/** <text> rendering tests
- * - Can render variables in strings 
- * - Need to fix p's and q's and g's
-*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: PAGE RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TEST(GUITest, pages_can_be_written_to_screen)
-// {
-//     // init gui clear
-//     gui_init(lcd_spy_write, helloWorldGui);
-//     // Update to set the first frame 
-//     gui_update();
-//     IS_LCD_EQUAL_BIT(beautifulBitMap);
-// }
+TEST(GUITest, changing_to_page_that_does_not_exist_causes_error)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Change page number to be out of bounds
+    gui_update_uint16_var("pageIndex", 10);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+TEST(GUITest, if_page_index_does_not_exist_then_error_is_returned)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, helloWorldGui_no_page_index);
+    // Change page number to be out of bounds
+    gui_update_uint16_var("pageIndex", 10);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that bitmaps match 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    lcd_spy_get_Frame(outputMap);
+    IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
+}
 
 /**
  * <page>
- * - Changing page number to a page that does not exist then calling gui_update() returns error and the spy page does not change
- * - User defines are defined in an untracked file 
  * - If gui is initilaise with no pageIndex var then error occurs 
  * - Additional options, Variable refresh rates/partial screen refreshes 
  */
@@ -787,6 +806,7 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
  * - Can use uint32_t as variables 
  * - Can use int32_t as variables 
  * - Can't create two variables of same name 
+ * - variables max and min can be set 
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -803,7 +823,8 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * <bitMaps>
- * - Can render multi line text elements to the screen 
+ * - variables can be used to control text inversion 
+ * - variables can be displayed in text 
  * - text position_can_be_set_using_variables_and_position_can_be_changed
  * - Can use more then one font per gui 
  * - Can set default font at the start of the page 

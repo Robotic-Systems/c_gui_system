@@ -633,7 +633,6 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
     const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
     const char *found = strchr(glyphs, character);
     uint16_t layerIdx = (found - glyphs);
-    printf("char: %c, idx: %d \n",character, layerIdx);
     // Charactor bitmap pointer 
     uint8_t *p_charBitmap = (uint8_t *)font_master_list[fontNameIdx].p_charBitmaps[fontSizeIdx];
     // Indexing a chacter              
@@ -652,6 +651,17 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
             //                                                  [     layer      ]   [    row   ]     [  col ]
             bitMap[itr_row+row][itr_col+col] = *(p_charBitmap + layerIdx*(19 * 14) + itr_row*(14)  +  itr_col);
         }
+    }
+    return GUI_OK;
+}
+
+gui_status_t gui_update()
+{
+    uint16_t pageNumber;
+    gui_variable_status_t indexStatus =  gui_get_uint16_var("pageIndex", &pageNumber);
+    if((pageNumber > pageCount) || (indexStatus != GUI_VAR_OK))
+    {
+        return GUI_ERR;
     }
     return GUI_OK;
 }
