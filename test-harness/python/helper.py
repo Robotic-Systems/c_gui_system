@@ -8,7 +8,7 @@ def resize_image(input_image_path, output_text_path, width, height):
     image = image.resize((width, height), Image.ANTIALIAS)
     
     # Convert the image to greyscale
-    image = image.convert('L')
+    image = image.convert('1')
 
     # Save the greyscale pixel values to a text file
     with open(output_text_path, 'w') as text_file:
@@ -19,9 +19,9 @@ def resize_image(input_image_path, output_text_path, width, height):
             text_file.write('\n')
 
 if __name__ == "__main__":
-    input_image_path = r'C:\Users\Pat\Desktop\download.jpg'  # Change this to your input image file
+    input_image_path = r'C:\Users\Pat\Downloads\rabbit.png'  # Change this to your input image file
     output_text_path = 'output.txt'  # Output text file
-    target_width = 800  # Change to the desired width
-    target_height = 600  # Change to the desired height
+    target_width = 102  # Change to the desired width
+    target_height = 64  # Change to the desired height
 
     resize_image(input_image_path, output_text_path, target_width, target_height)

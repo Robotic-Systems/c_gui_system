@@ -8,7 +8,7 @@ font_name = "juipter"
 text_num = "0123456789"  # Text to convert to a bitmap
 text_lc = "abcdefghijklmnopqrstuvwxyz"
 text_uc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-text_sym = " `~!@#$%^&*()-_=+[]\{\}|;':\",./<>?"
+text_sym = " `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?"
 font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\jupiter-crash-brk.regular.ttf"  # Path to your font file
 
 output_file = "output_bitmap.png"  # Output image file

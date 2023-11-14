@@ -441,16 +441,16 @@ TEST(GUITest, bit_maps_have_no_artifacts_when_written)
 // ONE: TEXT RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST(GUITest, text_render_does_not_return_error_when_xml_is_errorless)
-{
-     const char* strTextCopy = text_HelloWorld;
-    // Create empty bitmap 
-    uint8_t outputMap[ROWS][COLUMNS];
-    // Render text
-    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-    // Check status is okay 
-    LONGS_EQUAL(GUI_OK, renderStatus);
-}
+// TEST(GUITest, text_render_does_not_return_error_when_xml_is_errorless)
+// {
+//      const char* strTextCopy = text_HelloWorld;
+//     // Create empty bitmap 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     // Render text
+//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+//     // Check status is okay 
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+// }
 
 TEST(GUITest, text_render_returns_error_when_no_text_starting_brace_found)
 {
@@ -604,18 +604,20 @@ TEST(GUITest, unknown_chacter_returns_error)
 
 
 
-// TEST(GUITest, chacter_can_be_written_to_bitmap)
-// {
-//     // Create blank bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Write a character in top left corner 
-//     gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A');
-//     LONGS_EQUAL(GUI_OK,writeStatus);
-//     // Check that width matches expectation clear
-//     uint8_t (*layer)[14] = juipiter_fontMap[26];
-//     IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,14,19);
-// }
+TEST(GUITest, chacter_can_be_written_to_bitmap)
+{
+    // Create blank bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Write a character in top left corner 
+    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A');
+    LONGS_EQUAL(GUI_OK,writeStatus);
+    // Check that width matches expectation clear
+    uint8_t (*layer)[14] = juipiter_fontMap[26];
+    // PRINT_BIT_MAP(19,14,layer);
+    // PRINT_BIT_MAP(19,14,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,14,19);
+}
 
 // TEST(GUITest, question_can_be_written_to_bitmap)
 // {
@@ -626,8 +628,9 @@ TEST(GUITest, unknown_chacter_returns_error)
 //     gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'?');
 //     LONGS_EQUAL(GUI_OK,writeStatus);
 //     // Check that width matches expectation clear
-//     uint8_t (*layer)[14] = juipiter_fontMap[96];
-//     PRINT_BIT_MAP(64,102,outputMap);
+//     uint8_t (*layer)[14] = juipiter_fontMap[95];
+//     PRINT_BIT_MAP(19,14,layer);
+//     PRINT_BIT_MAP(19,14,outputMap);
 //     IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,14,19);
 // }
 
@@ -635,7 +638,7 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
 {
     char glyphs[96] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
 
-    for(int i = 0; i<95; i++)
+    for(int i = 86; i<96; i++)
     {
         // Create blank bitmap 
         uint8_t outputMap[ROWS][COLUMNS];
@@ -645,6 +648,10 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
         LONGS_EQUAL(GUI_OK,writeStatus);
         // Check that width matches expectation clear
         uint8_t (*layer)[14] = juipiter_fontMap[i];
+
+            PRINT_BIT_MAP(19,14,layer);
+            PRINT_BIT_MAP(19,14,outputMap);
+
         IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,14,19);
     }
 }

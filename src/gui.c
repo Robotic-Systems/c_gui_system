@@ -634,7 +634,6 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
     const char *found = strchr(glyphs, character);
     uint16_t layerIdx = (found - glyphs);
     printf("char: %c, idx: %d \n",character, layerIdx);
-    layerIdx +=1;
     // Charactor bitmap pointer 
     uint8_t *p_charBitmap = (uint8_t *)font_master_list[fontNameIdx].p_charBitmaps[fontSizeIdx];
     // Indexing a chacter              
