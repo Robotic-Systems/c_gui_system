@@ -100,7 +100,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">/****************/</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">/* PUBLIC TYPES */</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">/****************/</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">typedef</span> void (*write_function)(uint8_t bitMap[][ROWS], uint16_t columns, uint16_t rows);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">typedef</span> void (*write_function)(uint8_t bitMap[ROWS][COLUMNS], uint16_t columns, uint16_t rows);</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">typedef</span> <span class="keyword">enum</span>{</div>
@@ -171,7 +171,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, <span class="keywordtype">char</span> character);</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t row, int16_t col, uint8_t bitMap[ROWS][COLUMNS], <span class="keywordtype">char</span> character);</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>gui_status_t gui_update();</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructpage__params__t_html"><div class="ttname"><a href="structpage__params__t.html">page_params_t</a></div><div class="ttdoc">For storing page parameters.</div><div class="ttdef"><b>Definition</b> gui.h:55</div></div>
 <div class="ttc" id="astructpage__params__t_html_af1805846bcad52e88c12a6e26c5db36f"><div class="ttname"><a href="structpage__params__t.html#af1805846bcad52e88c12a6e26c5db36f">page_params_t::endIndex</a></div><div class="ttdeci">uint32_t endIndex</div><div class="ttdef"><b>Definition</b> gui.h:57</div></div>
 <div class="ttc" id="astructtext__alignment__opt__t_html"><div class="ttname"><a href="structtext__alignment__opt__t.html">text_alignment_opt_t</a></div><div class="ttdoc">Struct to create the text alignment dictionary.</div><div class="ttdef"><b>Definition</b> gui.h:74</div></div>
