@@ -638,7 +638,7 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
 {
     char glyphs[96] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
 
-    for(int i = 86; i<96; i++)
+    for(int i = 0; i<96; i++)
     {
         // Create blank bitmap 
         uint8_t outputMap[ROWS][COLUMNS];
@@ -648,9 +648,9 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
         LONGS_EQUAL(GUI_OK,writeStatus);
         // Check that width matches expectation clear
         uint8_t (*layer)[14] = juipiter_fontMap[i];
-
-            PRINT_BIT_MAP(19,14,layer);
-            PRINT_BIT_MAP(19,14,outputMap);
+        printf("char: %c, idx: %d \n",glyphs[i], i);
+        PRINT_BIT_MAP(19,14,layer);
+        PRINT_BIT_MAP(19,14,outputMap);
 
         IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,14,19);
     }
