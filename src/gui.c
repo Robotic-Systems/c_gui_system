@@ -40,6 +40,17 @@ text_alignment_opt_t txtAlignmentDic[TEXT_ALIGNMENT_OPTIONS] = {
     {LEFT,     "left"},
     {RIGHT,    "right"}
 };
+
+/**
+ * @brief Dictionary used to map the vert text alignment from the enum to there 
+ * associated string used in xml 
+ * 
+ */
+text_vert_alignment_opt_t txtVertAlignmentDic[TEXT_ALIGNMENT_OPTIONS] = {
+    {CENTER,  "center"},
+    {TOP,       "top"},
+    {BOTTOM,    "bottom"}
+};
 /*********************/
 /* PRIVATE VARIABLES */
 /*********************/
@@ -444,7 +455,8 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     int16_t posX      = {0}; /** What column to place text in  */
     int16_t posY      = {0}; /** What row to place text in*/
     char text[MAX_TAG_DATA_LENGTH] = {'\0'};
-    uint8_t alignmentOpt = 0;
+    uint8_t alignmentOpt     = 0;
+    uint8_t vertAlignmentOpt = 0;
     // Bools 
     bool b_haveFoundFont      = false; 
     bool b_haveFoundFontSize  = false; 
@@ -528,7 +540,23 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         ///////////////////////////
         if (strncmp(textObjectString, "<vert-alignment>", 16) == 0) 
         {
-            b_haveFoundVertAlignment = true;
+            char alignmentName[MAX_TAG_DATA_LENGTH] = {'\0'};
+            if ((sscanf(textObjectString, "<vert-alignment>%63[^<]", alignmentName) == 1)&&b_haveFoundFont) 
+            {
+                for(uint8_t iter_txtOpt = 0; iter_txtOpt < TEXT_ALIGNMENT_OPTIONS; iter_txtOpt ++)
+                {
+                    if(strncmp(txtVertAlignmentDic[iter_txtOpt].alignmentName, alignmentName, strlen(fontName)) == 0)
+                    {
+                        b_haveFoundVertAlignment = true;
+                        vertAlignmentOpt = txtVertAlignmentDic[iter_txtOpt].alignmentEnum;
+                        break;
+                    }
+                }   
+            }
+            if(!b_haveFoundVertAlignment)
+            {
+                return GUI_ERR;
+            }
         }
 
         // POSITION TAG CHECK 
@@ -575,21 +603,35 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     // ALIGNMENT CALC
     int16_t topLeftCol =0; //18
     int16_t topLeftRow =0; //29
+    // Horz
     if(alignmentOpt == 0)
     {
         // Calculate where top left would go 
         topLeftCol = (int16_t)(posX-txtPxWidth/2);
-        topLeftRow = (int16_t)(posY-fontSize/2);
     }
     else if(alignmentOpt == 1)
     {
         topLeftCol = (posX);
-        topLeftRow = (posY);
     }
     else if(alignmentOpt == 2)
     {
         topLeftCol = (posX-txtPxWidth);
-        topLeftRow = (posY);
+    }
+    // Vert
+    if(vertAlignmentOpt == 0)
+    {
+        topLeftRow = (int16_t)(posY-fontSize/2);
+    }
+    else if(vertAlignmentOpt == 1)
+    {
+        topLeftRow = posY;
+    }
+    else if(vertAlignmentOpt == 2)
+    {
+        topLeftRow = posY-fontSize;
+        printf("y = %d\n", topLeftRow);
+        printf("fontSize = %d\n", fontSize);
+        printf("posY = %d\n", posY);
     }
     // WRITING LOOP 
     int16_t colPos = topLeftCol;

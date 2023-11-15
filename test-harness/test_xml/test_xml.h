@@ -267,7 +267,17 @@ const char * text_HelloWorld_top =
 "    <alignment>center</alignment>\n"
 "    <vert-alignment>top</vert-alignment>\n"
 "    <position>32,51</position>\n"
-"    <content>\"Hello World!\"</content>\n"
+"    <content>\"HELLO WORLD!\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_bottom =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <vert-alignment>bottom</vert-alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"HELLO WORLD!\"</content>\n"
 "</text>\n";
 
 const char * operand_equal=

@@ -1162,17 +1162,40 @@ TEST(GUITest, verticle_alignment_can_be_used_to_align_to_top)
     // Render text
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
-    // PRINT_BIT_MAP(64,102,outputMap);
-    // PRINT_BIT_MAP(64,102,helloWorld_12_sans);
     LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that text rendered correctly 
-    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_center_top,outputMap,0,0,102,64);
 }
 
+TEST(GUITest, verticle_alignment_can_be_used_to_align_to_bottom)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_bottom;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_center_bottom,outputMap,0,0,102,64);
+}
+
+TEST(GUITest, text_can_be_inverted)
+{
+    // Create blank bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Write a character in top left corner 
+    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A');
+    LONGS_EQUAL(GUI_OK,writeStatus);
+    // PRINT_BIT_MAP(19,14,layer);
+    // PRINT_BIT_MAP(19,14,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(invertedA,outputMap,0,0,14,19);
+}
 /**
  * <bitMaps>
- * - 
- * - an additional text variable called vertAlignment (top, bottem, middle)
  * - variables can be used to control text inversion 
  * - variables can be displayed in text 
  * - text position_can_be_set_using_variables_and_position_can_be_changed 

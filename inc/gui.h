@@ -58,14 +58,23 @@ typedef struct
 }page_params_t;
 
 /**
- * @brief Text alignment enums 
+ * @brief Text horizontal alignment enums 
  * 
  */
 typedef enum {
     CENTERED,     /** Place text's center on the position*/
-    LEFT,         /** Place text's top left corner on the position*/
-    RIGHT,        /** Place text's top right corner on the position*/
+    LEFT,         /** Place text's left side on the position*/
+    RIGHT,        /** Place text's right side on the position*/
 }text_alignment_enum_t;
+/**
+ * @brief Text verticle alignment enums 
+ * 
+ */
+typedef enum {
+    CENTER ,           /** Place text's center  on the position*/
+    TOP    ,           /** Place text's top  on the position*/
+    BOTTOM ,          /** Place text's bottom on the position*/
+}text_vert_alignment_enum_t;
 
 /**
  * @brief Struct to create the text alignment dictionary 
@@ -75,7 +84,14 @@ typedef struct {
     text_alignment_enum_t alignmentEnum; /** Enum accocaited with Alignment option*/
     const char *alignmentName;      /** String accocaited with Alignment option*/
 } text_alignment_opt_t;
-
+/**
+ * @brief Struct to create the vert text alignment dictionary 
+ * 
+ */
+typedef struct {
+    text_vert_alignment_enum_t alignmentEnum; /** Enum accocaited with Alignment option*/
+    const char *alignmentName;      /** String accocaited with Alignment option*/
+} text_vert_alignment_opt_t;
 
 /********************/
 /* PUBLIC VARIABLES */
