@@ -56,7 +56,8 @@ write_function bitMapWrite = NULL; /** Function pointer that can be used to writ
 /*********************************/
 /* PRIVATE FUNCTION DECLARATIONS */
 /*********************************/
-uint32_t hash_index(const char * key); /** Generates a hash index from a key */
+uint32_t hash_index(const char * key);                   /** Generates a hash index from a key */
+gui_status_t help_set_var_equal(const char *operandObjectString); /** Sets the var name it finds first equal to the next value or var it finds*/
 /********************************/
 /* PRIVATE FUNCTION DEFINITIONS */
 /********************************/
@@ -799,56 +800,15 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
             if (b_isTrue && !strncmp(operandObjectString, "<then>", 6)) 
             {
                 b_haveFoundThen = true;
-                // Incrementing past <then> and skipping whitespace
-                SKIP_TO_WHITESPACE(operandObjectString);
-                SKIP_WHITESPACE(operandObjectString);
-                // Check for the var and extract name 
-                char varName[MAX_KEY_LENGTH];
-                // Extracting value 
-                if ((sscanf(operandObjectString, "<var>%63[^</]", varName) != 1)) 
-                {
-                return GUI_ERR;
-                }
-                SKIP_TO_WHITESPACE(operandObjectString);
-                SKIP_WHITESPACE(operandObjectString);
-                // Check for the var and extract name 
-                uint16_t value=0;
-                // Extracting value 
-                if (sscanf(operandObjectString, "<value>%hd</value>", &value) != 1) 
-                {
-                    return GUI_ERR;
-                } 
-
-                gui_variable_status_t updateStatus = gui_update_uint16_var(varName,value);
-                if(updateStatus != GUI_VAR_OK)
+                if (help_set_var_equal(operandObjectString) != GUI_OK)
                 {
                     return GUI_ERR;
                 }
+               
             }
             else if (!b_isTrue && !strncmp(operandObjectString, "<else>", 6)) 
             {
-                // Incrementing past <then> and skipping whitespace
-                SKIP_TO_WHITESPACE(operandObjectString);
-                SKIP_WHITESPACE(operandObjectString);
-                // Check for the var and extract name 
-                char varName[MAX_KEY_LENGTH];
-                // Extracting value 
-                if ((sscanf(operandObjectString, "<var>%63[^</]", varName) != 1)) 
-                {
-                  return GUI_ERR; 
-                }
-                SKIP_TO_WHITESPACE(operandObjectString);
-                SKIP_WHITESPACE(operandObjectString);
-                // Check for the var and extract name 
-                uint16_t value = 0;
-                // Extracting value 
-                if (sscanf(operandObjectString, "<value>%hd</value>", &value) != 1) 
-                {
-                    return GUI_ERR;
-                } 
-
-                gui_variable_status_t updateStatus = gui_update_uint16_var(varName,value);
-                if(updateStatus != GUI_VAR_OK)
+                if (help_set_var_equal(operandObjectString) != GUI_OK)
                 {
                     return GUI_ERR;
                 }
@@ -873,4 +833,41 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
 }
 
 
+gui_status_t help_set_var_equal(const char *operandObjectString)
+{
+    // Incrementing past <then> and skipping whitespace
+    SKIP_TO_WHITESPACE(operandObjectString);
+    SKIP_WHITESPACE(operandObjectString);
+    // Check for the var and extract name 
+    char varName[MAX_KEY_LENGTH];
+    // Extracting value 
+    if ((sscanf(operandObjectString, "<var>%63[^</]", varName) != 1)) 
+    {
+        return GUI_ERR; 
+    }
+    SKIP_TO_WHITESPACE(operandObjectString);
+    SKIP_WHITESPACE(operandObjectString);
+    // Check for the var and extract name 
+    uint16_t value = 0;
+    // Extracting value 
+    if (sscanf(operandObjectString, "<value>%hd</value>", &value) != 1) 
+    {
+        char argVarName[MAX_KEY_LENGTH];
+        if ((sscanf(operandObjectString, "<var>%63[^</]", argVarName) != 1)) 
+        {
+            return GUI_ERR; 
+        }
+        gui_variable_status_t fetchStatus = gui_get_uint16_var(argVarName, &value);
+        if(fetchStatus!=GUI_VAR_OK)
+        {
+            return GUI_ERR; 
+        }
+    } 
 
+    gui_variable_status_t updateStatus = gui_update_uint16_var(varName,value);
+    if(updateStatus != GUI_VAR_OK)
+    {
+        return GUI_ERR;
+    }
+    return GUI_OK;
+}

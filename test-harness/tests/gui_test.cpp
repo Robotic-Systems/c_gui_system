@@ -991,10 +991,57 @@ TEST(GUITest, if_statement_false_and_else_is_found_operation_takes_place)
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(6, value);
 }
+
+TEST(GUITest, if_statement_true_and_then_one_var_can_be_set_to_value_of_anoter)
+{
+    const char* strTextCopy = operand_equal_dual_var_out;
+    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test2","uint16_t","50");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check var now equals 
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(50, value);
+}
+
+TEST(GUITest, if_statement_false_then_one_var_can_be_set_to_value_of_anoter)
+{
+    const char* strTextCopy = operand_equal_dual_var_out;
+    gui_create_var("test1","uint16_t","11");
+    gui_create_var("test2","uint16_t","60");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check var now equals 
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(60, value);
+}
+
+TEST(GUITest, if_true_multiple_thens_can_take_place)
+{
+    const char* strTextCopy = operand_equal_many_thens;
+    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test2","uint16_t","60");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check var now equals 
+    uint16_t value = 0;
+    uint16_t value2 = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(60, value);
+    gui_get_uint16_var("test2", &value2);
+    LONGS_EQUAL(22, value2);
+
+}
+
 /**
- * - variable can be set to a value 
- * - Comparing two vars does not cause errors
- * - comparing two values does not cause error 
  * - Multiple thens can take place
 */
 

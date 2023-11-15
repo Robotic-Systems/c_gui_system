@@ -291,4 +291,39 @@ const char * operand_equal_no_else=
 "    <value>2</value>\n"
 " </then>\n"
 "</operand>\n";
+
+
+const char * operand_equal_dual_var_out=
+"<operand>\n"
+" <if>\n"
+"    <operation>\"equal\"</operation>"
+"    <var>test1</var>\n"
+"    <value>10</value>\n"
+" </if>\n"
+" <then>\n"
+"    <var>test1</var>\n"
+"    <var>test2</var>\n"
+" </then>\n"
+" <else>\n"
+"    <var>test1</var>\n"
+"    <var>test2</var>\n"
+" </else>\n"
+"</operand>\n";
+
+const char * operand_equal_many_thens=
+"<operand>\n"
+" <if>\n"
+"    <operation>\"equal\"</operation>"
+"    <var>test1</var>\n"
+"    <value>10</value>\n"
+" </if>\n"
+" <then>\n"
+"    <var>test1</var>\n"
+"    <var>test2</var>\n"
+" </then>\n"
+" <then>\n"
+"    <var>test2</var>\n"
+"    <value>22</value>\n"
+" </then>\n"
+"</operand>\n";
 #endif
