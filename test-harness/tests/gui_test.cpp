@@ -186,7 +186,7 @@ TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
     CHECK(helloWorldGui[endIndex] == '<');
 
     LONGS_EQUAL(3798,startIndex);
-    LONGS_EQUAL(4056,endIndex);
+    LONGS_EQUAL(4108,endIndex);
 }
 
 // if gui_get_page_position is called on page that does not exist then error is returned 
@@ -1057,17 +1057,20 @@ TEST(GUITest, if_end_operand_tag_hit_loop_breaks)
 // MANY: PAGES 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST(GUITest, pages_can_be_used_with_operands_true_test)
+TEST(GUITest, can_render_calbri_center_text)
 {
-    // init gui clear
-    gui_init(lcd_spy_write, gui_with_operand);
-    gui_create_var("test1","uint16_t","10");
-    // Update to set the first frame 
-    gui_status_t renderStatus = gui_update();
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
     LONGS_EQUAL(GUI_OK, renderStatus);
-    uint16_t value = 0;
-    gui_get_uint16_var("test1", &value);
-    LONGS_EQUAL(2, value);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
 }
 /**
  * <page>
@@ -1077,9 +1080,98 @@ TEST(GUITest, pages_can_be_used_with_operands_true_test)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: TEXT RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(GUITest, get_char_width_returns_corect_char_width_for_whole_glyph_set_sans)
+{
+    char glyphs[96] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
+    uint16_t widthIndex = 0;
+    uint8_t widthArray_size12[95] = {
+    0x07,   0x08,   0x06,   0x08,   0x07,   0x06,   0x07,   0x08,   0x04,   0x05,   0x08,   0x04,   0x0C,   0x08,   0x07,   0x08,   0x08,   0x06,   0x06,   0x05,   0x08,   0x07,   0x0B,   0x07,   0x07,   0x06,   0x09,   0x08,   0x08,   0x09,   0x07,   0x07,   0x09,   0x09,   0x04,   0x05,   0x08,   0x07,   0x0B,   0x0A,   0x0A,   0x08,   0x0A,   0x08,   0x07,   0x07,   0x09,   0x08,   0x0C,   0x08,   0x08,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x03,   0x07,   0x07,   0x03,   0x0B,   0x08,   0x07,   0x0B,   0x07,   0x09,   0x07,   0x04,   0x04,   0x04,   0x06,   0x07,   0x07,   0x04,   0x04,   0x05,   0x05,   0x07,   0x03,   0x03,   0x03,   0x05,   0x06,   0x03,   0x03,   0x05,   0x07,   0x07,   0x06
+    };
+
+
+    for (const char* text = glyphs; *text != '\0'; ++text) {
+        uint8_t c_width = gui_get_char_width(0, 0, *text);
+        // Check that width matches expectation
+        char str[64];
+        snprintf(str, 64, "MISMATCH CHAR %c, %d != %d ",  *text,widthArray_size12[widthIndex],c_width ); 
+        LONGS_EQUAL_TEXT(widthArray_size12[widthIndex], c_width,str);
+        widthIndex +=1;
+    }
+}
+
+
+TEST(GUITest, every_glyf_can_be_written_to_bitmap_sans)
+{
+    char glyphs[96] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
+
+    for(int i = 0; i<95; i++)
+    {
+        // Create blank bitmap 
+        uint8_t outputMap[ROWS][COLUMNS];
+        memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+        // Write a character in top left corner 
+        gui_status_t writeStatus = gui_write_char(0,0,0,0,outputMap,glyphs[i]);
+        LONGS_EQUAL(GUI_OK,writeStatus);
+        // Check that width matches expectation clear
+        uint8_t (*layer)[12] = sans_fontMap_size12[i];
+        // PRINT_BIT_MAP(12,12,outputMap);
+        // PRINT_BIT_MAP(12,12,layer);
+        IS_BIT_MAP_EQUAL_BIT(layer,outputMap,0,0,12,12);
+    }
+}
+// Can use more then one font per gui
+TEST(GUITest, can_render_center_text_new_font)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_sans;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // PRINT_BIT_MAP(64,102,helloWorld_12_sans);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_12_sans,outputMap,0,0,102,64);
+}
+
+TEST(GUITest, if_no_verticle_alignment_returns_error)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_error_vert_alignment_does_not_exist;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // PRINT_BIT_MAP(64,102,helloWorld_12_sans);
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+TEST(GUITest, verticle_alignment_can_be_used_to_align_to_top)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_top;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // PRINT_BIT_MAP(64,102,helloWorld_12_sans);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+}
+
 /**
  * <bitMaps>
- * - Can use more then one font per gui
+ * - 
  * - an additional text variable called vertAlignment (top, bottem, middle)
  * - variables can be used to control text inversion 
  * - variables can be displayed in text 

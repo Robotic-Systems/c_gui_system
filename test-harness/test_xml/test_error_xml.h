@@ -141,6 +141,7 @@ const char * text_HelloWorld_error_start_brace =
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
@@ -149,6 +150,7 @@ const char * text_HelloWorld_error_no_font =
 "<text>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
@@ -157,6 +159,7 @@ const char * text_HelloWorld_error_no_font_size =
 "<text>\n"
 "    <font>jupiter</font>\n"
 "    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
@@ -165,14 +168,23 @@ const char * text_HelloWorld_error_no_alignment =
 "<text>\n"
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
-
+const char * text_HelloWorld_error_no_vert_alignment =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <vert-alignment>center</vert-alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
 const char * text_HelloWorld_error_no_position =
 "<text>\n"
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <alignment>center</alignment>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
@@ -182,6 +194,7 @@ const char * text_HelloWorld_error_no_content =
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "</text>\n";
 
@@ -190,6 +203,7 @@ const char * text_HelloWorld_error_font_does_not_exist =
 "    <font>spaceMan</font>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
@@ -199,6 +213,7 @@ const char * text_HelloWorld_error_font_size_does_not_exist =
 "    <font>jupiter</font>\n"
 "    <font-size>20</font-size>\n"
 "    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
@@ -208,6 +223,16 @@ const char * text_HelloWorld_error_alignment_does_not_exist =
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>backwards</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello, World!\n\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_error_vert_alignment_does_not_exist =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello, World!\n\"</content>\n"
 "</text>\n";
@@ -228,6 +253,7 @@ const char* helloWorldGui_no_page_index =
 "            <font>jupiter</font>\n"
 "            <font-size>19</font-size>\n"
 "            <alignment>center</alignment>\n"
+"            <vert-alignment>center</vert-alignment>\n"
 "            <position>32,51</position>\n"
 "            <content>\"Hello World!\"</content>\n"
 "        </text>\n"
@@ -250,6 +276,7 @@ const char* helloWorldGui_text_error=
 "            <font>jupiter</font>\n"
 "            <font-size>19</font-size>\n"
 "            <alignment>backwards</alignment>\n"
+"            <vert-alignment>center</vert-alignment>\n"
 "            <position>32,51</position>\n"
 "            <content>\"Hello, World!\n\"</content>\n"
 "        </text>\n"

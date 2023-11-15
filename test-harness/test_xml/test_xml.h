@@ -64,6 +64,7 @@ const char* helloWorldGui =
 "            <font>jupiter</font>\n"
 "            <font-size>19</font-size>\n"
 "            <alignment>center</alignment>\n"
+"            <vert-alignment>center</vert-alignment>\n"
 "            <position>32,51</position>\n"
 "            <content>\"Hello World!\"</content>\n"
 "        </text>\n"
@@ -215,6 +216,7 @@ const char * text_HelloWorld =
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello World!\"</content>\n"
 "</text>\n";
@@ -224,6 +226,7 @@ const char * text_HelloWorld_left =
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>left</alignment>\n"
+"    <vert-alignment>top</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello World!\"</content>\n"
 "</text>\n";
@@ -233,6 +236,7 @@ const char * text_HelloWorld_right =
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>right</alignment>\n"
+"    <vert-alignment>top</vert-alignment>\n"
 "    <position>32,51</position>\n"
 "    <content>\"Hello World!\"</content>\n"
 "</text>\n";
@@ -241,8 +245,29 @@ const char * text_HelloWorld_multiline=
 "    <font>jupiter</font>\n"
 "    <font-size>19</font-size>\n"
 "    <alignment>left</alignment>\n"
+"    <vert-alignment>top</vert-alignment>\n"
 "    <position>0,0</position>\n"
 "    <content>\"Hello World!\nHow Are You?\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_sans =
+"<text>\n"
+"    <font>sans</font>\n"
+"    <font-size>12</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"HELLO WORLD\"</content>\n"
+"</text>\n";
+
+const char * text_HelloWorld_top =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <vert-alignment>top</vert-alignment>\n"
+"    <position>32,51</position>\n"
+"    <content>\"Hello World!\"</content>\n"
 "</text>\n";
 
 const char * operand_equal=
@@ -372,6 +397,7 @@ const char* gui_with_operand =
 "            <font>jupiter</font>\n"
 "            <font-size>19</font-size>\n"
 "            <alignment>center</alignment>\n"
+"            <vert-alignment>center</vert-alignment>\n"
 "            <position>32,51</position>\n"
 "            <content>\"Hello World!\"</content>\n"
 "        </text>\n"

@@ -449,6 +449,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     bool b_haveFoundFont      = false; 
     bool b_haveFoundFontSize  = false; 
     bool b_haveFoundAlignment = false; 
+    bool b_haveFoundVertAlignment = false; 
     bool b_haveFoundPosition  = false; 
     bool b_haveFoundContent   = false; 
 
@@ -523,6 +524,13 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             }
         }
 
+        // VERT-ALIGNMENT TAG CHECK 
+        ///////////////////////////
+        if (strncmp(textObjectString, "<vert-alignment>", 16) == 0) 
+        {
+            b_haveFoundVertAlignment = true;
+        }
+
         // POSITION TAG CHECK 
         //////////////////////
         if (strncmp(textObjectString, "<position>", 10) == 0) 
@@ -547,7 +555,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     }
     
     
-    if(!b_haveFoundFont || !b_haveFoundFontSize || !b_haveFoundAlignment || !b_haveFoundPosition || !b_haveFoundContent)
+    if(!b_haveFoundFont || !b_haveFoundFontSize || !b_haveFoundAlignment || !b_haveFoundPosition || !b_haveFoundContent || !b_haveFoundVertAlignment)
     {
         return GUI_ERR;
     }
@@ -615,7 +623,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char character)
 {
     const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
-    const char *found = strchr(glyphs, character);
+    const char *found  = strchr(glyphs, character);
 
     uint8_t *ptr = font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx];
     if((ptr == NULL) || (found == NULL))
@@ -632,6 +640,7 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
     // Charactor width 
     uint8_t charHeight = font_master_list[fontNameIdx].sizes[fontSizeIdx];
     uint8_t charWidth  = gui_get_char_width(fontNameIdx, fontSizeIdx, character);
+    uint8_t arrayWidth = font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx][95];
     if(charWidth == 0)
     {
         return GUI_ERR;
@@ -655,8 +664,8 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
             {
                 continue;
             }
-            //                                                  [     layer      ]   [    row   ]     [  col ]
-            bitMap[itr_row+row][itr_col+col] = *(p_charBitmap + layerIdx*(19 * 14) + itr_row*(14)  +  itr_col);
+            //                                                  [               layer             ]  [        row       ]     [ col ]
+            bitMap[itr_row+row][itr_col+col] = *(p_charBitmap + layerIdx*(charHeight * arrayWidth) + itr_row*(arrayWidth)  +  itr_col);
         }
     }
     return GUI_OK;

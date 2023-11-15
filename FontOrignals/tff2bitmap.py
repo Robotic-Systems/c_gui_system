@@ -3,13 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Configuration
-font_size = 19  # Font size
-font_name = "juipter"
+font_size = 12  # Font size
+font_name = "sans_bold"
 text_num = "0123456789"  # Text to convert to a bitmap
 text_lc = "abcdefghijklmnopqrstuvwxyz"
 text_uc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 text_sym = " `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?"
-font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\jupiter-crash-brk.regular.ttf"  # Path to your font file
+font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\open-sans.bold.ttf"  # Path to your font file
 
 output_file = "output_bitmap.png"  # Output image file
 
@@ -54,7 +54,7 @@ for i, char in enumerate(text_lc + text_uc + text_num +text_sym):
 
     # x = (output_width - text_width) / 2
     # y = (output_height - text_height) / 2
-    y=0
+    y=-1
     x=0
 
     # Draw the text on the image
@@ -79,14 +79,14 @@ for i, char in enumerate(text_lc + text_uc + text_num +text_sym):
 # Define the dimensions of the 3D array
 num_characters = len(text_lc + text_uc + text_num + text_sym)
 # Open a C file for writing
-with open("font_"+font_name+"_.h", "w") as c_file:
+with open("FontOrignals/font_"+font_name+"_.h", "w") as c_file:
     
     c_file.write("#ifndef "+font_name.upper()+"_H \n#define "+font_name.upper()+"_H\n")
     c_file.write("\n")
     c_file.write("#include <stdint.h>\n")
     c_file.write("\n")
     # Write the C array declaration for the width array
-    c_file.write("uint8_t widthArray[{}] = {{\n".format(num_characters))
+    c_file.write("uint8_t widthArray_size"+str(font_size)+"[{}] = {{\n".format(num_characters+1))
 
     # Write the width array data to the C file
     for i in range(num_characters):
@@ -96,10 +96,10 @@ with open("font_"+font_name+"_.h", "w") as c_file:
         else:
             c_file.write("\n")
     
-    c_file.write("};\n\n")
+    c_file.write(","+str(output_width)+"};\n\n")
 
     # Write the C array declaration for the 3D bitmap array
-    c_file.write("uint8_t fontMap[{}][{}][{}] = {{\n".format(num_characters, font_size, output_width))
+    c_file.write("uint8_t fontMap_size"+str(font_size)+"[{}][{}][{}] = {{\n".format(num_characters, font_size, output_width))
 
     # Write the bitmap data to the C file
     for i in range(num_characters):
