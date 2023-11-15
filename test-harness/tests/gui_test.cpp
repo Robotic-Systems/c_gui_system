@@ -848,6 +848,10 @@ TEST(GUITest, if_missing_operand_tag_throws_error)
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
+    // Check value same as when created
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(10, value);
 }
 
 TEST(GUITest, if_missing_if_tag_throws_error)
@@ -859,6 +863,10 @@ TEST(GUITest, if_missing_if_tag_throws_error)
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
+    // Check value same as when created
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(10, value);
 }
 
 TEST(GUITest, if_missing_operation_tag_throws_error)
@@ -870,6 +878,10 @@ TEST(GUITest, if_missing_operation_tag_throws_error)
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
+    // Check value same as when created
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(10, value);
 }
 
 TEST(GUITest, if_missing_var_tag_throws_error)
@@ -881,6 +893,10 @@ TEST(GUITest, if_missing_var_tag_throws_error)
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
+    // Check value same as when created
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(10, value);
 }
 
 TEST(GUITest, if_missing_value_tag_throws_error)
@@ -892,6 +908,10 @@ TEST(GUITest, if_missing_value_tag_throws_error)
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
+    // Check value same as when created
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(10, value);
 }
 
 TEST(GUITest, if_var_dne_throws_error)
@@ -913,6 +933,7 @@ TEST(GUITest, comparing_two_vars_does_not_throw_error)
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
+    
 }
 
 TEST(GUITest, if_statement_true_and_then_not_found_throws_error)
@@ -923,6 +944,10 @@ TEST(GUITest, if_statement_true_and_then_not_found_throws_error)
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
+    // Check value same as when created
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(10, value);
 }
 
 TEST(GUITest, if_statement_true_and_then_is_found_operation_takes_place)
@@ -939,11 +964,38 @@ TEST(GUITest, if_statement_true_and_then_is_found_operation_takes_place)
     LONGS_EQUAL(2, value);
 }
 
+TEST(GUITest, if_statement_false_and_else_is_not_found__no_operation_takes_place)
+{
+    const char* strTextCopy = operand_equal_no_else;
+    gui_create_var("test1","uint16_t","9");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check var now equals 2
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(9, value);
+}
+
+TEST(GUITest, if_statement_false_and_else_is_found_operation_takes_place)
+{
+    const char* strTextCopy = operand_equal;
+    gui_create_var("test1","uint16_t","9");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check var now equals 2
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(6, value);
+}
 /**
  * - variable can be set to a value 
  * - Comparing two vars does not cause errors
  * - comparing two values does not cause error 
- * 
+ * - Multiple thens can take place
 */
 
 

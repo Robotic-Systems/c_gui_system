@@ -257,7 +257,7 @@ const char * operand_equal=
 "    <value>2</value>\n"
 " </then>\n"
 " <else>\n"
-"    <var>pageIndex</var>\n"
+"    <var>test1</var>\n"
 "    <value>6</value>\n"
 " </else>\n"
 "</operand>\n";
@@ -277,5 +277,18 @@ const char * operand_equal_two_var=
 "    <var>test1</var>\n"
 "    <value>6</value>\n"
 " </else>\n"
+"</operand>\n";
+
+const char * operand_equal_no_else=
+"<operand>\n"
+" <if>\n"
+"    <operation>\"equal\"</operation>"
+"    <var>test1</var>\n"
+"    <value>10</value>\n"
+" </if>\n"
+" <then>\n"
+"    <var>test1</var>\n"
+"    <value>2</value>\n"
+" </then>\n"
 "</operand>\n";
 #endif
