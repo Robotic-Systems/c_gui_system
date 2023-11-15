@@ -1071,8 +1071,23 @@ TEST(GUITest, pages_can_be_used_with_operands_true_test)
 }
 /**
  * <page>
- * - Operands can be used with pages 
  * - Additional options, Variable refresh rates/partial screen refreshes 
+ */
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MANY: TEXT RENDER 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * <bitMaps>
+ * - Can use more then one font per gui
+ * - an additional text variable called vertAlignment (top, bottem, middle)
+ * - variables can be used to control text inversion 
+ * - variables can be displayed in text 
+ * - text position_can_be_set_using_variables_and_position_can_be_changed 
+ * - Can set default font at the start of the pages
+ * - Can set default alighment at start of pages 
+ * - Can set default font size at start of pages 
+ * - Returns error when alignment is not supported 
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1097,22 +1112,6 @@ TEST(GUITest, pages_can_be_used_with_operands_true_test)
  * <bitMaps>
  * - Can render multiple bitmaps to the screen 
  * - bitmap position_can_be_set_using_variables_and_position_can_be_changed
- */
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MANY: TEXT RENDER 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- * <bitMaps>
- * - an additional text variable called vertAlignment (top, bottem, middle)
- * - variables can be used to control text inversion 
- * - variables can be displayed in text 
- * - text position_can_be_set_using_variables_and_position_can_be_changed
- * - Can use more then one font per gui 
- * - Can set default font at the start of the page 
- * - Can set default alighment at start of page 
- * - Can set default font size at start of xml 
- * - Returns error when alignment is not supported 
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
