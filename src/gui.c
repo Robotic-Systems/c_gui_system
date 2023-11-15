@@ -3,7 +3,19 @@
 /***********************/
 /* PRIVATE DEFINITIONS */
 /***********************/
+#define SKIP_WHITESPACE(str) \
+    do { \
+        while (*str == ' ' || *str == '\n' || *str == ',' || *str == '\r' || *str == '\t') { \
+            str++; \
+        } \
+    } while (0)
 
+#define SKIP_TO_WHITESPACE(str) \
+    do { \
+        while (!(*str == ' ' || *str == '\n' || *str == ',' || *str == '\r' || *str == '\t')) { \
+            str++; \
+        } \
+    } while (0)
 /*****************/
 /* PRIVATE TYPES */
 /*****************/
@@ -37,12 +49,14 @@ const char* guiXml = NULL; /** XML string that contains the whole menu system*/
 page_params_t pages[MAX_PAGE_COUNT] = {0};
 KeyValuePairUint16 HashMapUint16[HASH_MAX_VARS];  /** Hash map for uint16_t menu variables*/
 extern font_list_t font_master_list[NUM_FONT_TYPES]; 
-
+/*****************************/
+/* PRIVATE FUNCTION POINTERS */
+/*****************************/
+write_function bitMapWrite = NULL; /** Function pointer that can be used to write to the display*/
 /*********************************/
 /* PRIVATE FUNCTION DECLARATIONS */
 /*********************************/
 uint32_t hash_index(const char * key); /** Generates a hash index from a key */
-
 /********************************/
 /* PRIVATE FUNCTION DEFINITIONS */
 /********************************/
@@ -64,7 +78,7 @@ gui_status_t gui_init(write_function p_lcdWrite, const char* xmlString)
     {
         return GUI_ERR;
     }
-    
+    bitMapWrite = p_lcdWrite;
     guiXml = xmlString;
     pageCount = 0;
     varCount  = 0;
@@ -379,10 +393,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
         for(int32_t itr_col = posX; itr_col < (width+posX); itr_col++)
         {
             // Skipping white-space chars 
-            while (*strBitmap == ' ' || *strBitmap == '\n' || *strBitmap == ',' || *strBitmap == '\r' || *strBitmap == '\t') 
-            {
-                strBitmap++;
-            }
+            SKIP_WHITESPACE(strBitmap);
             // Extracting ith data point 
             uint8_t bit = 0;
 
@@ -402,18 +413,12 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
         }
     }
     // Looking for the final braces. 
-    while (*strBitmap == ' ' || *strBitmap == '\n' || *strBitmap == ',' || *strBitmap == '\r' || *strBitmap == '\t') 
-    {
-        strBitmap++;
-    }
+    SKIP_WHITESPACE(strBitmap);
     if (strncmp(strBitmap, "</data>", 7) == 0) 
     {
         strBitmap+=7;
     }
-    while (*strBitmap == ' ' || *strBitmap == '\n' || *strBitmap == ',' || *strBitmap == '\r' || *strBitmap == '\t') 
-    {
-        strBitmap++;
-    }
+    SKIP_WHITESPACE(strBitmap);
     if (strncmp(strBitmap, "</bitMap>", 9) == 0) 
     {
         return GUI_OK;
@@ -657,11 +662,163 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
 
 gui_status_t gui_update()
 {
-    uint16_t pageNumber;
-    gui_variable_status_t indexStatus =  gui_get_uint16_var("pageIndex", &pageNumber);
-    if((pageNumber > pageCount) || (indexStatus != GUI_VAR_OK))
+    uint16_t pageNumber = 0; // set to non zero value 
+    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &pageNumber);
+    if((pageNumber > pageCount) || (fetchStatus != GUI_VAR_OK))
     {
         return GUI_ERR;
     }
+
+
+    // GETTING PAGE INFO 
+    ////////////////////
+    uint32_t startIndex = 0;
+    uint32_t endIndex   = 0;
+    gui_status_t pageStatus = gui_get_page_position(pageNumber,&startIndex,&endIndex);
+    if(pageStatus != GUI_OK)
+    {
+        return GUI_ERR; 
+    }
+    // PARSING PAGES 
+    ////////////////////
+    uint8_t bitMap[ROWS][COLUMNS];
+    memset(bitMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    const char*xmlCopy = guiXml + startIndex;
+    while(*xmlCopy < endIndex)
+    {
+        // TEXT TAG CHECK
+        //////////////////
+        if(!strncmp(xmlCopy, "<text>", 6))
+        {
+            gui_status_t renderStatus = gui_render_text(bitMap,xmlCopy);
+            if(renderStatus != GUI_OK)
+            {
+                return GUI_ERR;
+            }
+        }
+        // BITMAP TAG CHECK 
+        ////////////////// 
+        if(!strncmp(xmlCopy, "<bitMap>", 8))
+        {
+            gui_status_t renderStatus = gui_render_bitmap(bitMap,xmlCopy);
+            if(renderStatus != GUI_OK)
+            {
+                return GUI_ERR;
+            }
+        }
+
+        xmlCopy++;
+        if(!strncmp(xmlCopy, "</page>", 7))
+        {
+            break;
+        }
+    }
+    bitMapWrite(bitMap, COLUMNS,ROWS);
     return GUI_OK;
 }
+
+gui_status_t gui_execute_operand(const char *operandObjectString)
+{
+    if (strncmp(operandObjectString, "<operand>",9 ) != 0) 
+    {
+        return GUI_ERR;
+    }
+
+    // Bools 
+    bool b_haveFoundIf = false; 
+    bool b_haveFoundOperation = false;
+    bool b_haveFoundArg[2] = {false,false};
+    bool b_haveFoundThen = false;
+    bool b_isTrue = false; /** Wheather or not the evaluated operation is true or false*/
+
+    uint16_t arguments[2] = {0,0};
+    while (*operandObjectString != '\0')
+    {
+        // IF TAG CHECK 
+        ////////////////// 
+        if (!strncmp(operandObjectString, "<if>", 4)) 
+        {
+            b_haveFoundIf = true;
+            // Incrementing past <if> and skipping whitespace
+            SKIP_TO_WHITESPACE(operandObjectString);
+            SKIP_WHITESPACE(operandObjectString);
+            // Checking operation is present
+            if (!strncmp(operandObjectString, "<operation>", 11)) 
+            {
+                b_haveFoundOperation = true;
+            }
+            // Going past the operation decleration to the 
+            // variable/value decleration
+            for(int itr_arg = 0; itr_arg <2; itr_arg ++)
+            {
+                SKIP_TO_WHITESPACE(operandObjectString);
+                SKIP_WHITESPACE(operandObjectString);
+                // CHECKING FOR VAR
+                if (!strncmp(operandObjectString, "<var>",5)) 
+                {
+                    char varName[MAX_KEY_LENGTH];
+                    // Extracting value 
+                    if ((sscanf(operandObjectString, "<var>%63[^</]", varName) == 1)) 
+                    {
+                        gui_variable_status_t fetchStatus = gui_get_uint16_var(varName, &arguments[itr_arg]);
+                        if(fetchStatus==GUI_VAR_OK)
+                        {
+                            b_haveFoundArg[itr_arg] = true;
+                        }
+                    }
+                }
+                // CHECKING FOR VALUE
+                else if(!strncmp(operandObjectString, "<value>",7)) 
+                {
+                    if (sscanf(operandObjectString, "<value>%hd</value>", &arguments[itr_arg]) == 1) 
+                    {
+                        b_haveFoundArg[itr_arg] = true;
+                    } 
+                }
+                else
+                {
+                    break; 
+                }
+            }
+
+            // Checking all has been found 
+            if(!b_haveFoundOperation||!b_haveFoundArg[0]||!b_haveFoundArg[1])
+            {
+                return GUI_ERR; 
+            }
+
+            // Evaluating statement 
+            b_isTrue = (arguments[0] == arguments[1]);
+            
+
+        }
+
+        // THEN TAG CHECK 
+        ////////////////// 
+        if (!strncmp(operandObjectString, "<then>", 6)) 
+        {
+            b_haveFoundThen = true;
+            // Incrementing past <then> and skipping whitespace
+            SKIP_TO_WHITESPACE(operandObjectString);
+            SKIP_WHITESPACE(operandObjectString);
+            
+        }
+
+        operandObjectString++;
+    }
+
+    if(b_isTrue && !b_haveFoundThen)
+    {
+        return GUI_ERR; 
+    }
+
+    if(!b_haveFoundIf)
+    {
+        return GUI_ERR; 
+    }
+
+    return GUI_OK; 
+}
+
+
+

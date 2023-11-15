@@ -247,12 +247,12 @@ TEST(GUITest, uint16_variables_can_be_updated)
     // init gui 
     gui_init(lcd_spy_write, singleVarGui);
     // Update Variable 
-    gui_update_uint16_var("pageIndex",10);
+    gui_update_uint16_var("pageIndex",1);
     // Fetch variable value 
     uint16_t value = 0; // set to non zero value 
     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
-    LONGS_EQUAL(10, value);
+    LONGS_EQUAL(1, value);
 }
 
 TEST(GUITest, feeding_a_garbled_type_causes_error)
@@ -572,7 +572,7 @@ TEST(GUITest, get_char_width_returns_corect_char_width_for_whole_glyph_set)
         uint8_t c_width = gui_get_char_width(1, 0, *text);
         // Check that width matches expectation
         char str[64];
-        snprintf(str, 64, "MISMATCH CHAR %c, %d != %d ",  *text,widthArray[widthIndex],c_width ); \
+        snprintf(str, 64, "MISMATCH CHAR %c, %d != %d ",  *text,widthArray[widthIndex],c_width ); 
         LONGS_EQUAL_TEXT(widthArray[widthIndex], c_width,str);
         widthIndex +=1;
     }
@@ -724,10 +724,33 @@ TEST(GUITest, can_render_multiline_text)
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_multiline,outputMap,0,0,102,64);
 }
 
+TEST(GUITest, can_render_center_text)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: PAGE RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(GUITest, rendering_with_page_with_no_errors_does_not_return_error)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK, renderStatus);
+}
 
 TEST(GUITest, changing_to_page_that_does_not_exist_causes_error)
 {
@@ -744,8 +767,24 @@ TEST(GUITest, if_page_index_does_not_exist_then_error_is_returned)
 {
     // init gui clear
     gui_init(lcd_spy_write, helloWorldGui_no_page_index);
-    // Change page number to be out of bounds
-    gui_update_uint16_var("pageIndex", 10);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+TEST(GUITest, attempting_to_render_text_with_error_returns_error)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, helloWorldGui_text_error);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+}
+
+TEST(GUITest, attempting_to_render_bitmap_with_error_returns_error)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, helloWorldGui_bitmap_error);
     // Update to set the first frame 
     gui_status_t renderStatus = gui_update();
     LONGS_EQUAL(GUI_ERR, renderStatus);
@@ -762,38 +801,160 @@ TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     lcd_spy_get_Frame(outputMap);
+    // PRINT_BIT_MAP(64,102,outputMap);
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
 }
 
+TEST(GUITest, pages_with_text_can_be_written_to_screen)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, helloWorldGui);
+    gui_update_uint16_var("pageIndex", 1);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that bitmaps match 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    lcd_spy_get_Frame(outputMap);
+    // PRINT_BIT_MAP(64,102,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+}
 /**
  * <page>
- * - If gui is initilaise with no pageIndex var then error occurs 
- * - Additional options, Variable refresh rates/partial screen refreshes 
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: OPERANDS 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST(GUITest, passing_operand_with_no_error_returns_ok)
+{
+    const char* strTextCopy = operand_equal;
+    // Create the var used in test case
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+}
+
+TEST(GUITest, if_missing_operand_tag_throws_error)
+{
+    const char* strTextCopy = operand_equal_missing_opening_flag;
+    // Create the var used in test case
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+}
+
+TEST(GUITest, if_missing_if_tag_throws_error)
+{
+    const char* strTextCopy = operand_equal_missing_if_tag;
+    // Create the var used in test case
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+}
+
+TEST(GUITest, if_missing_operation_tag_throws_error)
+{
+    const char* strTextCopy = operand_equal_missing_operation_tag;
+    // Create the var used in test case
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+}
+
+TEST(GUITest, if_missing_var_tag_throws_error)
+{
+    const char* strTextCopy = operand_equal_missing_var_tag;
+    // Create the var used in test case
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+}
+
+TEST(GUITest, if_missing_value_tag_throws_error)
+{
+    const char* strTextCopy = operand_equal_missing_value_tag;
+    // Create the var used in test case
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+}
+
+TEST(GUITest, if_var_dne_throws_error)
+{
+    const char* strTextCopy = operand_equal;
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+}
+
+TEST(GUITest, comparing_two_vars_does_not_throw_error)
+{
+    const char* strTextCopy = operand_equal_two_var;
+    // Perform Operation 
+    // Create the var used in test case
+    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test2","uint16_t","10");
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+}
+
+TEST(GUITest, if_statement_true_and_then_not_found_throws_error)
+{
+    const char* strTextCopy = operand_equal_no_then;
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+}
+
+TEST(GUITest, if_statement_true_and_then_is_found_operation_takes_place)
+{
+    const char* strTextCopy = operand_equal;
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check var now equals 2
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(2, value);
+}
+
 /**
- * <operand>
- * - operand, will be restricted to:
- *  <if>
- *      <var>b_variable<value>true</value></var>
- *  <then>
- *      <var>pageIndex<value>10</value></var>
- *  <else>
- *          
- *  </if>
- * if b_variable is true then set pageIndex to 10, will be able to add else condition 
- * Operands will be performed when they are reached when passing the page as to give the most 
- * flexibility in behaviour. Sometimes you'll want it to happen before operation, sometimes 
- * after. Will need to have cascading if statement to realy get complex behaviour 
+ * - variable can be set to a value 
+ * - Comparing two vars does not cause errors
+ * - comparing two values does not cause error 
  * 
 */
 
 
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MANY: PAGES 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * <page>
+ * - Operands can be used with pages 
+ * - Additional options, Variable refresh rates/partial screen refreshes 
+ */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: HASHMAP 
@@ -801,10 +962,11 @@ TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
 /**
  * <variable>
  * - Hash table can handle collisions through Open Addressing
- * - Can use int16_t as variables 
  * - Can use floats as variables 
- * - Can use uint32_t as variables 
- * - Can use int32_t as variables 
+ * - If we have floats we really dont need the rest tbh 
+    * - Can use int16_t as variables 
+    * - Can use uint32_t as variables 
+    * - Can use int32_t as variables 
  * - Can't create two variables of same name 
  * - variables max and min can be set 
  */
@@ -823,6 +985,7 @@ TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * <bitMaps>
+ * - an additional text variable called vertAlignment (top, bottem, middle)
  * - variables can be used to control text inversion 
  * - variables can be displayed in text 
  * - text position_can_be_set_using_variables_and_position_can_be_changed
@@ -836,7 +999,10 @@ TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: OPERANDS 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * - Instead of just setting the value equal to another can do things like increment or deincrement the 
+ * value by one 
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 

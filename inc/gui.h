@@ -207,4 +207,12 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
  * @return gui_status_t - execution status of the update    
  */
 gui_status_t gui_update();
+
+/**
+ * @brief Takes in string that contains <operand> tag and performs the scripted operation 
+ * 
+ * @param operandObjectString - String that contains the operand 
+ * @return gui_status_t - operand execution status 
+ */
+gui_status_t gui_execute_operand(const char *operandObjectString);
 #endif
