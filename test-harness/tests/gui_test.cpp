@@ -1041,14 +1041,34 @@ TEST(GUITest, if_true_multiple_thens_can_take_place)
 
 }
 
-/**
- * - Multiple thens can take place
-*/
+TEST(GUITest, if_end_operand_tag_hit_loop_breaks)
+{
+    const char* strTextCopy = operand_equal_early_stop;
+    // Create the var used in test case
+    gui_create_var("test1","uint16_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: PAGES 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST(GUITest, pages_can_be_used_with_operands_true_test)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, gui_with_operand);
+    gui_create_var("test1","uint16_t","10");
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    uint16_t value = 0;
+    gui_get_uint16_var("test1", &value);
+    LONGS_EQUAL(2, value);
+}
 /**
  * <page>
  * - Operands can be used with pages 

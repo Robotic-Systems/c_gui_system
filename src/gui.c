@@ -540,6 +540,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             if ((sscanf(textObjectString, "<content>%63[^</]", text) == 1)) 
             {
                 b_haveFoundContent = true;
+                break;
             }
         }
         textObjectString++;
@@ -708,6 +709,17 @@ gui_status_t gui_update()
             }
         }
 
+        // OPERAND TAG CHECK
+        ////////////////////
+        if(!strncmp(xmlCopy, "<operand>", 9))
+        {
+            gui_status_t renderStatus = gui_execute_operand(xmlCopy);
+            if(renderStatus != GUI_OK)
+            {
+                return GUI_ERR;
+            }
+        }
+
         xmlCopy++;
         if(!strncmp(xmlCopy, "</page>", 7))
         {
@@ -735,6 +747,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
     uint16_t arguments[2] = {0,0};
     while (*operandObjectString != '\0')
     {
+
         // IF TAG CHECK 
         ////////////////// 
         if (!strncmp(operandObjectString, "<if>", 4)) 
@@ -781,7 +794,6 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
                     break; 
                 }
             }
-
             // Checking all has been found 
             if(!b_haveFoundOperation||!b_haveFoundArg[0]||!b_haveFoundArg[1])
             {
@@ -793,6 +805,14 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
             
 
         }
+        // OPERAND END TAG CHECK
+        ////////////////////////
+        if (!strncmp(operandObjectString, "</operand>", 10)) 
+        {
+            break;
+        }
+        // THEN AND ELSES
+        /////////////////
         if(b_haveFoundIf)
         {
             // THEN TAG CHECK 
