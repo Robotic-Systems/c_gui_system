@@ -596,7 +596,7 @@ TEST(GUITest, unknown_chacter_returns_error)
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     // Write a character in top left corner 
-    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,127);
+    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,127,false);
     LONGS_EQUAL(GUI_ERR,writeStatus);
 }
 
@@ -608,7 +608,7 @@ TEST(GUITest, chacter_can_be_written_to_bitmap)
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     // Write a character in top left corner 
-    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A');
+    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A',false);
     LONGS_EQUAL(GUI_OK,writeStatus);
     // Check that width matches expectation clear
     uint8_t (*layer)[14] = juipiter_fontMap[26];
@@ -623,7 +623,7 @@ TEST(GUITest, question_can_be_written_to_bitmap)
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     // Write a character in top left corner 
-    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'?');
+    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'?',false);
     LONGS_EQUAL(GUI_OK,writeStatus);
     // Check that width matches expectation clear
     uint8_t (*layer)[14] = juipiter_fontMap[94];
@@ -642,7 +642,7 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap)
         uint8_t outputMap[ROWS][COLUMNS];
         memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
         // Write a character in top left corner 
-        gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,glyphs[i]);
+        gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,glyphs[i],false);
         LONGS_EQUAL(GUI_OK,writeStatus);
         // Check that width matches expectation clear
         uint8_t (*layer)[14] = juipiter_fontMap[i];
@@ -656,7 +656,7 @@ TEST(GUITest, can_partially_render_chars_overflow)
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     // Write a character in top left corner 
-    gui_status_t writeStatus = gui_write_char(1,0,54,90,outputMap,'A');
+    gui_status_t writeStatus = gui_write_char(1,0,54,90,outputMap,'A',false);
     LONGS_EQUAL(GUI_OK,writeStatus);
     // Check that width matches expectation clear
     uint8_t (*layer)[14] = juipiter_fontMap[26];
@@ -669,7 +669,7 @@ TEST(GUITest, can_partially_render_chars_underflow)
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     // Write a character in top left corner 
-    gui_status_t writeStatus = gui_write_char(1,0,-2,-2,outputMap,'A');
+    gui_status_t writeStatus = gui_write_char(1,0,-2,-2,outputMap,'A',false);
     LONGS_EQUAL(GUI_OK,writeStatus);
     // Check that width matches expectation clear
     uint8_t (*layer)[14] = juipiter_fontMap[26];
@@ -1110,7 +1110,7 @@ TEST(GUITest, every_glyf_can_be_written_to_bitmap_sans)
         uint8_t outputMap[ROWS][COLUMNS];
         memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
         // Write a character in top left corner 
-        gui_status_t writeStatus = gui_write_char(0,0,0,0,outputMap,glyphs[i]);
+        gui_status_t writeStatus = gui_write_char(0,0,0,0,outputMap,glyphs[i],false);
         LONGS_EQUAL(GUI_OK,writeStatus);
         // Check that width matches expectation clear
         uint8_t (*layer)[12] = sans_fontMap_size12[i];
@@ -1188,16 +1188,16 @@ TEST(GUITest, text_can_be_inverted)
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     // Write a character in top left corner 
-    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A');
+    gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A',true);
     LONGS_EQUAL(GUI_OK,writeStatus);
     // PRINT_BIT_MAP(19,14,layer);
     // PRINT_BIT_MAP(19,14,outputMap);
-    IS_BIT_MAP_EQUAL_BIT(invertedA,outputMap,0,0,14,19);
+    IS_BIT_MAP_EQUAL_BIT(invertedA_juipter_19,outputMap,0,0,14,19);
 }
 /**
  * <bitMaps>
  * - variables can be used to control text inversion 
- * - variables can be displayed in text 
+ * - variables can be displayed in text clear
  * - text position_can_be_set_using_variables_and_position_can_be_changed 
  * - Can set default font at the start of the pages
  * - Can set default alighment at start of pages 

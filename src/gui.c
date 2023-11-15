@@ -629,9 +629,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     else if(vertAlignmentOpt == 2)
     {
         topLeftRow = posY-fontSize;
-        printf("y = %d\n", topLeftRow);
-        printf("fontSize = %d\n", fontSize);
-        printf("posY = %d\n", posY);
     }
     // WRITING LOOP 
     int16_t colPos = topLeftCol;
@@ -648,7 +645,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             colPos = topLeftCol;
             continue;
         }
-        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, text[itr_text]) != GUI_OK)
+        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, text[itr_text],false) != GUI_OK)
         {
             printf("Render Error \n");
             printf(">>%c<< \n",text[itr_text] );
@@ -675,7 +672,7 @@ uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char charac
     return ptr[found - glyphs];
 }
 
-gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t row, int16_t col, uint8_t bitMap[ROWS][COLUMNS], char character)
+gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t row, int16_t col, uint8_t bitMap[ROWS][COLUMNS], char character, bool b_bitMapInvert)
 {
     // GETTING LOOP PARAMS
     ////////////////////////
