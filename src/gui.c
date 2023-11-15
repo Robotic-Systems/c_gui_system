@@ -801,6 +801,29 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
             // Incrementing past <then> and skipping whitespace
             SKIP_TO_WHITESPACE(operandObjectString);
             SKIP_WHITESPACE(operandObjectString);
+            // Check for the var and extract name 
+            char varName[MAX_KEY_LENGTH];
+            // Extracting value 
+            if ((sscanf(operandObjectString, "<var>%63[^</]", varName) != 1)) 
+            {
+               return GUI_ERR;
+            }
+            SKIP_TO_WHITESPACE(operandObjectString);
+            SKIP_WHITESPACE(operandObjectString);
+            // Check for the var and extract name 
+            uint16_t value=0;
+            // Extracting value 
+            if (sscanf(operandObjectString, "<value>%hd</value>", &value) != 1) 
+            {
+                return GUI_ERR;
+            } 
+
+            gui_variable_status_t updateStatus = gui_update_uint16_var(varName,value);
+            if(updateStatus != GUI_VAR_OK)
+            {
+                return GUI_ERR;
+            }
+
             
         }
 

@@ -270,11 +270,11 @@ const char * operand_equal_two_var=
 "    <var>test2</var>\n"
 " </if>\n"
 " <then>\n"
-"    <var>pageIndex</var>\n"
+"    <var>test1</var>\n"
 "    <value>2</value>\n"
 " </then>\n"
 " <else>\n"
-"    <var>pageIndex</var>\n"
+"    <var>test1</var>\n"
 "    <value>6</value>\n"
 " </else>\n"
 "</operand>\n";
