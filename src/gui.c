@@ -464,7 +464,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     bool b_haveFoundVertAlignment = false; 
     bool b_haveFoundPosition  = false; 
     bool b_haveFoundContent   = false; 
-
+    bool b_invert   = false; 
 
     while (*textObjectString != '\0')
     {
@@ -569,6 +569,19 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             } 
         }
 
+
+        // INVERT TAG CHECK 
+        //////////////////////
+        if (strncmp(textObjectString, "<invert>", 8) == 0) 
+        {
+            uint8_t invertInt = 0;
+            if (sscanf(textObjectString, "<invert>%hhd</invert>", &invertInt) == 1) 
+            {
+                b_invert = (invertInt>0);
+                printf("Inverting\n");
+            } 
+        }
+
         // CONTENT TAG CHECK 
         //////////////////////
         if (strncmp(textObjectString, "<content>", 9) == 0) 
@@ -645,7 +658,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             colPos = topLeftCol;
             continue;
         }
-        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, text[itr_text],false) != GUI_OK)
+        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, text[itr_text],b_invert) != GUI_OK)
         {
             printf("Render Error \n");
             printf(">>%c<< \n",text[itr_text] );
@@ -705,6 +718,12 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
             }
             //                                                  [               layer             ]  [        row       ]     [ col ]
             bitMap[itr_row+row][itr_col+col] = *(p_charBitmap + layerIdx*(charHeight * arrayWidth) + itr_row*(arrayWidth)  +  itr_col);
+            // Invert the chacter if needed
+            if(b_bitMapInvert)
+            {
+                // Inverting the color of the bitmap
+                bitMap[itr_row+row][itr_col+col] = ~bitMap[itr_row+row][itr_col+col];
+            }
         }
     }
     return GUI_OK;

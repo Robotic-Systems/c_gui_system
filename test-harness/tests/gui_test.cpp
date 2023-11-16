@@ -1190,13 +1190,28 @@ TEST(GUITest, text_can_be_inverted)
     // Write a character in top left corner 
     gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,'A',true);
     LONGS_EQUAL(GUI_OK,writeStatus);
-    // PRINT_BIT_MAP(19,14,layer);
-    // PRINT_BIT_MAP(19,14,outputMap);
-    IS_BIT_MAP_EQUAL_BIT(invertedA_juipter_19,outputMap,0,0,14,19);
+    IS_BIT_MAP_EQUAL_BIT(invertedA_juipter_19,outputMap,0,0,7,19);
+}
+
+
+TEST(GUITest, hello_world_can_be_inverted)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_invert;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // PRINT_BIT_MAP(64,102,helloWorld_19_juipeter_inverted);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_inverted,outputMap,0,0,84,19);
 }
 /**
  * <bitMaps>
- * - variables can be used to control text inversion 
  * - variables can be displayed in text clear
  * - text position_can_be_set_using_variables_and_position_can_be_changed 
  * - Can set default font at the start of the pages
