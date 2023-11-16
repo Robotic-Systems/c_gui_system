@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 output_width = 102  # Width of the output image
 output_height = 64  # Height of the output image
 font_size = 19  # Font size
-text = "HELLO WORLD!"  # Text to convert to a bitmap
+text = "one: 1"  # Text to convert to a bitmap
 font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\jupiter-crash-brk.regular.ttf"  # Path to your font file
 output_file = "output_bitmap.png"  # Output image file
 horizontal_alignment = "left"

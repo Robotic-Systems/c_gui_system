@@ -587,7 +587,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             SKIP_TO(textObjectString,'>');
             if (!strncmp(textObjectString, "><var>",5)) 
             {
-                printf("Inverting via var\n");
                 char varName[MAX_KEY_LENGTH];
                 // Extracting value 
                 if ((sscanf(textObjectString, "><var>%63[^</]", varName) == 1)) 
@@ -603,7 +602,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             else 
             {
                 // Inverting via value 
-                printf("Inverting via value\n");
                 if (sscanf(textObjectString, ">%hd</invert>", &invertInt) != 1) 
                 {
                     return GUI_ERR;
@@ -631,17 +629,35 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     {
         return GUI_ERR;
     }
+    // CHECK IF TEXT CONTAINS VARS
+    // Core text 
+    char *quoteToken = strtok(text, "\"");
+    char coreText[64];
+    uint16_t var = 0;
+    if(quoteToken != NULL)
+    {
+      strncpy(coreText, quoteToken, sizeof(coreText) - 1);
+    }
+    // Variable 
+    quoteToken = strtok(NULL, "\"");
+    if(quoteToken != NULL)
+    {
+        SKIP_WHITESPACE(quoteToken);
+        var = (uint16_t)atoi(quoteToken);
+    }
+    // ToDo: remove this snprintf 
+    sprintf(coreText, coreText, var);
 
     // WIDTH CALC
-    size_t txtLen = strlen(text);
+    size_t txtLen = strlen(coreText);
     uint16_t txtPxWidth = 0; /** The pixel width of the string */
     for(int itr_text = 0; itr_text < txtLen; itr_text++)
     {
-        if((text[itr_text] == '\"') || (text[itr_text] == '\n'))
+        if((coreText[itr_text] == '\"') || (coreText[itr_text] == '\n'))
         {
             continue;
         }
-        txtPxWidth += gui_get_char_width(fontIndex ,fontSizeIndex, text[itr_text]);
+        txtPxWidth += gui_get_char_width(fontIndex ,fontSizeIndex, coreText[itr_text]);
     }
 
     // ALIGNMENT CALC
@@ -679,23 +695,23 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     int16_t rowPos = topLeftRow;
     for(int itr_text = 0; itr_text < txtLen; itr_text++)
     {
-        if(text[itr_text] == '\"')
+        if(coreText[itr_text] == '\"')
         {
             continue;
         }
-        if(text[itr_text] == '\n')
+        if(coreText[itr_text] == '\n')
         {
             rowPos += fontSize+3; /** ToDo- Add the leading calculation here */
             colPos = topLeftCol;
             continue;
         }
-        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, text[itr_text],b_invert) != GUI_OK)
+        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, coreText[itr_text],b_invert) != GUI_OK)
         {
             printf("Render Error \n");
-            printf(">>%c<< \n",text[itr_text] );
+            printf(">>%c<< \n",coreText[itr_text] );
             return GUI_ERR;
         }
-        colPos += gui_get_char_width(fontIndex ,fontSizeIndex, text[itr_text]);
+        colPos += gui_get_char_width(fontIndex ,fontSizeIndex, coreText[itr_text]);
         // printf("%c,%d ,%d  \n", text[itr_text],gui_get_char_width(fontIndex ,fontSizeIndex, text[itr_text]),colPos );
     }
     // start rendering the bitmap letter by letter indexing position by letter width
