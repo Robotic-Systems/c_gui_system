@@ -1332,12 +1332,42 @@ TEST(GUITest, gui_parse_tag_returns_text_between_tags)
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
     STRCMP_EQUAL_TEXT("Its a string!", text, "TEXT MISMATCH");
 }
+
+TEST(GUITest, if_a_var_is_refrenced_in_string_that_dne_error_returned)
+{
+    // Define string to test 
+    const char * stringOfTag = "<content>\"one: \%d\",<var>test</var></content>\n";
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check there is no error
+    LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+}
+
+TEST(GUITest, if_a_var_is_refrenced_in_string_the_value_is_returned_in_str)
+{
+    // Define string to test 
+    const char * stringOfTag = "<content>\"one: \%d\",<var>test</var></content>\n";
+    gui_create_var("test","uint16_t","1");
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check there is no error
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+    STRCMP_EQUAL_TEXT("\"one: \%d\",1", text, "TEXT MISMATCH");
+}
 // // Variables can be printed in text
 // TEST(GUITest, variables_can_be_printed_in_text)
 // {
 //     // Fetch the xml text extract 
 //     const char* strTextCopy = text_HelloWorld_one_var;
-//     // Create empty bitmap 
+//     // Create eclearmpty bitmap 
 //     uint8_t outputMap[ROWS][COLUMNS];
 //     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
 //     // Render text

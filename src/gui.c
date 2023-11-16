@@ -966,26 +966,59 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
     return GUI_OK; 
 }
 
-gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char result[MAX_TAG_DATA_LENGTH], bool *b_isFound)
+gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char rtnText[MAX_TAG_DATA_LENGTH], bool *b_isFound)
 {
     // CREATING START TAG
     char startTag[MAX_TAG_NAME_LENGTH];
-    snprintf(startTag, (strnlen(tagName,MAX_TAG_NAME_LENGTH)+3), "<%s>",tagName);
+    size_t startTagLen = strnlen(tagName,MAX_TAG_NAME_LENGTH)+3;
+    snprintf(startTag, startTagLen, "<%s>",tagName);
     const char *startTokens = strstr(tagString,startTag);
     // CREATING END TAG 
     char endTag[MAX_TAG_NAME_LENGTH];
-    snprintf(endTag, (strnlen(tagName,MAX_TAG_NAME_LENGTH)+4), "</%s>",tagName);
+    size_t endTagLen = strnlen(tagName,MAX_TAG_NAME_LENGTH)+4;
+    snprintf(endTag, endTagLen, "</%s>",tagName);
     const char *endTokens = strstr(tagString,endTag);
+
+
     // PARSING START TAG
     if(startTokens != NULL)
     {
         *b_isFound = true;
-
-
         if(endTokens == NULL)
         {
             return GUI_ERR;
         }
+        // GETTING LENGTHS 
+        size_t startPos = (startTokens - tagString + startTagLen)-1;
+        size_t endPos = endTokens - tagString;
+        size_t extractedLength = endPos - startPos;
+        // EXTRACTING STRING 
+        strncpy(rtnText, tagString + startPos, extractedLength);
+        rtnText[extractedLength] = '\0'; // Null-terminate the string
+        // CHECKING FOR VAR
+        const char *varSrtTok = strstr(rtnText,"<var>");
+        const char *varEndTok = strstr(rtnText,"</var>");
+        if(varSrtTok != NULL)
+        {
+            // EXTRACTING VAR NAME 
+            size_t varSrtLen = 5;
+            size_t varStartPos = (varSrtTok - rtnText + varSrtLen);
+            size_t varEndPos   = (varEndTok - rtnText);
+            size_t varExtractedLength = varEndPos - varStartPos;
+            char varName[MAX_TAG_NAME_LENGTH];
+            strncpy(varName, rtnText + varStartPos, varExtractedLength);
+            varName[varExtractedLength] = '\0'; // Null-terminate the string
+            // FETCHING VAR
+            uint16_t value = 0;
+            printf("Name %s\n", varName);
+            gui_variable_status_t fetchStatus = gui_get_uint16_var(varName, &value);
+            if(fetchStatus!=GUI_VAR_OK)
+            {
+                printf("ERR\n");
+                return GUI_ERR;
+            }
+        }
+
     }
     return GUI_OK;
 }
