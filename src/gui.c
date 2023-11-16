@@ -631,7 +631,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     }
     // CHECK IF TEXT CONTAINS VARS
     // Core text 
-    printf("core %s\n", text);
     char *quoteToken = strtok(text, "\"");
     char coreText[64];
     uint16_t var = 0;
@@ -967,6 +966,29 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
     return GUI_OK; 
 }
 
+gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char result[MAX_TAG_DATA_LENGTH], bool *b_isFound)
+{
+    // CREATING START TAG
+    char startTag[MAX_TAG_NAME_LENGTH];
+    snprintf(startTag, (strnlen(tagName,MAX_TAG_NAME_LENGTH)+3), "<%s>",tagName);
+    const char *startTokens = strstr(tagString,startTag);
+    // CREATING END TAG 
+    char endTag[MAX_TAG_NAME_LENGTH];
+    snprintf(endTag, (strnlen(tagName,MAX_TAG_NAME_LENGTH)+4), "</%s>",tagName);
+    const char *endTokens = strstr(tagString,endTag);
+    // PARSING START TAG
+    if(startTokens != NULL)
+    {
+        *b_isFound = true;
+
+
+        if(endTokens == NULL)
+        {
+            return GUI_ERR;
+        }
+    }
+    return GUI_OK;
+}
 
 gui_status_t help_set_var_equal(const char *operandObjectString)
 {

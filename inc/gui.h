@@ -18,7 +18,7 @@
 #define MAX_TAG_DATA_LENGTH 64   /** Maximum length of data strings that is not displayed on gui */
 #define MAX_KEY_LENGTH 20        /** Maximum length key strings  */
 #define TEXT_ALIGNMENT_OPTIONS 3        /** Number of text alignment options */
-
+#define MAX_TAG_NAME_LENGTH 64   /** Maximum supported length of a tag*/
 /****************/
 /* PUBLIC TYPES */
 /****************/
@@ -232,4 +232,19 @@ gui_status_t gui_update();
  * @return gui_status_t - operand execution status 
  */
 gui_status_t gui_execute_operand(const char *operandObjectString);
+
+/**
+ * @brief Parses the input string looking for the start and end tags specified by tag name, the resultant string found between them
+ * if a val tag is found then its corresponding value will be extracted and added to that position in the string. If there is any 
+ * error finding the value then an error will be returned
+ * 
+ * 
+ * @param [in] tagString - The string that could contain the tag that you need to find  
+ * @param [in] tagName - the name of the tag that is being parsed for, i.e if you want to parse for a "<content>" tag you should pass in "content"
+ * @param [out] result - The resultant extracted sting 
+ * @param [out] b_isFound - Succsess boolean that returns true if the tag was found 
+ * @return gui_status_t - Tag parsing execution status 
+ */
+gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char result[MAX_TAG_DATA_LENGTH], bool *b_isFound);
+
 #endif

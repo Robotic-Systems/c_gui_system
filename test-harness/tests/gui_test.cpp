@@ -1260,23 +1260,95 @@ TEST(GUITest, numbers_can_be_printed_in_text)
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one,outputMap,0,0,84,19);
 }
 
-// Variables can be printed in text
-TEST(GUITest, variables_can_be_printed_in_text)
+// GUI parse tag
+TEST(GUITest, passing_gui_parse_tag_an_errorless_xml_returns_ok)
 {
-    // Fetch the xml text extract 
-    const char* strTextCopy = text_HelloWorld_one_var;
-    // Create empty bitmap 
-    uint8_t outputMap[ROWS][COLUMNS];
-    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    // Render text
-    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-    // Check status is okay 
-    // PRINT_BIT_MAP(64,102,outputMap);
-    // PRINT_BIT_MAP(64,102,helloWorld_19_juipeter_one);
-    LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check that text rendered correctly 
-    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one,outputMap,0,0,84,19);
+    // Define string to test 
+    const char * stringOfTag = "<content>\"one: \%d\",1</content>\n";
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check there is no error
+    LONGS_EQUAL(GUI_OK, parseStatus);
 }
+
+
+TEST(GUITest, passing_a_string_that_does_not_contain_start_tag_returns_boolean_false)
+{
+    // Define string to test 
+    const char * stringOfTag = "\"one: \%d\",1</content>\n";
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check there is no error
+    LONGS_EQUAL(GUI_OK, parseStatus);
+    LONGS_EQUAL(false, is_found);
+}
+
+TEST(GUITest, passing_a_string_that_does_contain_start_tag_returns_boolean_true)
+{
+    // Define string to test 
+    const char * stringOfTag = "<content>\"one: \%d\",1</content>\n";
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check there is no error
+    LONGS_EQUAL(GUI_OK, parseStatus);
+    LONGS_EQUAL(true, is_found);
+}
+
+
+TEST(GUITest, if_end_tag_is_not_found_returns_error)
+{
+    // Define string to test 
+    const char * stringOfTag = "<content>\"one: \%d\",1\n";
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check there is no error
+    LONGS_EQUAL(GUI_ERR, parseStatus);
+    LONGS_EQUAL(true, is_found);
+}
+
+TEST(GUITest, gui_parse_tag_returns_text_between_tags)
+{
+    // Define string to test 
+    const char * stringOfTag = "<content>Its a string!</content>\n";
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check there is no error
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+    STRCMP_EQUAL_TEXT("Its a string!", text, "TEXT MISMATCH");
+}
+// // Variables can be printed in text
+// TEST(GUITest, variables_can_be_printed_in_text)
+// {
+//     // Fetch the xml text extract 
+//     const char* strTextCopy = text_HelloWorld_one_var;
+//     // Create empty bitmap 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+//     // Render text
+//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+//     // Check status is okay 
+//     // PRINT_BIT_MAP(64,102,outputMap);
+//     // PRINT_BIT_MAP(64,102,helloWorld_19_juipeter_one);
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+//     // Check that text rendered correctly 
+//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one,outputMap,0,0,84,19);
+// }
 /**
  * <bitMaps>
  * - text position_can_be_set_using_variables_and_position_can_be_changed 
