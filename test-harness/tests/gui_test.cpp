@@ -1253,14 +1253,18 @@ TEST(GUITest, numbers_can_be_printed_in_text)
     // Render text
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
-    PRINT_BIT_MAP(64,102,outputMap);
-    PRINT_BIT_MAP(64,102,helloWorld_19_juipeter_one);
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // PRINT_BIT_MAP(64,102,helloWorld_19_juipeter_one);
     LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that text rendered correctly 
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one,outputMap,0,0,84,19);
 }
 
 // Variables can be printed in text
+TEST(GUITest, variables_can_be_printed_in_text)
+{
+    FAIL("AAAAAHHHHHHHHHHHHHHHH");
+}
 /**
  * <bitMaps>
  * - text position_can_be_set_using_variables_and_position_can_be_changed 
