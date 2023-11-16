@@ -613,14 +613,12 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 
         // CONTENT TAG CHECK 
         //////////////////////
-        if (strncmp(textObjectString, "<content>", 9) == 0) 
+        gui_status_t contentStatus = gui_parse_tag_str(textObjectString,"content",text,&b_haveFoundContent);
+        if(contentStatus != GUI_OK)
         {
-            if ((sscanf(textObjectString, "<content>%63[^</]", text) == 1)) 
-            {
-                b_haveFoundContent = true;
-                break;
-            }
+            return contentStatus;
         }
+        
         textObjectString++;
     }
     
@@ -972,14 +970,20 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
     char startTag[MAX_TAG_NAME_LENGTH];
     size_t startTagLen = strnlen(tagName,MAX_TAG_NAME_LENGTH)+3;
     snprintf(startTag, startTagLen, "<%s>",tagName);
+    //Checking start tag is present
+    if(!strncmp(tagString, startTag, startTagLen))
+    {
+        return GUI_OK;
+    }
     const char *startTokens = strstr(tagString,startTag);
     // CREATING END TAG 
     char endTag[MAX_TAG_NAME_LENGTH];
     size_t endTagLen = strnlen(tagName,MAX_TAG_NAME_LENGTH)+4;
     snprintf(endTag, endTagLen, "</%s>",tagName);
     const char *endTokens = strstr(tagString,endTag);
-
-
+    // OTHER TEMP VARS
+    uint16_t value = 0;
+    char TxtData[MAX_TAG_DATA_LENGTH];
     // PARSING START TAG
     if(startTokens != NULL)
     {
@@ -993,31 +997,39 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
         size_t endPos = endTokens - tagString;
         size_t extractedLength = endPos - startPos;
         // EXTRACTING STRING 
-        strncpy(rtnText, tagString + startPos, extractedLength);
-        rtnText[extractedLength] = '\0'; // Null-terminate the string
+        strncpy(TxtData, tagString + startPos, extractedLength);
+        TxtData[extractedLength] = '\0'; // Null-terminate the string
         // CHECKING FOR VAR
-        const char *varSrtTok = strstr(rtnText,"<var>");
-        const char *varEndTok = strstr(rtnText,"</var>");
+        const char *varSrtTok = strstr(TxtData,"<var>");
+        const char *varEndTok = strstr(TxtData,"</var>");
         if(varSrtTok != NULL)
         {
-            // EXTRACTING VAR NAME 
-            size_t varSrtLen = 5;
-            size_t varStartPos = (varSrtTok - rtnText + varSrtLen);
-            size_t varEndPos   = (varEndTok - rtnText);
+            // EXTRACTING VAR CONTENTS
+            size_t varStartPos = varSrtTok - TxtData + strlen("<var>");
+            size_t varEndPos = varEndTok - TxtData;
             size_t varExtractedLength = varEndPos - varStartPos;
-            char varName[MAX_TAG_NAME_LENGTH];
-            strncpy(varName, rtnText + varStartPos, varExtractedLength);
-            varName[varExtractedLength] = '\0'; // Null-terminate the string
+
+            char varTag[MAX_TAG_DATA_LENGTH];
+            strncpy(varTag, TxtData + varStartPos, varExtractedLength);
+            varTag[varExtractedLength] = '\0'; // Null-terminate the string
+
             // FETCHING VAR
-            uint16_t value = 0;
-            printf("Name %s\n", varName);
-            gui_variable_status_t fetchStatus = gui_get_uint16_var(varName, &value);
-            if(fetchStatus!=GUI_VAR_OK)
-            {
-                printf("ERR\n");
+            gui_variable_status_t fetchStatus = gui_get_uint16_var(varTag, &value);
+            if (fetchStatus != GUI_VAR_OK) {
                 return GUI_ERR;
             }
+
+            // Replace the <var>...</var> with the fetched value
+            char replacedTxtData[MAX_TAG_DATA_LENGTH];
+            snprintf(replacedTxtData, MAX_TAG_DATA_LENGTH, "%.*s%d%s", (int)(varSrtTok - TxtData), TxtData, value, varEndTok + strlen("</var>"));
+            
+            // Copy the modified string back to TxtData
+            strncpy(TxtData, replacedTxtData, MAX_TAG_DATA_LENGTH);
+            TxtData[MAX_TAG_DATA_LENGTH - 1] = '\0'; // Ensure null-termination
         }
+        // CREATING RETURN STRING 
+        snprintf(rtnText, MAX_TAG_DATA_LENGTH, "%s",TxtData);
+        
 
     }
     return GUI_OK;
