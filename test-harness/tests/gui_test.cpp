@@ -1210,6 +1210,40 @@ TEST(GUITest, hello_world_can_be_inverted)
     // Check that text rendered correctly 
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_inverted,outputMap,0,0,84,19);
 }
+
+TEST(GUITest, variables_can_be_used_to_not_invert_text)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_var_invert;
+    gui_create_var("invert","uint16_t","0");
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_not_inverted,outputMap,0,0,84,19);
+}
+
+TEST(GUITest, variables_can_be_used_to_invert_text)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_var_invert;
+    gui_create_var("invert","uint16_t","1");
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_inverted,outputMap,0,0,84,19);
+}
+
+
 /**
  * <bitMaps>
  * - variables can be displayed in text clear

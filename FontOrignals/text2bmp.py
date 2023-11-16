@@ -11,7 +11,7 @@ horizontal_alignment = "left"
 vertical_alignment = "top"  # Vertical alignment option
 input_x = 0
 input_y = 0
-invert_image = True  # Boolean flag for image inversion
+invert_image = False  # Boolean flag for image inversion
 
 # Create a blank image with white background
 image = Image.new("RGB", (output_width, output_height), "white")
