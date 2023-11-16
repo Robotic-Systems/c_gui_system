@@ -313,6 +313,17 @@ const char * text_HelloWorld_one =
 "    <content>\"one: \%d\",1</content>\n"
 "</text>\n";
 
+const char * text_HelloWorld_one_var =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>left</alignment>\n"
+"    <vert-alignment>top</vert-alignment>\n"
+"    <position>0,0</position>\n"
+"    <content>\"one: \%d\",<var>test1</var></content>\n"
+"</text>\n";
+
+
 const char * operand_equal=
 "<operand>\n"
 " <if>\n"

@@ -631,6 +631,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     }
     // CHECK IF TEXT CONTAINS VARS
     // Core text 
+    printf("core %s\n", text);
     char *quoteToken = strtok(text, "\"");
     char coreText[64];
     uint16_t var = 0;
