@@ -579,37 +579,48 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 
         // INVERT TAG CHECK 
         //////////////////////
-        if (strncmp(textObjectString, "<invert>", 8) == 0) 
+        uint16_t invertInt = 0;
+        bool is_found = false;
+        gui_status_t invertStatus = gui_parse_tag_val(textObjectString,"invert",&invertInt,2,&is_found);
+        if(invertStatus != GUI_OK)
         {
-
-            uint16_t invertInt = 0;
-            // Skip to >
-            SKIP_TO(textObjectString,'>');
-            if (!strncmp(textObjectString, "><var>",5)) 
-            {
-                char varName[MAX_KEY_LENGTH];
-                // Extracting value 
-                if ((sscanf(textObjectString, "><var>%63[^</]", varName) == 1)) 
-                {
-                    gui_variable_status_t fetchStatus = gui_get_uint16_var(varName, &invertInt);
-                    if(fetchStatus!=GUI_VAR_OK)
-                    {
-                        return GUI_ERR;
-                    }
-                }
-            }
-            // Assume its a value 
-            else 
-            {
-                // Inverting via value 
-                if (sscanf(textObjectString, ">%hd</invert>", &invertInt) != 1) 
-                {
-                    return GUI_ERR;
-                }
-            } 
-    
+            return invertStatus;
+        }
+        if(is_found)
+        {
             b_invert = (invertInt>0);
         }
+        // if (strncmp(textObjectString, "<invert>", 8) == 0) 
+        // {
+
+        //     uint16_t invertInt = 0;
+        //     // Skip to >
+        //     SKIP_TO(textObjectString,'>');
+        //     if (!strncmp(textObjectString, "><var>",5)) 
+        //     {
+        //         char varName[MAX_KEY_LENGTH];
+        //         // Extracting value 
+        //         if ((sscanf(textObjectString, "><var>%63[^</]", varName) == 1)) 
+        //         {
+        //             gui_variable_status_t fetchStatus = gui_get_uint16_var(varName, &invertInt);
+        //             if(fetchStatus!=GUI_VAR_OK)
+        //             {
+        //                 return GUI_ERR;
+        //             }
+        //         }
+        //     }
+        //     // Assume its a value 
+        //     else 
+        //     {
+        //         // Inverting via value 
+        //         if (sscanf(textObjectString, ">%hd</invert>", &invertInt) != 1) 
+        //         {
+        //             return GUI_ERR;
+        //         }
+        //     } 
+    
+        //     b_invert = (invertInt>0);
+        // }
 
         // CONTENT TAG CHECK 
         //////////////////////
