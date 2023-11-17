@@ -18,14 +18,14 @@ const char * noPageEndBrace =
 
 const char * noVarStrtBrace =
 "        <name>pageIndex</name>\n"
-"        <type>uint16_t</type>\n"
+"        <type>int32_t</type>\n"
 "        <value>0</value>\n"
 "    </variable>\n";
 
 const char * noVarEndBrace =
 "    <variable>\n"
 "        <name>pageIndex</name>\n"
-"        <type>uint16_t</type>\n"
+"        <type>int32_t</type>\n"
 "        <value>0</value>\n";
 
 
@@ -242,7 +242,7 @@ const char* helloWorldGui_no_page_index =
 "<variables>\n"
 "    <variable>\n"
 "        <name>othertIndex</name>\n"
-"        <type>uint16_t</type>\n"
+"        <type>int32_t</type>\n"
 "        <value>0</value>\n"
 "    </variable>\n"
 "</variables>\n"
@@ -265,7 +265,7 @@ const char* helloWorldGui_text_error=
 "<variables>\n"
 "    <variable>\n"
 "        <name>pageIndex</name>\n"
-"        <type>uint16_t</type>\n"
+"        <type>int32_t</type>\n"
 "        <value>0</value>\n"
 "    </variable>\n"
 "</variables>\n"
@@ -288,7 +288,7 @@ const char* helloWorldGui_bitmap_error=
 "<variables>\n"
 "    <variable>\n"
 "        <name>pageIndex</name>\n"
-"        <type>uint16_t</type>\n"
+"        <type>int32_t</type>\n"
 "        <value>0</value>\n"
 "    </variable>\n"
 "</variables>\n"

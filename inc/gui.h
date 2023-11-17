@@ -162,7 +162,7 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
  * @param [out] p_value - Variable value  
  * @return gui_variable_status_t 
  */
-gui_variable_status_t gui_get_uint16_var(const char *variableKey,int32_t *p_value);
+gui_variable_status_t gui_get_int32_var(const char *variableKey,int32_t *p_value);
 
 /**
  * @brief Can update int32_t variables from there variable key 
@@ -171,7 +171,7 @@ gui_variable_status_t gui_get_uint16_var(const char *variableKey,int32_t *p_valu
  * @param [in] value - Value to update variable to 
  * @return gui_variable_status_t 
  */
-gui_variable_status_t gui_update_uint16_var(const char *variableKey,int32_t value);
+gui_variable_status_t gui_update_int32_var(const char *variableKey,int32_t value);
 
 /**
  * @brief Take a text string that contains a bitMap and renders that bitmap onto the passed in

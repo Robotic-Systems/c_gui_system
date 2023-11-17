@@ -323,6 +323,15 @@ const char * text_HelloWorld_one_var =
 "    <content>\"one: \%d\",<var>test1</var></content>\n"
 "</text>\n";
 
+const char * text_HelloWorld_moveable =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>center</alignment>\n"
+"    <vert-alignment>center</vert-alignment>\n"
+"    <position><var>xPos</var>,<var>yPos</var></position>\n"
+"    <content>\"Hello World!\"</content>\n"
+"</text>\n";
 
 const char * operand_equal=
 "<operand>\n"

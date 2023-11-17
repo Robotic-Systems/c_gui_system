@@ -225,7 +225,7 @@ TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
     LONGS_EQUAL(GUI_VAR_OK, createStatus);
     // Check operation was successful 
     int32_t value = 0;
-    gui_variable_status_t fetchStatus = gui_get_uint16_var(lastName, &value);
+    gui_variable_status_t fetchStatus = gui_get_int32_var(lastName, &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
     LONGS_EQUAL(10, value);
 }
@@ -236,7 +236,7 @@ TEST(GUITest, variable_exists_and_is_set_to_its_default)
     gui_init(lcd_spy_write, singleVarGui);
     // Fetch variable value 
     int32_t value = 0; // set to non zero value 
-    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pageIndex", &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
     LONGS_EQUAL(55, value);
 }
@@ -247,10 +247,10 @@ TEST(GUITest, uint16_variables_can_be_updated)
     // init gui 
     gui_init(lcd_spy_write, singleVarGui);
     // Update Variable 
-    gui_update_uint16_var("pageIndex",1);
+    gui_update_int32_var("pageIndex",1);
     // Fetch variable value 
     int32_t value = 0; // set to non zero value 
-    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pageIndex", &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
     LONGS_EQUAL(1, value);
 }
@@ -676,6 +676,23 @@ TEST(GUITest, can_partially_render_chars_underflow)
     IS_BIT_MAP_EQUAL_BIT(layer,outputMap,-2,-2,14,19);
 }
 
+TEST(GUITest, can_render_center_text)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // PRINT_BIT_MAP(64,102,helloWorld_19_juipeter); 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+}
+
 TEST(GUITest, can_render_text_elements_left)
 {
     // Fetch the xml text extract 
@@ -687,8 +704,8 @@ TEST(GUITest, can_render_text_elements_left)
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check that text rendered correctly 
-    // PRINT_BIT_MAP(64,102,outputMap);
+    // Check that text rendered correctly
+
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_left,outputMap,0,0,102,64);
 }
 
@@ -724,21 +741,6 @@ TEST(GUITest, can_render_multiline_text)
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_multiline,outputMap,0,0,102,64);
 }
 
-TEST(GUITest, can_render_center_text)
-{
-    // Fetch the xml text extract 
-    const char* strTextCopy = text_HelloWorld;
-    // Create empty bitmap 
-    uint8_t outputMap[ROWS][COLUMNS];
-    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    // Render text
-    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-    // Check status is okay 
-    // PRINT_BIT_MAP(64,102,outputMap);
-    LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check that text rendered correctly 
-    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: PAGE RENDER 
@@ -757,7 +759,7 @@ TEST(GUITest, changing_to_page_that_does_not_exist_causes_error)
     // init gui clear
     gui_init(lcd_spy_write, helloWorldGui);
     // Change page number to be out of bounds
-    gui_update_uint16_var("pageIndex", 10);
+    gui_update_int32_var("pageIndex", 10);
     // Update to set the first frame 
     gui_status_t renderStatus = gui_update();
     LONGS_EQUAL(GUI_ERR, renderStatus);
@@ -809,7 +811,7 @@ TEST(GUITest, pages_with_text_can_be_written_to_screen)
 {
     // init gui clear
     gui_init(lcd_spy_write, helloWorldGui);
-    gui_update_uint16_var("pageIndex", 1);
+    gui_update_int32_var("pageIndex", 1);
     // Update to set the first frame 
     gui_status_t renderStatus = gui_update();
     LONGS_EQUAL(GUI_OK, renderStatus);
@@ -850,7 +852,7 @@ TEST(GUITest, if_missing_operand_tag_throws_error)
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
 
@@ -865,7 +867,7 @@ TEST(GUITest, if_missing_if_tag_throws_error)
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
 
@@ -880,7 +882,7 @@ TEST(GUITest, if_missing_operation_tag_throws_error)
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
 
@@ -895,7 +897,7 @@ TEST(GUITest, if_missing_var_tag_throws_error)
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
 
@@ -910,7 +912,7 @@ TEST(GUITest, if_missing_value_tag_throws_error)
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
 
@@ -946,7 +948,7 @@ TEST(GUITest, if_statement_true_and_then_not_found_throws_error)
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
 
@@ -960,7 +962,7 @@ TEST(GUITest, if_statement_true_and_then_is_found_operation_takes_place)
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 2
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(2, value);
 }
 
@@ -974,7 +976,7 @@ TEST(GUITest, if_statement_false_and_else_is_not_found__no_operation_takes_place
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 2
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(9, value);
 }
 
@@ -988,7 +990,7 @@ TEST(GUITest, if_statement_false_and_else_is_found_operation_takes_place)
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 2
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(6, value);
 }
 
@@ -1003,7 +1005,7 @@ TEST(GUITest, if_statement_true_and_then_one_var_can_be_set_to_value_of_anoter)
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(50, value);
 }
 
@@ -1018,7 +1020,7 @@ TEST(GUITest, if_statement_false_then_one_var_can_be_set_to_value_of_anoter)
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 
     int32_t value = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(60, value);
 }
 
@@ -1034,9 +1036,9 @@ TEST(GUITest, if_true_multiple_thens_can_take_place)
     // Check var now equals 
     int32_t value = 0;
     int32_t value2 = 0;
-    gui_get_uint16_var("test1", &value);
+    gui_get_int32_var("test1", &value);
     LONGS_EQUAL(60, value);
-    gui_get_uint16_var("test2", &value2);
+    gui_get_int32_var("test2", &value2);
     LONGS_EQUAL(22, value2);
 
 }
@@ -1567,10 +1569,44 @@ TEST(GUITest, can_be_used_to_return_two_vars)
     LONGS_EQUAL_TEXT(99, value[0], "VALUE");
     LONGS_EQUAL_TEXT(88, value[1], "VALUE");
 }
-// Checking using invert test 
+
+
+TEST(GUITest, text_position_can_be_set_using_variables_and_position_can_be_changed_)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_moveable;
+    // Create variables 
+    gui_create_var("xPos","int32_t","32");
+    gui_create_var("yPos","int32_t","51");
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // PRINT_BIT_MAP(64,102,helloWorld_19_juipeter); 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+    // MOVING AND CHECKING AGAIN 
+    gui_update_int32_var("xPos",13);
+    gui_update_int32_var("yPos",-2);
+    // Reset bitmap 
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check it matches 
+    // PRINT_BIT_MAP(64,102,helloWorld_19_juipeter_moved_off); 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_moved_off,outputMap,0,0,102,64);
+}
+
 /**
- * <bitMaps>
- * - text position_can_be_set_using_variables_and_position_can_be_changed 
+ * <text>
  * - Can set default font at the start of the pages
  * - Can set default alighment at start of pages 
  * - Can set default vert alighment at start of pages 
@@ -1582,12 +1618,9 @@ TEST(GUITest, can_be_used_to_return_two_vars)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * <variable>
- * - Hash table can handle collisions through Open Addressing
  * - Can use floats as variables 
+ * - Hash table can handle collisions through Open Addressing
  * - If we have floats we really dont need the rest tbh 
-    * - Can use int16_t as variables 
-    * - Can use uint32_t as variables 
-    * - Can use int32_t as variables 
  * - Can't create two variables of same name 
  * - variables max and min can be set clear
  * make

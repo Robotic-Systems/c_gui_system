@@ -323,7 +323,7 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
     return GUI_VAR_ERR;
 }
 
-gui_variable_status_t gui_get_uint16_var(const char *variableKey,int32_t *p_value)
+gui_variable_status_t gui_get_int32_var(const char *variableKey,int32_t *p_value)
 {
     uint32_t index = hash_index(variableKey);
     while (index < HASH_MAX_VARS)
@@ -337,7 +337,7 @@ gui_variable_status_t gui_get_uint16_var(const char *variableKey,int32_t *p_valu
     return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
 }
     
-gui_variable_status_t gui_update_uint16_var(const char *variableKey,int32_t value)
+gui_variable_status_t gui_update_int32_var(const char *variableKey,int32_t value)
 {
     uint32_t index = hash_index(variableKey);
     while (index < HASH_MAX_VARS)
@@ -459,8 +459,8 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     uint8_t fontSize  = {0};
     uint8_t fontSizeIndex  = {0};
     uint8_t fontIndex = 0;
-    int16_t posX      = {0}; /** What column to place text in  */
-    int16_t posY      = {0}; /** What row to place text in*/
+    int32_t posX      = {0}; /** What column to place text in  */
+    int32_t posY      = {0}; /** What row to place text in*/
     char text[MAX_TAG_DATA_LENGTH] = {'\0'};
     uint8_t alignmentOpt     = 0;
     uint8_t vertAlignmentOpt = 0;
@@ -570,13 +570,20 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         //////////////////////
         if (strncmp(textObjectString, "<position>", 10) == 0) 
         {
-            if (sscanf(textObjectString, "<position>%hd,%hd</position>", &posY, &posX) == 2) 
+            int32_t posVars[2] = {0};
+            gui_status_t posStatus = gui_parse_tag_val(textObjectString,"position",posVars,2,&b_haveFoundPosition);
+            if(posStatus != GUI_OK)
             {
-                b_haveFoundPosition = true;
-            } 
+                printf("Pos Fault");
+                return posStatus;
+            }
+            if(b_haveFoundPosition)
+            {
+                posY = posVars[0];
+                posX = posVars[1];
+            }
         }
-
-
+         
         // INVERT TAG CHECK 
         //////////////////////
         int32_t invertInt = 0;
@@ -590,37 +597,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         {
             b_invert = (invertInt>0);
         }
-        // if (strncmp(textObjectString, "<invert>", 8) == 0) 
-        // {
-
-        //     int32_t invertInt = 0;
-        //     // Skip to >
-        //     SKIP_TO(textObjectString,'>');
-        //     if (!strncmp(textObjectString, "><var>",5)) 
-        //     {
-        //         char varName[MAX_KEY_LENGTH];
-        //         // Extracting value 
-        //         if ((sscanf(textObjectString, "><var>%63[^</]", varName) == 1)) 
-        //         {
-        //             gui_variable_status_t fetchStatus = gui_get_uint16_var(varName, &invertInt);
-        //             if(fetchStatus!=GUI_VAR_OK)
-        //             {
-        //                 return GUI_ERR;
-        //             }
-        //         }
-        //     }
-        //     // Assume its a value 
-        //     else 
-        //     {
-        //         // Inverting via value 
-        //         if (sscanf(textObjectString, ">%hd</invert>", &invertInt) != 1) 
-        //         {
-        //             return GUI_ERR;
-        //         }
-        //     } 
-    
-        //     b_invert = (invertInt>0);
-        // }
 
         // CONTENT TAG CHECK 
         //////////////////////
@@ -788,7 +764,7 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
 gui_status_t gui_update()
 {
     int32_t pageNumber = 0; // set to non zero value 
-    gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &pageNumber);
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pageIndex", &pageNumber);
     if((pageNumber > pageCount) || (fetchStatus != GUI_VAR_OK))
     {
         return GUI_ERR;
@@ -897,7 +873,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
                     // Extracting value 
                     if ((sscanf(operandObjectString, "<var>%63[^</]", varName) == 1)) 
                     {
-                        gui_variable_status_t fetchStatus = gui_get_uint16_var(varName, &arguments[itr_arg]);
+                        gui_variable_status_t fetchStatus = gui_get_int32_var(varName, &arguments[itr_arg]);
                         if(fetchStatus==GUI_VAR_OK)
                         {
                             b_haveFoundArg[itr_arg] = true;
@@ -1036,7 +1012,7 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
             varTag[varExtractedLength] = '\0'; // Null-terminate the string
 
             // FETCHING VAR
-            gui_variable_status_t fetchStatus = gui_get_uint16_var(varTag, &value);
+            gui_variable_status_t fetchStatus = gui_get_int32_var(varTag, &value);
             if (fetchStatus != GUI_VAR_OK) {
                 return GUI_ERR;
             }
@@ -1120,11 +1096,11 @@ gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_
                 gui_variable_status_t fetchStatus = GUI_VAR_ERR;
                 if(numReturn > 1)
                 {
-                    fetchStatus = gui_get_uint16_var(varTag, &p_value[itr_var]);
+                    fetchStatus = gui_get_int32_var(varTag, &p_value[itr_var]);
                 }
                 else 
                 {
-                    fetchStatus = gui_get_uint16_var(varTag, p_value);
+                    fetchStatus = gui_get_int32_var(varTag, p_value);
                 }
                 
                 if (fetchStatus != GUI_VAR_OK)
@@ -1179,14 +1155,14 @@ gui_status_t help_set_var_equal(const char *operandObjectString)
         {
             return GUI_ERR; 
         }
-        gui_variable_status_t fetchStatus = gui_get_uint16_var(argVarName, &value);
+        gui_variable_status_t fetchStatus = gui_get_int32_var(argVarName, &value);
         if(fetchStatus!=GUI_VAR_OK)
         {
             return GUI_ERR; 
         }
     } 
 
-    gui_variable_status_t updateStatus = gui_update_uint16_var(varName,value);
+    gui_variable_status_t updateStatus = gui_update_int32_var(varName,value);
     if(updateStatus != GUI_VAR_OK)
     {
         return GUI_ERR;
