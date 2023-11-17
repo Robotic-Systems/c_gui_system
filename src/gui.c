@@ -5,7 +5,7 @@
 /***********************/
 #define SKIP_WHITESPACE(str) \
     do { \
-        while (*str == ' ' || *str == '\n' || *str == ',' || *str == '\r' || *str == '\t') { \
+        while ((*str == ' ' || *str == '\n' || *str == ',' || *str == '\r' || *str == '\t') && (*str != '\0')) { \
             str++; \
         } \
     } while (0)
@@ -19,7 +19,7 @@
 
 #define SKIP_TO(str,char) \
     do { \
-        while (*str != char) { \
+        while (*str != char && *str != '\0') { \
             str++; \
         } \
     } while (0)
@@ -618,7 +618,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         {
             return contentStatus;
         }
-        
+
         textObjectString++;
     }
     
@@ -992,6 +992,12 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
         {
             return GUI_ERR;
         }
+        // CHECKING DATA LENGTH 
+        if((endTokens - (startTokens + startTagLen))>MAX_TAG_DATA_LENGTH)
+        {
+            return GUI_ERR;
+        }
+
         // GETTING LENGTHS 
         size_t startPos = (startTokens - tagString + startTagLen)-1;
         size_t endPos = endTokens - tagString;
@@ -1002,8 +1008,13 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
         // CHECKING FOR VAR
         const char *varSrtTok = strstr(TxtData,"<var>");
         const char *varEndTok = strstr(TxtData,"</var>");
-        if(varSrtTok != NULL)
+        if((varSrtTok != NULL))
         {
+            // TOLKEN POSITION CHECK
+            if(varEndTok<=varSrtTok)
+            {
+                return GUI_ERR;
+            }
             // EXTRACTING VAR CONTENTS
             size_t varStartPos = varSrtTok - TxtData + strlen("<var>");
             size_t varEndPos = varEndTok - TxtData;
@@ -1035,6 +1046,104 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
     return GUI_OK;
 }
 
+
+gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, uint16_t *p_value,uint8_t numReturn, bool *b_isFound)
+{
+    // CREATING START TAG
+    char startTag[MAX_TAG_NAME_LENGTH];
+    size_t startTagLen = strnlen(tagName,MAX_TAG_NAME_LENGTH)+3;
+    snprintf(startTag, startTagLen, "<%s>",tagName);
+    const char *startTokens = strstr(tagString,startTag);
+     // CREATING END TAG 
+    char endTag[MAX_TAG_NAME_LENGTH];
+    size_t endTagLen = strnlen(tagName,MAX_TAG_NAME_LENGTH)+4;
+    snprintf(endTag, endTagLen, "</%s>",tagName);
+    const char *endTokens = strstr(tagString,endTag);
+    // OTHER TEMP VARS
+    char TxtData[MAX_TAG_DATA_LENGTH];
+    char* dataPtr = TxtData;    
+    // PARSING START TAG
+    if(startTokens != NULL)
+    {
+        *b_isFound = true;
+        if(endTokens == NULL)   
+        {
+            return GUI_ERR;
+        }
+        // CHECKING DATA LENGTH 
+        if((endTokens - (startTokens + startTagLen))>MAX_TAG_DATA_LENGTH)
+        {
+            return GUI_ERR;
+        }
+        // GETTING LENGTHS 
+        size_t startPos = (startTokens - tagString + startTagLen)-1;
+        size_t endPos = endTokens - tagString;
+        size_t extractedLength = endPos - startPos;
+        // EXTRACTING VALUE OR VAR STRING 
+        strncpy(TxtData, tagString + startPos, extractedLength);
+        TxtData[extractedLength] = '\0'; // Null-terminate the string
+        
+        // START EXTRACTION LOOP 
+        for(int itr_var = 0; itr_var <numReturn;itr_var++)
+        {
+            // CHECKING FOR VAR
+            const char *varSrtTok = strstr(dataPtr,"<var>");
+            const char *varEndTok = strstr(dataPtr,"</var>");
+            if((varSrtTok != NULL))
+            {
+                // TOLKEN POSITION CHECK
+                if(varEndTok<=varSrtTok)
+                {
+                    return GUI_ERR;
+                }
+                // EXTRACTING VAR CONTENTS
+                size_t varStartPos = varSrtTok - TxtData + strlen("<var>");
+                size_t varEndPos = varEndTok - TxtData;
+                size_t varExtractedLength = varEndPos - varStartPos;
+
+                char varTag[MAX_TAG_DATA_LENGTH];
+                strncpy(varTag, TxtData + varStartPos, varExtractedLength);
+                varTag[varExtractedLength] = '\0'; // Null-terminate the string
+
+                // FETCHING VAR
+                gui_variable_status_t fetchStatus = GUI_VAR_ERR;
+                if(numReturn > 1)
+                {
+                    fetchStatus = gui_get_uint16_var(varTag, &p_value[itr_var]);
+                }
+                else 
+                {
+                    fetchStatus = gui_get_uint16_var(varTag, p_value);
+                }
+                
+                if (fetchStatus != GUI_VAR_OK)
+                {
+                    return GUI_ERR;
+                }
+            }
+            else
+            {
+                // TURNING INTO VALUE 
+                if(numReturn > 1)
+                {
+                    p_value[itr_var] = atoi(dataPtr);  
+                }
+                else 
+                {
+                    *p_value = atoi(dataPtr);  
+                }
+            }
+            // INCREMENTING POINTER
+            if(numReturn>1)
+            {
+                SKIP_TO(dataPtr, ','); // Skipping to the next comma
+                dataPtr++;
+            }
+        }
+        
+    }
+    return GUI_OK;
+}
 gui_status_t help_set_var_equal(const char *operandObjectString)
 {
     // Incrementing past <then> and skipping whitespace

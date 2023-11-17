@@ -1363,9 +1363,32 @@ TEST(GUITest, if_a_var_is_refrenced_in_string_the_value_is_returned_in_str)
     STRCMP_EQUAL_TEXT("\"one: \%d\",1", text, "TEXT MISMATCH");
 }
 // Error is returned if end tag is greater then MAX_TAG_DATA length away
+TEST(GUITest, error_returned_if_end_tag_is_more_then_max_len_away)
+{
+    // Create string longer then max data length 
+    const char * stringOfTag = "<content>adfasdfasdfasdfasdfasdfasdfasdfsdafsdfsadfasdfasdfasdfasdfsadfasdffasdfsdaASASDasdSDAdsasadsda</content>\n";
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check for returned error 
+    LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
+}
 // Error is returned if end var tolken found before start  
-// Error is returned if end content tolken found before start
-
+TEST(GUITest, error_if_var_end_tolken_found_first)
+{
+    // Define string to test 
+    const char * stringOfTag = "<content>\"one: \%d\",</var>test<var></content>\n";
+    gui_create_var("test","uint16_t","1");
+    const char* tagName = "content";
+    char text[MAX_TAG_DATA_LENGTH];
+    bool is_found = false;
+    // Call gui parse tag 
+    gui_status_t parseStatus = gui_parse_tag_str(stringOfTag,tagName,text,&is_found);
+    // Check there is no error
+    LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
+}
 // // Variables can be printed in text
 TEST(GUITest, variables_can_be_printed_in_text)
 {
@@ -1378,12 +1401,173 @@ TEST(GUITest, variables_can_be_printed_in_text)
     // Render text
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
-    PRINT_BIT_MAP(64,102,outputMap);
-    PRINT_BIT_MAP(64,102,helloWorld_19_juipeter_one);
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // PRINT_BIT_MAP(64,102,helloWorld_19_juipeter_one);
     LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that text rendered correctly 
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one,outputMap,0,0,84,19);
 }
+
+TEST(GUITest, passing_gui_parse_tag_val_an_errorless_xml_returns_ok)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<invert>1</invert>\n";
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+
+    LONGS_EQUAL(GUI_OK, parseStatus);
+}
+
+TEST(GUITest, passing_a_string_that_does_not_contain_start_tag_returns_boolean_false_var)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "1</invert>\n";
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(false, is_found, "BOOLEAN MISMATCH");
+}
+
+TEST(GUITest, passing_a_string_that_does_contain_start_tag_returns_boolean_true_var)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<invert>1</invert>\n";
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+}
+
+TEST(GUITest, if_end_tag_is_not_found_returns_error_var)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<invert>1\n";
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+}
+
+TEST(GUITest, gui_parse_tag_returns_value_between_tags)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<invert>1</invert>\n";
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+    LONGS_EQUAL_TEXT(1, value, "VALUE");
+}
+
+TEST(GUITest, if_a_var_is_refrenced_in_val_that_dne_error_returned_var)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<invert><var>test</var></invert>\n";
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+}
+
+TEST(GUITest, if_a_var_is_refrenced_in_val_the_value_is_returned)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<invert><var>test</var></invert>\n";
+    gui_create_var("test","uint16_t","1");
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+    LONGS_EQUAL_TEXT(1, value, "VALUE");
+}
+
+TEST(GUITest, error_returned_if_end_tag_is_more_then_max_len_away_var)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<invert><var>test</var>                                                                                                                </invert>\n";
+    gui_create_var("test","uint16_t","1");
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
+
+}
+
+TEST(GUITest, error_if_var_end_tolken_found_first_var)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<invert></var>test<var></invert>\n";
+    gui_create_var("test","uint16_t","1");
+    // Call gui parse tag 
+    uint16_t value = 0;
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
+}
+
+TEST(GUITest, can_be_used_to_return_two_values)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<position>32,51</position>\n";
+    gui_create_var("test","uint16_t","1");
+    // Call gui parse tag 
+    uint16_t value[2] = {0};
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+    // printf("%d\n", value[0]);
+    // printf("%d\n", value[1]);
+    LONGS_EQUAL_TEXT(32, value[0], "VALUE");
+    LONGS_EQUAL_TEXT(51, value[1], "VALUE");
+}
+
+TEST(GUITest, can_be_used_to_return_one_vars)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<position><var>test</var>,51</position>\n";
+    gui_create_var("test","uint16_t","99");
+    // Call gui parse tag 
+    uint16_t value[2] = {0};
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+    LONGS_EQUAL_TEXT(99, value[0], "VALUE");
+    LONGS_EQUAL_TEXT(51, value[1], "VALUE");
+}
+
+TEST(GUITest, can_be_used_to_return_two_vars)
+{
+    // Create string to parse 
+    const char* strTextCopy =  "<position><var>test1</var>,<var>test2</var></position>\n";
+    gui_create_var("test1","uint16_t","99");
+    gui_create_var("test2","uint16_t","88");
+    // Call gui parse tag 
+    uint16_t value[2] = {0};
+    bool is_found = false;
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
+    LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
+    LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
+    LONGS_EQUAL_TEXT(99, value[0], "VALUE");
+    LONGS_EQUAL_TEXT(88, value[1], "VALUE");
+}
+// Checking using invert test 
 /**
  * <bitMaps>
  * - text position_can_be_set_using_variables_and_position_can_be_changed 
@@ -1405,7 +1589,9 @@ TEST(GUITest, variables_can_be_printed_in_text)
     * - Can use uint32_t as variables 
     * - Can use int32_t as variables 
  * - Can't create two variables of same name 
- * - variables max and min can be set 
+ * - variables max and min can be set clear
+ * make
+
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

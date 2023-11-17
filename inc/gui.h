@@ -247,4 +247,18 @@ gui_status_t gui_execute_operand(const char *operandObjectString);
  */
 gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char result[MAX_TAG_DATA_LENGTH], bool *b_isFound);
 
+/**
+ * @brief Parses the input string looking for the start and end tags specified by tag name, the resultant uint16 value found between them
+ * if a val tag is found then its corresponding value will be extracted and returned. If there is any 
+ * error finding the value then an error will be returned
+ * 
+ * @param [in] tagString  - The string that could contain the tag that you need to find  
+ * @param [in] tagName  - the name of the tag that is being parsed for, i.e if you want to parse for a "<content>" tag you should pass in "content"
+ * @param [out] p_value  - The resultant extracted value 
+ * @param [out] numReturn  - Number of values to return, if less then number of return found error is caused
+ * @param [out] b_isFound  - Succsess boolean that returns true if the tag was found 
+ * @return gui_status_t  - Tag parsing execution status 
+ */
+gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, uint16_t *p_value,uint8_t numReturn, bool *b_isFound);
+
 #endif
