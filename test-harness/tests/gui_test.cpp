@@ -166,11 +166,11 @@ TEST(GUITest, gui_get_page_position_returns_page_0_start_and_end)
     uint32_t endIndex = 0;
     gui_get_page_position(0,&startIndex,&endIndex);
 
-    CHECK(helloWorldGui[startIndex] == '>');
-    CHECK(helloWorldGui[endIndex] == '<');
+    CHECK_EQUAL('>',helloWorldGui[startIndex]);
+    CHECK_EQUAL('<',helloWorldGui[endIndex]);
 
-    LONGS_EQUAL(198,startIndex);
-    LONGS_EQUAL(3781,endIndex);
+    LONGS_EQUAL(197,startIndex);
+    LONGS_EQUAL(3780,endIndex);
 }
 
 TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
@@ -185,8 +185,8 @@ TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
     CHECK(helloWorldGui[startIndex] == '>');
     CHECK(helloWorldGui[endIndex] == '<');
 
-    LONGS_EQUAL(3798,startIndex);
-    LONGS_EQUAL(4108,endIndex);
+    LONGS_EQUAL(3797,startIndex);
+    LONGS_EQUAL(4107,endIndex);
 }
 
 // if gui_get_page_position is called on page that does not exist then error is returned 
@@ -219,12 +219,12 @@ TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
     // Create variable definition strings
     char lastName[64]  = "testVar"; 
     char lastValue[64] = "10"; 
-    char lastType[64]  = "uint16_t";  
+    char lastType[64]  = "int32_t";  
     // Call variable create 
     gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
     LONGS_EQUAL(GUI_VAR_OK, createStatus);
     // Check operation was successful 
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_variable_status_t fetchStatus = gui_get_uint16_var(lastName, &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
     LONGS_EQUAL(10, value);
@@ -235,7 +235,7 @@ TEST(GUITest, variable_exists_and_is_set_to_its_default)
     // init gui 
     gui_init(lcd_spy_write, singleVarGui);
     // Fetch variable value 
-    uint16_t value = 0; // set to non zero value 
+    int32_t value = 0; // set to non zero value 
     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
     LONGS_EQUAL(55, value);
@@ -249,7 +249,7 @@ TEST(GUITest, uint16_variables_can_be_updated)
     // Update Variable 
     gui_update_uint16_var("pageIndex",1);
     // Fetch variable value 
-    uint16_t value = 0; // set to non zero value 
+    int32_t value = 0; // set to non zero value 
     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &value);
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
     LONGS_EQUAL(1, value);
@@ -273,7 +273,7 @@ TEST(GUITest, feeding_in_a_value_with_name_greater_then_max_causes_error)
     // Create variable definition strings
     char lastName[64]  = "ghjopasd;lkfjas;ldkfjas;ldfkja;sldfkjas;dlfkjas"; 
     char lastValue[64] = "10"; 
-    char lastType[64]  = "uint16_t";  // Create garbled type
+    char lastType[64]  = "int32_t";  // Create garbled type
     // Call variable create 
     gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
     LONGS_EQUAL(GUI_VAR_ERR, createStatus);
@@ -562,7 +562,7 @@ TEST(GUITest, get_char_width_returns_corect_char_width_for_c)
 TEST(GUITest, get_char_width_returns_corect_char_width_for_whole_glyph_set)
 {
     char glyphs[96] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
-    uint16_t widthIndex = 0;
+    int32_t widthIndex = 0;
     uint8_t widthArray[95] = {
     0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x03,   0x03,   0x07,   0x03,   0x0B,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x0B,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x0B,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x0B,   0x07,   0x07,   0x07,   0x07,   0x03,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x04,   0x0B,   0x03,   0x0E,   0x09,   0x07,   0x07,   0x07,   0x07,   0x09,   0x05,   0x05,   0x07,   0x07,   0x07,   0x07,   0x06,   0x06,   0x06,   0x06,   0x03,   0x03,   0x03,   0x03,   0x07,   0x06,   0x03,   0x03,   0x07,   0x06,   0x06,   0x07
     };
@@ -832,7 +832,7 @@ TEST(GUITest, passing_operand_with_no_error_returns_ok)
 {
     const char* strTextCopy = operand_equal;
     // Create the var used in test case
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
@@ -843,13 +843,13 @@ TEST(GUITest, if_missing_operand_tag_throws_error)
 {
     const char* strTextCopy = operand_equal_missing_opening_flag;
     // Create the var used in test case
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
@@ -858,13 +858,13 @@ TEST(GUITest, if_missing_if_tag_throws_error)
 {
     const char* strTextCopy = operand_equal_missing_if_tag;
     // Create the var used in test case
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
@@ -873,13 +873,13 @@ TEST(GUITest, if_missing_operation_tag_throws_error)
 {
     const char* strTextCopy = operand_equal_missing_operation_tag;
     // Create the var used in test case
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
@@ -888,13 +888,13 @@ TEST(GUITest, if_missing_var_tag_throws_error)
 {
     const char* strTextCopy = operand_equal_missing_var_tag;
     // Create the var used in test case
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
@@ -903,13 +903,13 @@ TEST(GUITest, if_missing_value_tag_throws_error)
 {
     const char* strTextCopy = operand_equal_missing_value_tag;
     // Create the var used in test case
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
@@ -928,8 +928,8 @@ TEST(GUITest, comparing_two_vars_does_not_throw_error)
     const char* strTextCopy = operand_equal_two_var;
     // Perform Operation 
     // Create the var used in test case
-    gui_create_var("test1","uint16_t","10");
-    gui_create_var("test2","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
+    gui_create_var("test2","int32_t","10");
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
@@ -939,13 +939,13 @@ TEST(GUITest, comparing_two_vars_does_not_throw_error)
 TEST(GUITest, if_statement_true_and_then_not_found_throws_error)
 {
     const char* strTextCopy = operand_equal_no_then;
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     // Check value same as when created
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
@@ -953,13 +953,13 @@ TEST(GUITest, if_statement_true_and_then_not_found_throws_error)
 TEST(GUITest, if_statement_true_and_then_is_found_operation_takes_place)
 {
     const char* strTextCopy = operand_equal;
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 2
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(2, value);
 }
@@ -967,13 +967,13 @@ TEST(GUITest, if_statement_true_and_then_is_found_operation_takes_place)
 TEST(GUITest, if_statement_false_and_else_is_not_found__no_operation_takes_place)
 {
     const char* strTextCopy = operand_equal_no_else;
-    gui_create_var("test1","uint16_t","9");
+    gui_create_var("test1","int32_t","9");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 2
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(9, value);
 }
@@ -981,13 +981,13 @@ TEST(GUITest, if_statement_false_and_else_is_not_found__no_operation_takes_place
 TEST(GUITest, if_statement_false_and_else_is_found_operation_takes_place)
 {
     const char* strTextCopy = operand_equal;
-    gui_create_var("test1","uint16_t","9");
+    gui_create_var("test1","int32_t","9");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 2
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(6, value);
 }
@@ -995,14 +995,14 @@ TEST(GUITest, if_statement_false_and_else_is_found_operation_takes_place)
 TEST(GUITest, if_statement_true_and_then_one_var_can_be_set_to_value_of_anoter)
 {
     const char* strTextCopy = operand_equal_dual_var_out;
-    gui_create_var("test1","uint16_t","10");
-    gui_create_var("test2","uint16_t","50");
+    gui_create_var("test1","int32_t","10");
+    gui_create_var("test2","int32_t","50");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(50, value);
 }
@@ -1010,14 +1010,14 @@ TEST(GUITest, if_statement_true_and_then_one_var_can_be_set_to_value_of_anoter)
 TEST(GUITest, if_statement_false_then_one_var_can_be_set_to_value_of_anoter)
 {
     const char* strTextCopy = operand_equal_dual_var_out;
-    gui_create_var("test1","uint16_t","11");
-    gui_create_var("test2","uint16_t","60");
+    gui_create_var("test1","int32_t","11");
+    gui_create_var("test2","int32_t","60");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 
-    uint16_t value = 0;
+    int32_t value = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(60, value);
 }
@@ -1025,15 +1025,15 @@ TEST(GUITest, if_statement_false_then_one_var_can_be_set_to_value_of_anoter)
 TEST(GUITest, if_true_multiple_thens_can_take_place)
 {
     const char* strTextCopy = operand_equal_many_thens;
-    gui_create_var("test1","uint16_t","10");
-    gui_create_var("test2","uint16_t","60");
+    gui_create_var("test1","int32_t","10");
+    gui_create_var("test2","int32_t","60");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
     // Check var now equals 
-    uint16_t value = 0;
-    uint16_t value2 = 0;
+    int32_t value = 0;
+    int32_t value2 = 0;
     gui_get_uint16_var("test1", &value);
     LONGS_EQUAL(60, value);
     gui_get_uint16_var("test2", &value2);
@@ -1045,7 +1045,7 @@ TEST(GUITest, if_end_operand_tag_hit_loop_breaks)
 {
     const char* strTextCopy = operand_equal_early_stop;
     // Create the var used in test case
-    gui_create_var("test1","uint16_t","10");
+    gui_create_var("test1","int32_t","10");
     // Perform Operation 
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
@@ -1083,7 +1083,7 @@ TEST(GUITest, can_render_calbri_center_text)
 TEST(GUITest, get_char_width_returns_corect_char_width_for_whole_glyph_set_sans)
 {
     char glyphs[96] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
-    uint16_t widthIndex = 0;
+    int32_t widthIndex = 0;
     uint8_t widthArray_size12[95] = {
     0x07,   0x08,   0x06,   0x08,   0x07,   0x06,   0x07,   0x08,   0x04,   0x05,   0x08,   0x04,   0x0C,   0x08,   0x07,   0x08,   0x08,   0x06,   0x06,   0x05,   0x08,   0x07,   0x0B,   0x07,   0x07,   0x06,   0x09,   0x08,   0x08,   0x09,   0x07,   0x07,   0x09,   0x09,   0x04,   0x05,   0x08,   0x07,   0x0B,   0x0A,   0x0A,   0x08,   0x0A,   0x08,   0x07,   0x07,   0x09,   0x08,   0x0C,   0x08,   0x08,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x07,   0x03,   0x07,   0x07,   0x03,   0x0B,   0x08,   0x07,   0x0B,   0x07,   0x09,   0x07,   0x04,   0x04,   0x04,   0x06,   0x07,   0x07,   0x04,   0x04,   0x05,   0x05,   0x07,   0x03,   0x03,   0x03,   0x05,   0x06,   0x03,   0x03,   0x05,   0x07,   0x07,   0x06
     };
@@ -1215,7 +1215,7 @@ TEST(GUITest, variables_can_be_used_to_not_invert_text)
 {
     // Fetch the xml text extract 
     const char* strTextCopy = text_HelloWorld_var_invert;
-    gui_create_var("invert","uint16_t","0");
+    gui_create_var("invert","int32_t","0");
     // Create empty bitmap 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -1231,7 +1231,7 @@ TEST(GUITest, variables_can_be_used_to_invert_text)
 {
     // Fetch the xml text extract 
     const char* strTextCopy = text_HelloWorld_var_invert;
-    gui_create_var("invert","uint16_t","1");
+    gui_create_var("invert","int32_t","1");
     // Create empty bitmap 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -1351,7 +1351,7 @@ TEST(GUITest, if_a_var_is_refrenced_in_string_the_value_is_returned_in_str)
 {
     // Define string to test 
     const char * stringOfTag = "<content>\"one: \%d\",<var>test</var></content>\n";
-    gui_create_var("test","uint16_t","1");
+    gui_create_var("test","int32_t","1");
     const char* tagName = "content";
     char text[MAX_TAG_DATA_LENGTH];
     bool is_found = false;
@@ -1380,7 +1380,7 @@ TEST(GUITest, error_if_var_end_tolken_found_first)
 {
     // Define string to test 
     const char * stringOfTag = "<content>\"one: \%d\",</var>test<var></content>\n";
-    gui_create_var("test","uint16_t","1");
+    gui_create_var("test","int32_t","1");
     const char* tagName = "content";
     char text[MAX_TAG_DATA_LENGTH];
     bool is_found = false;
@@ -1394,7 +1394,7 @@ TEST(GUITest, variables_can_be_printed_in_text)
 {
     // Fetch the xml text extract 
     const char* strTextCopy = text_HelloWorld_one_var;
-    gui_create_var("test1","uint16_t","1");
+    gui_create_var("test1","int32_t","1");
     // Create eclearmpty bitmap 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -1413,7 +1413,7 @@ TEST(GUITest, passing_gui_parse_tag_val_an_errorless_xml_returns_ok)
     // Create string to parse 
     const char* strTextCopy =  "<invert>1</invert>\n";
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
 
@@ -1425,7 +1425,7 @@ TEST(GUITest, passing_a_string_that_does_not_contain_start_tag_returns_boolean_f
     // Create string to parse 
     const char* strTextCopy =  "1</invert>\n";
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
@@ -1437,7 +1437,7 @@ TEST(GUITest, passing_a_string_that_does_contain_start_tag_returns_boolean_true_
     // Create string to parse 
     const char* strTextCopy =  "<invert>1</invert>\n";
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
@@ -1449,7 +1449,7 @@ TEST(GUITest, if_end_tag_is_not_found_returns_error_var)
     // Create string to parse 
     const char* strTextCopy =  "<invert>1\n";
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
@@ -1461,7 +1461,7 @@ TEST(GUITest, gui_parse_tag_returns_value_between_tags)
     // Create string to parse 
     const char* strTextCopy =  "<invert>1</invert>\n";
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
@@ -1474,7 +1474,7 @@ TEST(GUITest, if_a_var_is_refrenced_in_val_that_dne_error_returned_var)
     // Create string to parse 
     const char* strTextCopy =  "<invert><var>test</var></invert>\n";
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
@@ -1485,9 +1485,9 @@ TEST(GUITest, if_a_var_is_refrenced_in_val_the_value_is_returned)
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert><var>test</var></invert>\n";
-    gui_create_var("test","uint16_t","1");
+    gui_create_var("test","int32_t","1");
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
@@ -1499,9 +1499,9 @@ TEST(GUITest, error_returned_if_end_tag_is_more_then_max_len_away_var)
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert><var>test</var>                                                                                                                </invert>\n";
-    gui_create_var("test","uint16_t","1");
+    gui_create_var("test","int32_t","1");
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
@@ -1512,9 +1512,9 @@ TEST(GUITest, error_if_var_end_tolken_found_first_var)
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert></var>test<var></invert>\n";
-    gui_create_var("test","uint16_t","1");
+    gui_create_var("test","int32_t","1");
     // Call gui parse tag 
-    uint16_t value = 0;
+    int32_t value = 0;
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
@@ -1524,9 +1524,9 @@ TEST(GUITest, can_be_used_to_return_two_values)
 {
     // Create string to parse 
     const char* strTextCopy =  "<position>32,51</position>\n";
-    gui_create_var("test","uint16_t","1");
+    gui_create_var("test","int32_t","1");
     // Call gui parse tag 
-    uint16_t value[2] = {0};
+    int32_t value[2] = {0};
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
@@ -1541,9 +1541,9 @@ TEST(GUITest, can_be_used_to_return_one_vars)
 {
     // Create string to parse 
     const char* strTextCopy =  "<position><var>test</var>,51</position>\n";
-    gui_create_var("test","uint16_t","99");
+    gui_create_var("test","int32_t","99");
     // Call gui parse tag 
-    uint16_t value[2] = {0};
+    int32_t value[2] = {0};
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
@@ -1556,10 +1556,10 @@ TEST(GUITest, can_be_used_to_return_two_vars)
 {
     // Create string to parse 
     const char* strTextCopy =  "<position><var>test1</var>,<var>test2</var></position>\n";
-    gui_create_var("test1","uint16_t","99");
-    gui_create_var("test2","uint16_t","88");
+    gui_create_var("test1","int32_t","99");
+    gui_create_var("test2","int32_t","88");
     // Call gui parse tag 
-    uint16_t value[2] = {0};
+    int32_t value[2] = {0};
     bool is_found = false;
     gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");

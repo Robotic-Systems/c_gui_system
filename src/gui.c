@@ -27,14 +27,14 @@
 /* PRIVATE TYPES */
 /*****************/
 /**
- * @brief Structure for the uint16_t Hashmap 
+ * @brief Structure for the int32_t Hashmap 
 */
-typedef struct KeyValuePairUint16
+typedef struct KeyValuePairInt32
 {
     char key[MAX_KEY_LENGTH];
-    uint16_t value;
+    int32_t value;
     bool b_isUsed;
-} KeyValuePairUint16;
+} KeyValuePairInt32;
 
 
 /**
@@ -65,7 +65,7 @@ int16_t pageCount = 0;     /** Number of pages found in xml after parsing*/
 int16_t varCount  = 0;     /** Number of Variables found in xml after parsing*/
 const char* guiXml = NULL; /** XML string that contains the whole menu system*/
 page_params_t pages[MAX_PAGE_COUNT] = {0};
-KeyValuePairUint16 HashMapUint16[HASH_MAX_VARS];  /** Hash map for uint16_t menu variables*/
+KeyValuePairInt32 HashMapInt32[HASH_MAX_VARS];  /** Hash map for int32_t menu variables*/
 extern font_list_t font_master_list[NUM_FONT_TYPES]; 
 /*****************************/
 /* PRIVATE FUNCTION POINTERS */
@@ -106,9 +106,9 @@ gui_status_t gui_init(write_function p_lcdWrite, const char* xmlString)
 
     // Initalise hashmap 
     for (int i = 0; i < HASH_MAX_VARS; i++) {
-        strncpy(HashMapUint16[i].key, "Nothing", MAX_KEY_LENGTH - 1);
-        HashMapUint16[i].b_isUsed = false;
-        HashMapUint16[i].value = 0;
+        strncpy(HashMapInt32[i].key, "Nothing", MAX_KEY_LENGTH - 1);
+        HashMapInt32[i].b_isUsed = false;
+        HashMapInt32[i].value = 0;
     }
     
     // Parsing the XML and creating hashmap and page index
@@ -156,7 +156,7 @@ gui_status_t gui_parse_xml()
     const char*xmlCopy = guiXml;
     while (*xmlCopy != '\0') {
 
-
+        
         // VARIABLE TAG CHECK 
         ///////////////////// 
         if (strncmp(xmlCopy, "<variable>", 10) == 0) 
@@ -189,6 +189,7 @@ gui_status_t gui_parse_xml()
             {
                 pages[pageCount].endIndex = currentIndex;
                 pageCount++;
+                
                 b_isInPage = false;
             }else{return GUI_INIT_PGE_BRACE;}
         }
@@ -267,7 +268,6 @@ gui_status_t gui_parse_xml()
                 }
             }
         }
-
         xmlCopy++;
         currentIndex++;
     }
@@ -304,32 +304,32 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
     }
     uint32_t index = hash_index(variableName);
 
-    if (strncmp(variableType, "uint16_t", 9) == 0) {
+    if (strncmp(variableType, "int32_t", 9) == 0) {
         // Extracting value 
-        uint16_t value = (uint16_t)atoi(variableValue);
+        int32_t value = (int32_t)atoi(variableValue);
         // Linear probing
-        while (HashMapUint16[index].b_isUsed) 
+        while (HashMapInt32[index].b_isUsed) 
         {
             index = (index + 1) % HASH_MAX_VARS;
         }
         // Statically allocated memory
-        HashMapUint16[index].b_isUsed = true;
-        strncpy(HashMapUint16[index].key, variableName, MAX_KEY_LENGTH - 1);
-        HashMapUint16[index].key[MAX_KEY_LENGTH - 1] = '\0'; // Null-terminate the string
-        HashMapUint16[index].value = value;
+        HashMapInt32[index].b_isUsed = true;
+        strncpy(HashMapInt32[index].key, variableName, MAX_KEY_LENGTH - 1);
+        HashMapInt32[index].key[MAX_KEY_LENGTH - 1] = '\0'; // Null-terminate the string
+        HashMapInt32[index].value = value;
         return GUI_VAR_OK;
     }
 
     return GUI_VAR_ERR;
 }
 
-gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_value)
+gui_variable_status_t gui_get_uint16_var(const char *variableKey,int32_t *p_value)
 {
     uint32_t index = hash_index(variableKey);
     while (index < HASH_MAX_VARS)
      {
-        if (HashMapUint16[index].b_isUsed && strcmp(HashMapUint16[index].key, variableKey) == 0) {
-            *p_value = HashMapUint16[index].value;
+        if (HashMapInt32[index].b_isUsed && strcmp(HashMapInt32[index].key, variableKey) == 0) {
+            *p_value = HashMapInt32[index].value;
             return GUI_VAR_OK;
         }
         index++;
@@ -337,13 +337,13 @@ gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_val
     return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
 }
     
-gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t value)
+gui_variable_status_t gui_update_uint16_var(const char *variableKey,int32_t value)
 {
     uint32_t index = hash_index(variableKey);
     while (index < HASH_MAX_VARS)
      {
-        if (HashMapUint16[index].b_isUsed && strcmp(HashMapUint16[index].key, variableKey) == 0) {
-            HashMapUint16[index].value = value;
+        if (HashMapInt32[index].b_isUsed && strcmp(HashMapInt32[index].key, variableKey) == 0) {
+            HashMapInt32[index].value = value;
             return GUI_VAR_OK;
         }
         index++;
@@ -360,10 +360,10 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     }
 
     // Creating loop variables 
-    uint16_t width  = {0}; /** Width of bitmap in pixels */
-    uint16_t height = {0}; /** Height of bitmap in pixels */
-    int16_t posX    = {0}; /** What column to place the top left corner of bitmap in  */
-    int16_t posY    = {0}; /** What row to place the top left corner of bitmap in  */
+    int32_t width  = {0}; /** Width of bitmap in pixels */
+    int32_t height = {0}; /** Height of bitmap in pixels */
+    int32_t posX    = {0}; /** What column to place the top left corner of bitmap in  */
+    int32_t posY    = {0}; /** What row to place the top left corner of bitmap in  */
     bool b_haveFoundSize = false; 
     bool b_haveFoundPosi = false; 
     while (*strBitmap != '\0')
@@ -372,7 +372,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
         ////////////////// 
         if (strncmp(strBitmap, "<size>", 6) == 0) 
         {
-            if (sscanf(strBitmap, "<size>%hu,%hu</size>", &width, &height) == 2) 
+            if (sscanf(strBitmap, "<size>%d,%d</size>", &width, &height) == 2) 
             {
                 b_haveFoundSize = true;
             }
@@ -382,7 +382,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
         ///////////////////// 
         else if (strncmp(strBitmap, "<position>", 10) == 0) 
         {
-            if (sscanf(strBitmap, "<position>%hd,%hd</position>", &posY, &posX) == 2) 
+            if (sscanf(strBitmap, "<position>%d,%d</position>", &posY, &posX) == 2) 
             {
                 b_haveFoundPosi = true;
             }
@@ -579,7 +579,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 
         // INVERT TAG CHECK 
         //////////////////////
-        uint16_t invertInt = 0;
+        int32_t invertInt = 0;
         bool is_found = false;
         gui_status_t invertStatus = gui_parse_tag_val(textObjectString,"invert",&invertInt,2,&is_found);
         if(invertStatus != GUI_OK)
@@ -593,7 +593,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         // if (strncmp(textObjectString, "<invert>", 8) == 0) 
         // {
 
-        //     uint16_t invertInt = 0;
+        //     int32_t invertInt = 0;
         //     // Skip to >
         //     SKIP_TO(textObjectString,'>');
         //     if (!strncmp(textObjectString, "><var>",5)) 
@@ -642,7 +642,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     // Core text 
     char *quoteToken = strtok(text, "\"");
     char coreText[64];
-    uint16_t var = 0;
+    int32_t var = 0;
     if(quoteToken != NULL)
     {
       strncpy(coreText, quoteToken, sizeof(coreText) - 1);
@@ -652,14 +652,14 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     if(quoteToken != NULL)
     {
         SKIP_WHITESPACE(quoteToken);
-        var = (uint16_t)atoi(quoteToken);
+        var = (int32_t)atoi(quoteToken);
     }
     // ToDo: remove this snprintf 
     sprintf(coreText, coreText, var);
 
     // WIDTH CALC
     size_t txtLen = strlen(coreText);
-    uint16_t txtPxWidth = 0; /** The pixel width of the string */
+    int32_t txtPxWidth = 0; /** The pixel width of the string */
     for(int itr_text = 0; itr_text < txtLen; itr_text++)
     {
         if((coreText[itr_text] == '\"') || (coreText[itr_text] == '\n'))
@@ -756,7 +756,7 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
     // Char layer index
     const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
     const char *found = strchr(glyphs, character);
-    uint16_t layerIdx = (found - glyphs);
+    int32_t layerIdx = (found - glyphs);
     // Charactor bitmap pointer 
     uint8_t *p_charBitmap = (uint8_t *)font_master_list[fontNameIdx].p_charBitmaps[fontSizeIdx];
     // Indexing a chacter              
@@ -787,7 +787,7 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
 
 gui_status_t gui_update()
 {
-    uint16_t pageNumber = 0; // set to non zero value 
+    int32_t pageNumber = 0; // set to non zero value 
     gui_variable_status_t fetchStatus = gui_get_uint16_var("pageIndex", &pageNumber);
     if((pageNumber > pageCount) || (fetchStatus != GUI_VAR_OK))
     {
@@ -867,7 +867,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
     bool b_haveFoundThen = false;
     bool b_isTrue = false; /** Wheather or not the evaluated operation is true or false*/
 
-    uint16_t arguments[2] = {0,0};
+    int32_t arguments[2] = {0,0};
     while (*operandObjectString != '\0')
     {
 
@@ -907,7 +907,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
                 // CHECKING FOR VALUE
                 else if(!strncmp(operandObjectString, "<value>",7)) 
                 {
-                    if (sscanf(operandObjectString, "<value>%hd</value>", &arguments[itr_arg]) == 1) 
+                    if (sscanf(operandObjectString, "<value>%d</value>", &arguments[itr_arg]) == 1) 
                     {
                         b_haveFoundArg[itr_arg] = true;
                     } 
@@ -993,7 +993,7 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
     snprintf(endTag, endTagLen, "</%s>",tagName);
     const char *endTokens = strstr(tagString,endTag);
     // OTHER TEMP VARS
-    uint16_t value = 0;
+    int32_t value = 0;
     char TxtData[MAX_TAG_DATA_LENGTH];
     // PARSING START TAG
     if(startTokens != NULL)
@@ -1058,7 +1058,7 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
 }
 
 
-gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, uint16_t *p_value,uint8_t numReturn, bool *b_isFound)
+gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_t *p_value,uint8_t numReturn, bool *b_isFound)
 {
     // CREATING START TAG
     char startTag[MAX_TAG_NAME_LENGTH];
@@ -1170,9 +1170,9 @@ gui_status_t help_set_var_equal(const char *operandObjectString)
     SKIP_TO_WHITESPACE(operandObjectString);
     SKIP_WHITESPACE(operandObjectString);
     // Check for the var and extract name 
-    uint16_t value = 0;
+    int32_t value = 0;
     // Extracting value 
-    if (sscanf(operandObjectString, "<value>%hd</value>", &value) != 1) 
+    if (sscanf(operandObjectString, "<value>%d</value>", &value) != 1) 
     {
         char argVarName[MAX_KEY_LENGTH];
         if ((sscanf(operandObjectString, "<var>%63[^</]", argVarName) != 1)) 

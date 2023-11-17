@@ -82,7 +82,7 @@ typedef enum {
  */
 typedef struct {
     text_alignment_enum_t alignmentEnum; /** Enum accocaited with Alignment option*/
-    const char *alignmentName;      /** String accocaited with Alignment option*/
+    const char *alignmentName;           /** String accocaited with Alignment option*/
 } text_alignment_opt_t;
 /**
  * @brief Struct to create the vert text alignment dictionary 
@@ -90,7 +90,7 @@ typedef struct {
  */
 typedef struct {
     text_vert_alignment_enum_t alignmentEnum; /** Enum accocaited with Alignment option*/
-    const char *alignmentName;      /** String accocaited with Alignment option*/
+    const char *alignmentName;                /** String accocaited with Alignment option*/
 } text_vert_alignment_opt_t;
 
 /********************/
@@ -156,22 +156,22 @@ gui_status_t gui_get_page_position(int16_t pageNumber, uint32_t * p_startIndex ,
 gui_variable_status_t gui_create_var(const char *variableName,const char *variableType,const char *variableValue);
 
 /**
- * @brief Querys the uint16_t hashmap for the variableKey and returns its value
+ * @brief Querys the int32_t hashmap for the variableKey and returns its value
  * 
  * @param [in] variableKey - Name associated with the variable as defined in the xml 
  * @param [out] p_value - Variable value  
  * @return gui_variable_status_t 
  */
-gui_variable_status_t gui_get_uint16_var(const char *variableKey,uint16_t *p_value);
+gui_variable_status_t gui_get_uint16_var(const char *variableKey,int32_t *p_value);
 
 /**
- * @brief Can update uint16_t variables from there variable key 
+ * @brief Can update int32_t variables from there variable key 
  * 
  * @param [in] variableKey - Key of variable to be updated 
  * @param [in] value - Value to update variable to 
  * @return gui_variable_status_t 
  */
-gui_variable_status_t gui_update_uint16_var(const char *variableKey,uint16_t value);
+gui_variable_status_t gui_update_uint16_var(const char *variableKey,int32_t value);
 
 /**
  * @brief Take a text string that contains a bitMap and renders that bitmap onto the passed in
@@ -259,6 +259,6 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
  * @param [out] b_isFound  - Succsess boolean that returns true if the tag was found 
  * @return gui_status_t  - Tag parsing execution status 
  */
-gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, uint16_t *p_value,uint8_t numReturn, bool *b_isFound);
+gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_t *p_value,uint8_t numReturn, bool *b_isFound);
 
 #endif
