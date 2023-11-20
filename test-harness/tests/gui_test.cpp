@@ -1721,15 +1721,10 @@ TEST(GUITest, float_vars_can_be_printed_in_text)
     // Check that text rendered correctly 
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one_pt_2,outputMap,0,0,102,64);
 }
-/** FLOATS AS VARS 
- * -
- * 
- */
 
 /**
  * <variable>
  * - Hash table can handle collisions through Open Addressing
- * - If we have floats we really dont need the rest tbh 
  * - Can't create two variables of same name 
  * - variables max and min can be set clear
  * make
@@ -1741,8 +1736,6 @@ TEST(GUITest, float_vars_can_be_printed_in_text)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * <bitMaps>
- * - Can render multiple bitmaps to the screen 
- * - bitmap position_can_be_set_using_variables_and_position_can_be_changed
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

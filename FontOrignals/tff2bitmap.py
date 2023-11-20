@@ -86,7 +86,7 @@ with open("FontOrignals/font_"+font_name+"_.h", "w") as c_file:
     c_file.write("#include <stdint.h>\n")
     c_file.write("\n")
     # Write the C array declaration for the width array
-    c_file.write("uint8_t widthArray_size"+str(font_size)+"[{}] = {{\n".format(num_characters+1))
+    c_file.write("const uint8_t widthArray_size"+str(font_size)+"[{}] = {{\n".format(num_characters+1))
 
     # Write the width array data to the C file
     for i in range(num_characters):
@@ -99,7 +99,7 @@ with open("FontOrignals/font_"+font_name+"_.h", "w") as c_file:
     c_file.write(","+str(output_width)+"};\n\n")
 
     # Write the C array declaration for the 3D bitmap array
-    c_file.write("uint8_t fontMap_size"+str(font_size)+"[{}][{}][{}] = {{\n".format(num_characters, font_size, output_width))
+    c_file.write("const uint8_t fontMap_size"+str(font_size)+"[{}][{}][{}] = {{\n".format(num_characters, font_size, output_width))
 
     # Write the bitmap data to the C file
     for i in range(num_characters):

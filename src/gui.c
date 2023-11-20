@@ -801,7 +801,7 @@ uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, char charac
     const char *glyphs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?";
     const char *found  = strchr(glyphs, character);
 
-    uint8_t *ptr = font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx];
+    const uint8_t *ptr = font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx];
     if((ptr == NULL) || (found == NULL))
     {
         return 0;
@@ -1117,7 +1117,6 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
             if (fetchStatusFlt == GUI_VAR_OK) 
             {
                 snprintf(replacedTxtData, MAX_TAG_DATA_LENGTH, "%.*s%f%s", (int)(varSrtTok - TxtData), TxtData, valueF, varEndTok + strlen("</var>"));
-                printf("%s\n", replacedTxtData);
             }
             // error check 
             if(fetchStatusFlt != GUI_VAR_OK && fetchStatus32 != GUI_VAR_OK)
