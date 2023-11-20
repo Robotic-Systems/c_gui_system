@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Configuration
-font_size = 12  # Font size
+font_size = 18  # Font size
 font_name = "sans_bold"
 text_num = "0123456789"  # Text to convert to a bitmap
 text_lc = "abcdefghijklmnopqrstuvwxyz"
@@ -54,7 +54,7 @@ for i, char in enumerate(text_lc + text_uc + text_num +text_sym):
 
     # x = (output_width - text_width) / 2
     # y = (output_height - text_height) / 2
-    y=-1
+    y=-5
     x=0
 
     # Draw the text on the image
