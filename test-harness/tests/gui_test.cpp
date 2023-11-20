@@ -1262,6 +1262,7 @@ TEST(GUITest, numbers_can_be_printed_in_text)
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one,outputMap,0,0,84,19);
 }
 
+
 // GUI parse tag
 TEST(GUITest, passing_gui_parse_tag_an_errorless_xml_returns_ok)
 {
@@ -1688,10 +1689,37 @@ TEST(GUITest, float_vars_can_be_updated)
  
 }
 
-TEST(GUITest, float_vars_can_be_written_to_pages)
+TEST(GUITest, floats_can_be_printed_in_text)
 {
-    FAIL("FAIL");
- 
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_one_pt_2;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one_pt_2,outputMap,0,0,102,64);
+}
+
+TEST(GUITest, float_vars_can_be_printed_in_text)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_HelloWorld_one_pt_2_var;
+        // Call variable create 
+    gui_variable_status_t createStatus = gui_create_var("test1","float","1.2");
+    LONGS_EQUAL(GUI_VAR_OK, createStatus);
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay clear
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one_pt_2,outputMap,0,0,102,64);
 }
 /** FLOATS AS VARS 
  * -

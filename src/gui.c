@@ -439,11 +439,19 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
 
         // POSITION TAG CHECK 
         ///////////////////// 
-        else if (strncmp(strBitmap, "<position>", 10) == 0) 
+        if (strncmp(strBitmap, "<position>", 10) == 0) 
         {
-            if (sscanf(strBitmap, "<position>%d,%d</position>", &posY, &posX) == 2) 
+            int32_t posVars[2] = {0};
+            gui_status_t posStatus = gui_parse_tag_val(strBitmap,"position",posVars,2,&b_haveFoundPosi);
+            if(posStatus != GUI_OK)
             {
-                b_haveFoundPosi = true;
+                printf("Pos Fault");
+                return posStatus;
+            }
+            if(b_haveFoundPosi)
+            {
+                posY = posVars[0];
+                posX = posVars[1];
             }
         }
         // DATA TAG CHECK
@@ -659,11 +667,15 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 
         // CONTENT TAG CHECK 
         //////////////////////
-        gui_status_t contentStatus = gui_parse_tag_str(textObjectString,"content",text,&b_haveFoundContent);
-        if(contentStatus != GUI_OK)
+        if(!b_haveFoundContent)
         {
-            return contentStatus;
+            gui_status_t contentStatus = gui_parse_tag_str(textObjectString,"content",text,&b_haveFoundContent);
+            if(contentStatus != GUI_OK)
+            {
+                return contentStatus;
+            }
         }
+        
 
         textObjectString++;
     }
@@ -677,7 +689,8 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     // Core text 
     char *quoteToken = strtok(text, "\"");
     char coreText[64];
-    int32_t var = 0;
+    char formatSpecifier[10];
+
     if(quoteToken != NULL)
     {
       strncpy(coreText, quoteToken, sizeof(coreText) - 1);
@@ -687,10 +700,30 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     if(quoteToken != NULL)
     {
         SKIP_WHITESPACE(quoteToken);
-        var = (int32_t)atoi(quoteToken);
+        
+        if(sscanf(coreText, "%*[^:]%*[: ]%9s", formatSpecifier))
+        {
+            char *ptr_fmt = formatSpecifier;
+            while(*ptr_fmt != '\0')
+            {
+                if(*ptr_fmt =='d')
+                {
+                    int32_t var = (int32_t)atoi(quoteToken);
+                    sprintf(coreText, coreText, var);
+                    break;
+                }
+                else if (*ptr_fmt =='f')
+                {
+                    float var = atof(quoteToken);
+                    sprintf(coreText, coreText, var);
+                    break;
+                }
+                ++ptr_fmt;
+            }
+        }
     }
     // ToDo: remove this snprintf 
-    sprintf(coreText, coreText, var);
+    
 
     // WIDTH CALC
     size_t txtLen = strlen(coreText);
@@ -1028,7 +1061,6 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
     snprintf(endTag, endTagLen, "</%s>",tagName);
     const char *endTokens = strstr(tagString,endTag);
     // OTHER TEMP VARS
-    int32_t value = 0;
     char TxtData[MAX_TAG_DATA_LENGTH];
     // PARSING START TAG
     if(startTokens != NULL)
@@ -1071,14 +1103,27 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
             varTag[varExtractedLength] = '\0'; // Null-terminate the string
 
             // FETCHING VAR
-            gui_variable_status_t fetchStatus = gui_get_int32_var(varTag, &value);
-            if (fetchStatus != GUI_VAR_OK) {
-                return GUI_ERR;
-            }
-
-            // Replace the <var>...</var> with the fetched value
+            // int32
             char replacedTxtData[MAX_TAG_DATA_LENGTH];
-            snprintf(replacedTxtData, MAX_TAG_DATA_LENGTH, "%.*s%d%s", (int)(varSrtTok - TxtData), TxtData, value, varEndTok + strlen("</var>"));
+            uint32_t valueI = 0;
+            gui_variable_status_t fetchStatus32 = gui_get_int32_var(varTag, &valueI);
+            if (fetchStatus32 == GUI_VAR_OK)
+            {
+                snprintf(replacedTxtData, MAX_TAG_DATA_LENGTH, "%.*s%d%s", (int)(varSrtTok - TxtData), TxtData, valueI, varEndTok + strlen("</var>"));
+            }
+            // float 
+            float valueF = 0;
+            gui_variable_status_t fetchStatusFlt = gui_get_float_var(varTag, &valueF);
+            if (fetchStatusFlt == GUI_VAR_OK) 
+            {
+                snprintf(replacedTxtData, MAX_TAG_DATA_LENGTH, "%.*s%f%s", (int)(varSrtTok - TxtData), TxtData, valueF, varEndTok + strlen("</var>"));
+                printf("%s\n", replacedTxtData);
+            }
+            // error check 
+            if(fetchStatusFlt != GUI_VAR_OK && fetchStatus32 != GUI_VAR_OK)
+            {
+                return GUI_ERR;
+            }            
             
             // Copy the modified string back to TxtData
             strncpy(TxtData, replacedTxtData, MAX_TAG_DATA_LENGTH);
@@ -1086,8 +1131,6 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
         }
         // CREATING RETURN STRING 
         snprintf(rtnText, MAX_TAG_DATA_LENGTH, "%s",TxtData);
-        
-
     }
     return GUI_OK;
 }

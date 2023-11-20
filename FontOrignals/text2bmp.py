@@ -4,13 +4,13 @@ from PIL import Image, ImageDraw, ImageFont
 output_width = 102  # Width of the output image
 output_height = 64  # Height of the output image
 font_size = 19  # Font size
-text = "Hello World!"  # Text to convert to a bitmap
+text = "one: 1.2"  # Text to convert to a bitmap
 font_path = r"FontOrignals\jupiter-crash-brk.regular.ttf"  # Path to your font file
 output_file = "output_bitmap.png"  # Output image file
-horizontal_alignment = "center"
-vertical_alignment = "center"  # Vertical alignment option
-input_x = -2
-input_y = 13
+horizontal_alignment = "left"
+vertical_alignment = "top"  # Vertical alignment option
+input_x = 0
+input_y = 0
 invert_image = False  # Boolean flag for image inversion
 
 # Create a blank image with white background
