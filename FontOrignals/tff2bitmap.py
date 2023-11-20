@@ -4,17 +4,17 @@ import matplotlib.pyplot as plt
 
 # Configuration
 font_size = 18  # Font size
-font_name = "sans_bold"
+font_name = "ubuntu_reg"
 text_num = "0123456789"  # Text to convert to a bitmap
 text_lc = "abcdefghijklmnopqrstuvwxyz"
 text_uc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 text_sym = " `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?"
-font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\open-sans.bold.ttf"  # Path to your font file
+font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\ubuntu.regular.ttf"  # Path to your font file
 
 output_file = "output_bitmap.png"  # Output image file
 
 # Create a blank image with white background
-image = Image.new("RGB", (19, 14), "white")
+image = Image.new("L", (19, 14), "white")
 draw = ImageDraw.Draw(image)
 
 # Load the font
@@ -54,7 +54,7 @@ for i, char in enumerate(text_lc + text_uc + text_num +text_sym):
 
     # x = (output_width - text_width) / 2
     # y = (output_height - text_height) / 2
-    y=-5
+    y=0
     x=0
 
     # Draw the text on the image
@@ -86,7 +86,7 @@ with open("FontOrignals/font_"+font_name+"_.h", "w") as c_file:
     c_file.write("#include <stdint.h>\n")
     c_file.write("\n")
     # Write the C array declaration for the width array
-    c_file.write("const uint8_t widthArray_size"+str(font_size)+"[{}] = {{\n".format(num_characters+1))
+    c_file.write("const uint8_t "+font_name+"_widthArray_"+str(font_size)+"[{}] = {{\n".format(num_characters+1))
 
     # Write the width array data to the C file
     for i in range(num_characters):
@@ -99,7 +99,7 @@ with open("FontOrignals/font_"+font_name+"_.h", "w") as c_file:
     c_file.write(","+str(output_width)+"};\n\n")
 
     # Write the C array declaration for the 3D bitmap array
-    c_file.write("const uint8_t fontMap_size"+str(font_size)+"[{}][{}][{}] = {{\n".format(num_characters, font_size, output_width))
+    c_file.write("const uint8_t "+font_name+"_fontMap_"+str(font_size)+"[{}][{}][{}] = {{\n".format(num_characters, font_size, output_width))
 
     # Write the bitmap data to the C file
     for i in range(num_characters):
