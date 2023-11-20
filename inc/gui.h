@@ -164,6 +164,17 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
  */
 gui_variable_status_t gui_get_int32_var(const char *variableKey,int32_t *p_value);
 
+
+/**
+ * @brief Querys the float hashmap for the variableKey and returns its value
+ * 
+ * @param [in] variableKey - Name associated with the variable as defined in the xml 
+ * @param [out] p_value - Variable value  
+ * @return gui_variable_status_t 
+ */
+gui_variable_status_t gui_get_float_var(const char *variableKey,float *p_value);
+
+
 /**
  * @brief Can update int32_t variables from there variable key 
  * 
@@ -172,6 +183,15 @@ gui_variable_status_t gui_get_int32_var(const char *variableKey,int32_t *p_value
  * @return gui_variable_status_t 
  */
 gui_variable_status_t gui_update_int32_var(const char *variableKey,int32_t value);
+
+/**
+ * @brief Can update float variables from there variable key 
+ * 
+ * @param [in] variableKey - Key of variable to be updated 
+ * @param [in] value - Value to update variable to 
+ * @return gui_variable_status_t 
+ */
+gui_variable_status_t gui_update_float_var(const char *variableKey,float value);
 
 /**
  * @brief Take a text string that contains a bitMap and renders that bitmap onto the passed in

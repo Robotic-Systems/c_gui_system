@@ -36,6 +36,15 @@ typedef struct KeyValuePairInt32
     bool b_isUsed;
 } KeyValuePairInt32;
 
+/**
+ * @brief Structure for the float Hashmap 
+*/
+typedef struct KeyValuePairFlt
+{
+    char key[MAX_KEY_LENGTH];
+    float value;
+    bool b_isUsed;
+} KeyValuePairFlt;
 
 /**
  * @brief Dictionary used to map the text alignment from the enum to there 
@@ -66,6 +75,8 @@ int16_t varCount  = 0;     /** Number of Variables found in xml after parsing*/
 const char* guiXml = NULL; /** XML string that contains the whole menu system*/
 page_params_t pages[MAX_PAGE_COUNT] = {0};
 KeyValuePairInt32 HashMapInt32[HASH_MAX_VARS];  /** Hash map for int32_t menu variables*/
+KeyValuePairFlt HashMapFlt[HASH_MAX_VARS];  /** Hash map for float menu variables*/
+
 extern font_list_t font_master_list[NUM_FONT_TYPES]; 
 /*****************************/
 /* PRIVATE FUNCTION POINTERS */
@@ -109,6 +120,9 @@ gui_status_t gui_init(write_function p_lcdWrite, const char* xmlString)
         strncpy(HashMapInt32[i].key, "Nothing", MAX_KEY_LENGTH - 1);
         HashMapInt32[i].b_isUsed = false;
         HashMapInt32[i].value = 0;
+        strncpy(HashMapFlt[i].key, "Nothing", MAX_KEY_LENGTH - 1);
+        HashMapFlt[i].b_isUsed = false;
+        HashMapFlt[i].value = 0;
     }
     
     // Parsing the XML and creating hashmap and page index
@@ -319,6 +333,23 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
         HashMapInt32[index].value = value;
         return GUI_VAR_OK;
     }
+    else if(strncmp(variableType, "float", 5) == 0) 
+    {
+        // Extracting value 
+        float value = atof(variableValue);
+        // Linear probing
+        while (HashMapFlt[index].b_isUsed) 
+        {
+            index = (index + 1) % HASH_MAX_VARS;
+        }
+        // Statically allocated memory
+        HashMapFlt[index].b_isUsed = true;
+        strncpy(HashMapFlt[index].key, variableName, MAX_KEY_LENGTH - 1);
+        HashMapFlt[index].key[MAX_KEY_LENGTH - 1] = '\0'; // Null-terminate the string
+        HashMapFlt[index].value = value;
+        return GUI_VAR_OK;
+    }
+        
 
     return GUI_VAR_ERR;
 }
@@ -336,7 +367,21 @@ gui_variable_status_t gui_get_int32_var(const char *variableKey,int32_t *p_value
     }
     return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
 }
-    
+
+
+gui_variable_status_t gui_get_float_var(const char *variableKey,float *p_value)
+{
+    uint32_t index = hash_index(variableKey);
+    while (index < HASH_MAX_VARS)
+     {
+        if (HashMapFlt[index].b_isUsed && strcmp(HashMapFlt[index].key, variableKey) == 0) {
+            *p_value = HashMapFlt[index].value;
+            return GUI_VAR_OK;
+        }
+        index++;
+    }
+    return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
+}
 gui_variable_status_t gui_update_int32_var(const char *variableKey,int32_t value)
 {
     uint32_t index = hash_index(variableKey);
@@ -344,6 +389,20 @@ gui_variable_status_t gui_update_int32_var(const char *variableKey,int32_t value
      {
         if (HashMapInt32[index].b_isUsed && strcmp(HashMapInt32[index].key, variableKey) == 0) {
             HashMapInt32[index].value = value;
+            return GUI_VAR_OK;
+        }
+        index++;
+    }
+    return GUI_VAR_ERR; // Return GUI_VAR_ERR if variable is not found
+}
+
+gui_variable_status_t gui_update_float_var(const char *variableKey,float value)
+{
+    uint32_t index = hash_index(variableKey);
+    while (index < HASH_MAX_VARS)
+     {
+        if (HashMapFlt[index].b_isUsed && strcmp(HashMapFlt[index].key, variableKey) == 0) {
+            HashMapFlt[index].value = value;
             return GUI_VAR_OK;
         }
         index++;

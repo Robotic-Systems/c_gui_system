@@ -1616,9 +1616,90 @@ TEST(GUITest, text_position_can_be_set_using_variables_and_position_can_be_chang
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: HASHMAP 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+TEST(GUITest, gui_var_init_does_not_throw_error_with_float)
+{
+    // Create variable definition strings
+    char lastName[64]  = "testVar"; 
+    char lastValue[64] = "10"; 
+    char lastType[64]  = "float";  
+    // Call variable create 
+    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+    LONGS_EQUAL(GUI_VAR_OK, createStatus);
+}
+
+TEST(GUITest, after_creation_float_vars_can_be_queryed_without_error)
+{
+    // init gui 
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Create variable definition strings
+    char lastName[64]  = "testVar"; 
+    char lastValue[64] = "10.22"; 
+    char lastType[64]  = "float";  
+    // Call variable create 
+    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+    LONGS_EQUAL(GUI_VAR_OK, createStatus);
+    // Checking the value is default 
+    float value = 0; 
+    gui_variable_status_t fetchStatus = gui_get_float_var("testVar", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+}
+
+
+TEST(GUITest, after_creation_float_vars_can_be_queryed_and_return_value)
+{
+    // init gui 
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Create variable definition strings
+    char lastName[64]  = "testVar"; 
+    char lastValue[64] = "10.22"; 
+    char lastType[64]  = "float";  
+    // Call variable create 
+    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+    LONGS_EQUAL(GUI_VAR_OK, createStatus);
+    // Checking the value is default 
+    float value = 0; 
+    gui_variable_status_t fetchStatus = gui_get_float_var("testVar", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    DOUBLES_EQUAL(10.22, value,.1);
+    
+}
+
+TEST(GUITest, float_vars_can_be_updated)
+{
+    // init gui 
+    gui_init(lcd_spy_write, helloWorldGui);
+    // Create variable definition strings
+    char lastName[64]  = "testVar"; 
+    char lastValue[64] = "10.22"; 
+    char lastType[64]  = "float";  
+    // Call variable create 
+    gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
+    LONGS_EQUAL(GUI_VAR_OK, createStatus);
+    // Updsating var 
+    gui_variable_status_t updateStatus = gui_update_float_var("testVar",-2.2);
+    LONGS_EQUAL(GUI_VAR_OK, updateStatus);
+    // Checking the value is default 
+    float value=0;
+    gui_variable_status_t fetchStatus = gui_get_float_var("testVar", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    DOUBLES_EQUAL(-2.2, value,.1);
+ 
+}
+
+TEST(GUITest, float_vars_can_be_written_to_pages)
+{
+    FAIL("FAIL");
+ 
+}
+/** FLOATS AS VARS 
+ * -
+ * 
+ */
+
 /**
  * <variable>
- * - Can use floats as variables 
  * - Hash table can handle collisions through Open Addressing
  * - If we have floats we really dont need the rest tbh 
  * - Can't create two variables of same name 
