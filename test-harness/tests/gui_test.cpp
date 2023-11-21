@@ -58,7 +58,18 @@ TEST_GROUP(GUITest)
             } \
         } \
     } while (0)
-
+    #define IS_BIT_REG_EQUAL_REG(bitMap, mainMap,posY,posX,width,height) do { \
+        for (int ith_row = posY; ith_row < (height+posY); ith_row++) { \
+            for (int ith_col = posX; ith_col < (width+posX); ith_col++) { \
+                char str[64]; \
+                if((ith_row < 0) || (ith_row >= ROWS)||(ith_col<0) || (ith_col >= COLUMNS)){\
+                    continue;\
+                }\
+                snprintf(str, 64, "MISMATCH ON Row: %d, Col: %d, %d != %d", ith_row, ith_col, bitMap[ith_row][ith_col], mainMap[ith_row][ith_col]); \
+                LONGS_EQUAL_TEXT(bitMap[ith_row][ith_col], mainMap[ith_row][ith_col], str); \
+            } \
+        } \
+    } while (0)
     #define PRINT_BIT_MAP(rows, cols, bitMap) do { \
         printf("\n");\
         for (int ith_row = 0; ith_row < rows; ith_row++) { \
@@ -1074,6 +1085,24 @@ TEST(GUITest, can_render_calbri_center_text)
     // Check that text rendered correctly 
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
 }
+
+
+TEST(GUITest, can_render_many_text_elements_per_page)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, advanced_gui);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that all text elements were rendered 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    lcd_spy_get_Frame(outputMap);
+    // PRINT_BIT_MAP(64,102,outputMap);
+    // PRINT_BIT_MAP(64,102,ready_19_juipeter_T_L_0_0);
+    IS_BIT_REG_EQUAL_REG(ready_19_juipeter_T_L_0_0,outputMap,0,0,20,19);
+    IS_BIT_REG_EQUAL_REG(service_due_19_juipeter_T_L_30_0,outputMap,30,0,102,19);
+}
 /**
  * <page>
  * - Additional options, Variable refresh rates/partial screen refreshes 
@@ -1606,6 +1635,22 @@ TEST(GUITest, text_position_can_be_set_using_variables_and_position_can_be_chang
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_moved_off,outputMap,0,0,102,64);
 }
 
+TEST(GUITest, can_render_just_a_var)
+{
+    // just a var text 
+    const char* strTextCopy = just_one_var;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render 
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check matches expectation 
+    IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
+
+}
 /**
  * <text>
  * - Can set default font at the start of the pages

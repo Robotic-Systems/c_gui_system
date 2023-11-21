@@ -71,6 +71,38 @@ const char* helloWorldGui =
 "    </page>\n"
 "</pages>";
 
+
+const char* advanced_gui = 
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<variables>\n"
+"    <variable>\n"
+"        <name>pageIndex</name>\n"
+"        <type>int32_t</type>\n"
+"        <value>0</value>\n"
+"    </variable>\n"
+"</variables>\n"
+"<pages>\n" 
+"    <page>\n"
+"        <name>1</name>\n"
+"        <text>\n"
+"            <font>jupiter</font>\n"
+"            <font-size>19</font-size>\n"
+"            <alignment>left</alignment>\n"
+"            <vert-alignment>top</vert-alignment>\n"
+"            <position>0,0</position>\n"
+"            <content>\"READY!\"</content>\n"
+"        </text>\n"
+"        <text>\n"
+"            <font>jupiter</font>\n"
+"            <font-size>19</font-size>\n"
+"            <alignment>left</alignment>\n"
+"            <vert-alignment>top</vert-alignment>\n"
+"            <position>30,0</position>\n"
+"            <content>\"Service Due\"</content>\n"
+"        </text>\n"
+"    </page>\n"
+"</pages>";
+
 const char* singleVarGui = 
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<variables>\n"
@@ -349,6 +381,16 @@ const char * text_HelloWorld_moveable =
 "    <vert-alignment>center</vert-alignment>\n"
 "    <position><var>xPos</var>,<var>yPos</var></position>\n"
 "    <content>\"Hello World!\"</content>\n"
+"</text>\n";
+
+const char * just_one_var =
+"<text>\n"
+"    <font>jupiter</font>\n"
+"    <font-size>19</font-size>\n"
+"    <alignment>left</alignment>\n"
+"    <vert-alignment>top</vert-alignment>\n"
+"    <position>0,0</position>\n"
+"    <content>\"\%d\",1</content>\n"
 "</text>\n";
 
 const char * operand_equal=

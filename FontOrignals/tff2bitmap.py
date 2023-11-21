@@ -3,13 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Configuration
-font_size = 18  # Font size
-font_name = "ubuntu_reg"
+font_size = 15  # Font size
+font_name = "sans_pro"
 text_num = "0123456789"  # Text to convert to a bitmap
 text_lc = "abcdefghijklmnopqrstuvwxyz"
 text_uc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 text_sym = " `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?"
-font_path = r"C:\Users\Pat\Documents\1. Robotic systems\3. Goals\2023 Q3 Goals\dev\c_gui_system\FontOrignals\ubuntu.regular.ttf"  # Path to your font file
+font_path = r"FontOrignals\source-sans-pro.regular.ttf"  # Path to your font file
 
 output_file = "output_bitmap.png"  # Output image file
 
@@ -54,8 +54,6 @@ for i, char in enumerate(text_lc + text_uc + text_num +text_sym):
 
     # x = (output_width - text_width) / 2
     # y = (output_height - text_height) / 2
-    y=0
-    x=0
 
     # Draw the text on the image
     draw.text((x, y), char, fill="white", font=font)

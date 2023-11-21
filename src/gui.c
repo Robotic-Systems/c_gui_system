@@ -336,7 +336,7 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
     else if(strncmp(variableType, "float", 5) == 0) 
     {
         // Extracting value 
-        float value = atof(variableValue);
+        float value = (float)atof(variableValue);
         // Linear probing
         while (HashMapFlt[index].b_isUsed) 
         {
@@ -562,6 +562,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 {
                     return GUI_ERR;
                 }
+
                 
             }
         }
@@ -676,7 +677,12 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             }
         }
         
-
+        // END OF PAGE CHECK 
+        ///////////////////
+        if (strncmp(textObjectString, "</text>", 7) == 0) 
+        {
+            break;
+        }
         textObjectString++;
     }
     
@@ -697,12 +703,22 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     }
     // Variable 
     quoteToken = strtok(NULL, "\"");
+    // char *modoToken = strtok(coreText, "\%");
     if(quoteToken != NULL)
     {
         SKIP_WHITESPACE(quoteToken);
-        
+        printf("%s\n", coreText);
         if(sscanf(coreText, "%*[^:]%*[: ]%9s", formatSpecifier))
         {
+            // if(modoToken != NULL)
+            // {
+            //     printf("FS IS- %s\n", modoToken);
+            // }
+            // modoToken = strtok(NULL, "%");
+            // if(modoToken != NULL)
+            // {
+            //     printf("FS IS- %s\n", modoToken);
+            // }
             char *ptr_fmt = formatSpecifier;
             while(*ptr_fmt != '\0')
             {
@@ -714,7 +730,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 }
                 else if (*ptr_fmt =='f')
                 {
-                    float var = atof(quoteToken);
+                    float var = (float)atof(quoteToken);
                     sprintf(coreText, coreText, var);
                     break;
                 }
