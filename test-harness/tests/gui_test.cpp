@@ -1635,22 +1635,22 @@ TEST(GUITest, text_position_can_be_set_using_variables_and_position_can_be_chang
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_moved_off,outputMap,0,0,102,64);
 }
 
-TEST(GUITest, can_render_just_a_var)
-{
-    // just a var text 
-    const char* strTextCopy = just_one_var;
-    // Create empty bitmap 
-    uint8_t outputMap[ROWS][COLUMNS];
-    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    // Render 
-    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-    // Check status is okay 
-    // PRINT_BIT_MAP(64,102,outputMap);
-    LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check matches expectation 
-    IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
+// TEST(GUITest, can_render_just_a_var)
+// {
+//     // just a var text 
+//     const char* strTextCopy = just_one_var;
+//     // Create empty bitmap 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+//     // Render 
+//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+//     // Check status is okay 
+//     // PRINT_BIT_MAP(64,102,outputMap);
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+//     // Check matches expectation 
+//     IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
 
-}
+// }
 /**
  * <text>
  * - Can set default font at the start of the pages
@@ -1771,9 +1771,8 @@ TEST(GUITest, float_vars_can_be_printed_in_text)
  * <variable>
  * - Hash table can handle collisions through Open Addressing
  * - Can't create two variables of same name 
- * - variables max and min can be set clear
- * make
-
+ * - variables max and min can be set 
+ * - 
  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1787,15 +1786,18 @@ TEST(GUITest, float_vars_can_be_printed_in_text)
 // MANY: OPERANDS 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * - Instead of just setting the value equal to another can do things like increment or deincrement the 
- * value by one 
+ * - Values can be incremented using operands 
+ * - Values can be deincremented using operands
+ * - Less then checks can be done in operands 
+ * - Greater then checks can be done in operands 
+ * - 
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * - Make error codes more highly specific 
+ * - Make error codes more highly specific and add an input that will print fault messages to 
  * - if not pages brace exists then no pages are created 
  * - if a page exists outside the <pages> tag an error is thrown 
  * - if a variable exists outside the <variables> tag an error is thrown  

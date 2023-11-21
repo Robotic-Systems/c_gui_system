@@ -445,7 +445,6 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
             gui_status_t posStatus = gui_parse_tag_val(strBitmap,"position",posVars,2,&b_haveFoundPosi);
             if(posStatus != GUI_OK)
             {
-                printf("Pos Fault");
                 return posStatus;
             }
             if(b_haveFoundPosi)
@@ -642,7 +641,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             gui_status_t posStatus = gui_parse_tag_val(textObjectString,"position",posVars,2,&b_haveFoundPosition);
             if(posStatus != GUI_OK)
             {
-                printf("Pos Fault");
                 return posStatus;
             }
             if(b_haveFoundPosition)
@@ -707,18 +705,8 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     if(quoteToken != NULL)
     {
         SKIP_WHITESPACE(quoteToken);
-        printf("%s\n", coreText);
         if(sscanf(coreText, "%*[^:]%*[: ]%9s", formatSpecifier))
         {
-            // if(modoToken != NULL)
-            // {
-            //     printf("FS IS- %s\n", modoToken);
-            // }
-            // modoToken = strtok(NULL, "%");
-            // if(modoToken != NULL)
-            // {
-            //     printf("FS IS- %s\n", modoToken);
-            // }
             char *ptr_fmt = formatSpecifier;
             while(*ptr_fmt != '\0')
             {
