@@ -119,7 +119,7 @@ const char * justABitmap_positionBraceErr =
 
 const char * justABitmap_sizeBraceErr =
 "<bitMap>\n"
-" <size>2,32</size>\n"
+" 2,32</size>\n"
 " <position>0,0</position>"
 " <data>\n"
 "   1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" 

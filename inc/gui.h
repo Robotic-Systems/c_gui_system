@@ -19,6 +19,7 @@
 #define MAX_KEY_LENGTH 20        /** Maximum length key strings  */
 #define TEXT_ALIGNMENT_OPTIONS 3        /** Number of text alignment options */
 #define MAX_TAG_NAME_LENGTH 64   /** Maximum supported length of a tag*/
+#define MAX_GUI_LOG_SIZE 128  /** Maximum supported length of a log message*/
 /****************/
 /* PUBLIC TYPES */
 /****************/
@@ -26,8 +27,10 @@
  * @brief Function Pointer type for the lcd write function 
 */
 typedef void (*write_function)(uint8_t bitMap[ROWS][COLUMNS], uint16_t columns, uint16_t rows);
-
-
+/**
+ * @brief Function Pointer type to allow a logger output to pass out error messages 
+*/
+typedef void (*log_function)(const char *);
 /**
  * @brief For describing execution status of function.
  */
@@ -105,10 +108,11 @@ typedef struct {
  * @brief Init function for the gui system, must be called before other gui functions used
  * 
  * @param [in] p_lcdWrite - pointer to the lcd write function
+ * @param [in] p_logFunction - pointer to the logging output function 
  * @param [in] xmlString - xml string where the gui system has been defined  
  * @return gui_status_t - init execution status 
  */
-gui_status_t gui_init(write_function p_lcdWrite, const char* xmlString);
+gui_status_t gui_init(write_function p_lcdWrite,log_function p_logFunction,const char* xmlString);
 
 /**
  * @brief Returns the number of pages in the current gui system 

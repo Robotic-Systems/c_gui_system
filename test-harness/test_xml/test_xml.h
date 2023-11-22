@@ -101,7 +101,7 @@ const char* advanced_gui =
 "            <content>\"Service Due\"</content>\n"
 "        </text>\n"
 "    </page>\n"
-"</pages>";
+"</pages>\n\0";
 
 const char* singleVarGui = 
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"

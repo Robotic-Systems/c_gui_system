@@ -82,11 +82,15 @@ extern font_list_t font_master_list[NUM_FONT_TYPES];
 /* PRIVATE FUNCTION POINTERS */
 /*****************************/
 write_function bitMapWrite = NULL; /** Function pointer that can be used to write to the display*/
+log_function logWrite      = NULL; /** Function pointer that can be used to write to the logger output*/
+
 /*********************************/
 /* PRIVATE FUNCTION DECLARATIONS */
 /*********************************/
 uint32_t hash_index(const char * key);                   /** Generates a hash index from a key */
 gui_status_t help_set_var_equal(const char *operandObjectString); /** Sets the var name it finds first equal to the next value or var it finds*/
+void help_log(const char *message, ...);                  /** Function to be used to log messages */
+
 /********************************/
 /* PRIVATE FUNCTION DEFINITIONS */
 /********************************/
@@ -102,14 +106,16 @@ uint32_t hash_index(const char * key)
 /*******************************/
 /* PUBLIC FUNCTION DEFINITIONS */
 /*******************************/
-gui_status_t gui_init(write_function p_lcdWrite, const char* xmlString)
+gui_status_t gui_init(write_function p_lcdWrite, log_function p_logFunction, const char* xmlString)
 {
+    logWrite    = p_logFunction;
     if(p_lcdWrite == NULL || xmlString == NULL)
     {
+        help_log("GUI ERROR:  Init Fail, check the xmlString and p_lcdWrite arguments are not NULL!");
         return GUI_ERR;
     }
     bitMapWrite = p_lcdWrite;
-    guiXml = xmlString;
+    guiXml      = xmlString;
     pageCount = 0;
     varCount  = 0;
 
@@ -186,7 +192,11 @@ gui_status_t gui_parse_xml()
                 // Creating Variable 
                 gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
                 if(createStatus != GUI_VAR_OK){return GUI_ERR;}
-            }else{return GUI_INIT_VAR_BRACE;}
+            }else
+            {
+                help_log("GUI ERROR: Variable tag mismatch!");
+                return GUI_INIT_VAR_BRACE;
+            }
         }
         
         
@@ -205,7 +215,12 @@ gui_status_t gui_parse_xml()
                 pageCount++;
                 
                 b_isInPage = false;
-            }else{return GUI_INIT_PGE_BRACE;}
+            }
+            else
+            {
+                help_log("GUI ERROR: Page tag mismatch!");
+                return GUI_INIT_PGE_BRACE;
+            }
         }
 
         // NAME TAG CHECK 
@@ -289,12 +304,16 @@ gui_status_t gui_parse_xml()
     // Checking for mimatched braces
     if(b_isInPage)
     {
-        return GUI_INIT_PGE_BRACE;
+       help_log("GUI ERROR: Page tag mismatch!");
+       return GUI_INIT_PGE_BRACE;
     }
     if(b_isInVar)
     {
+        help_log("GUI ERROR: Variable tag mismatch for '%s'!", lastName);
         return GUI_INIT_VAR_BRACE;
     }
+    // Printing Successful Parse 
+    help_log("GUI: Successful init! Contains %d Var and %d pages",varCount,pageCount);
     return GUI_OK;
 }
 
@@ -303,6 +322,7 @@ gui_status_t gui_get_page_position(int16_t pageNumber, uint32_t * p_startIndex ,
 {
     if(pageNumber > pageCount)
     {
+        help_log("GUI ERROR: Page %d does not exist!", pageNumber);
         return GUI_ERR;
     }
     *p_startIndex = pages[pageNumber].startIndex;
@@ -314,6 +334,7 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
 {
     if(strlen(variableName)>MAX_KEY_LENGTH-1)
     {
+        help_log("GUI ERROR: Variable '%s' name too long!", variableName);
         return GUI_VAR_ERR;
     }
     uint32_t index = hash_index(variableName);
@@ -349,8 +370,7 @@ gui_variable_status_t gui_create_var(const char *variableName,const char *variab
         HashMapFlt[index].value = value;
         return GUI_VAR_OK;
     }
-        
-
+    help_log("GUI ERROR: Type '%s' not supported!", variableType);
     return GUI_VAR_ERR;
 }
 
@@ -415,6 +435,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     const char*strBitmap = bitmapString;
     if (strncmp(strBitmap, "<bitMap>", 8) != 0) 
     {
+        help_log("GUI ERROR: No bitmap start tag found!");
         return GUI_ERR;
     }
 
@@ -463,6 +484,14 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
             }
             else 
             {
+                if(!b_haveFoundPosi)
+                {
+                    help_log("GUI ERROR: Bitmap Postion not found!");
+                }
+                if(!b_haveFoundSize)
+                {
+                    help_log("GUI ERROR: Bitmap Size not found!");
+                }
                 return GUI_ERR;
             }
         }
@@ -508,6 +537,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     {
         return GUI_OK;
     }
+    help_log("GUI ERROR: No bitmap end tag found!");
     return GUI_ERR;
 }
     
@@ -635,7 +665,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 
         // POSITION TAG CHECK 
         //////////////////////
-        if (strncmp(textObjectString, "<position>", 10) == 0) 
+        if ((strncmp(textObjectString, "<position>", 10) == 0)&&(!b_haveFoundPosition)) 
         {
             int32_t posVars[2] = {0};
             gui_status_t posStatus = gui_parse_tag_val(textObjectString,"position",posVars,2,&b_haveFoundPosition);
@@ -652,16 +682,19 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
          
         // INVERT TAG CHECK 
         //////////////////////
-        int32_t invertInt = 0;
-        bool is_found = false;
-        gui_status_t invertStatus = gui_parse_tag_val(textObjectString,"invert",&invertInt,2,&is_found);
-        if(invertStatus != GUI_OK)
+        if (strncmp(textObjectString, "<invert>", 8) == 0) 
         {
-            return invertStatus;
-        }
-        if(is_found)
-        {
-            b_invert = (invertInt>0);
+            int32_t invertInt = 0;
+            bool is_found = false;
+            gui_status_t invertStatus = gui_parse_tag_val(textObjectString,"invert",&invertInt,2,&is_found);
+            if(invertStatus != GUI_OK)
+            {
+                return invertStatus;
+            }
+            if(is_found)
+            {
+                b_invert = (invertInt>0);
+            }
         }
 
         // CONTENT TAG CHECK 
@@ -788,12 +821,9 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         }
         if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, coreText[itr_text],b_invert) != GUI_OK)
         {
-            printf("Render Error \n");
-            printf(">>%c<< \n",coreText[itr_text] );
             return GUI_ERR;
         }
         colPos += gui_get_char_width(fontIndex ,fontSizeIndex, coreText[itr_text]);
-        // printf("%c,%d ,%d  \n", text[itr_text],gui_get_char_width(fontIndex ,fontSizeIndex, text[itr_text]),colPos );
     }
     // start rendering the bitmap letter by letter indexing position by letter width
 
@@ -874,6 +904,7 @@ gui_status_t gui_update()
     gui_status_t pageStatus = gui_get_page_position(pageNumber,&startIndex,&endIndex);
     if(pageStatus != GUI_OK)
     {
+        
         return GUI_ERR; 
     }
     // PARSING PAGES 
@@ -884,7 +915,7 @@ gui_status_t gui_update()
     while(*xmlCopy < endIndex)
     {
         // TEXT TAG CHECK
-        //////////////////
+        /////////////////
         if(!strncmp(xmlCopy, "<text>", 6))
         {
             gui_status_t renderStatus = gui_render_text(bitMap,xmlCopy);
@@ -945,6 +976,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
 
         // IF TAG CHECK 
         ////////////////// 
+        SKIP_TO(operandObjectString,'<');
         if (!strncmp(operandObjectString, "<if>", 4)) 
         {
             b_haveFoundIf = true;
@@ -1092,7 +1124,7 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
         const char *varEndTok = strstr(TxtData,"</var>");
         if((varSrtTok != NULL))
         {
-            // TOLKEN POSITION CHECK
+            // TOKEN POSITION CHECK
             if(varEndTok<=varSrtTok)
             {
                 return GUI_ERR;
@@ -1145,6 +1177,12 @@ gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_
     char startTag[MAX_TAG_NAME_LENGTH];
     size_t startTagLen = strnlen(tagName,MAX_TAG_NAME_LENGTH)+3;
     snprintf(startTag, startTagLen, "<%s>",tagName);
+    //Checking start tag is present
+    if(!strncmp(tagString, startTag, startTagLen))
+    {
+        return GUI_OK;
+    }
+
     const char *startTokens = strstr(tagString,startTag);
      // CREATING END TAG 
     char endTag[MAX_TAG_NAME_LENGTH];
@@ -1273,4 +1311,19 @@ gui_status_t help_set_var_equal(const char *operandObjectString)
         return GUI_ERR;
     }
     return GUI_OK;
+}
+
+
+void help_log(const char *message, ...)
+{
+    if(logWrite == NULL)
+    {
+        return;
+    }
+    char formatted_message[MAX_GUI_LOG_SIZE+1] = {0};
+    va_list args;
+    va_start(args, message);
+    vsnprintf(formatted_message, MAX_GUI_LOG_SIZE, message, args);
+    va_end(args);
+    logWrite(formatted_message);
 }

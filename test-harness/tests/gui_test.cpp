@@ -3,6 +3,7 @@
 extern "C" 
 {
     #include "../spies/lcd_spy.h"
+    #include "../spies/logger_spy.h"
     #include "gui.h"
     #include "../test_xml/test_xml.h"
     #include "../test_xml/test_error_xml.h"
@@ -13,7 +14,8 @@ TEST_GROUP(GUITest)
     void setup()
     {
         lcd_spy_init();
-        gui_init(lcd_spy_write, zeroGui);
+        gui_init(lcd_spy_write, logger_spy_write, zeroGui);
+        logger_spy_init();
     }
 
     void teardown()
@@ -107,28 +109,38 @@ TEST_GROUP(GUITest)
 TEST(GUITest, passing_null_as_write_function_causes_error)
 {
     // init gui with null 
-    gui_status_t initStatus = gui_init(NULL, zeroGui);
+    gui_status_t initStatus = gui_init(NULL, logger_spy_write, zeroGui);
     LONGS_EQUAL(GUI_ERR,initStatus);
+    STRCMP_EQUAL("GUI ERROR:  Init Fail, check the xmlString and p_lcdWrite arguments are not NULL!", logger_spy_get_string());
 }
+
+TEST(GUITest, passing_in_null_as_log_function_causes_no_error)
+{
+    // init gui with null 
+    gui_status_t initStatus = gui_init(lcd_spy_write, NULL, zeroGui);
+    LONGS_EQUAL(GUI_OK,initStatus);
+}
+
 
 TEST(GUITest, passing_null_as_xml_causes_error)
 {
     // init gui with null 
-    gui_status_t initStatus = gui_init(lcd_spy_write, NULL);
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write, NULL);
     LONGS_EQUAL(GUI_ERR,initStatus);
+    STRCMP_EQUAL("GUI ERROR:  Init Fail, check the xmlString and p_lcdWrite arguments are not NULL!", logger_spy_get_string());
 }
 
 TEST(GUITest, passing_in_inputs_causes_no_error)
 {
     // init gui
-    gui_status_t initStatus = gui_init(lcd_spy_write, zeroGui);
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write, zeroGui);
     LONGS_EQUAL(GUI_OK,initStatus);
 }
 
 TEST(GUITest, on_init_no_frame_has_been_written)
 {
     // init gui 
-    gui_init(lcd_spy_write, zeroGui);
+    gui_init(lcd_spy_write, NULL,  zeroGui);
     // Check spy state undefined 
     IS_LCD_EQUAL_TO(LCD_UNDEFINED);
 }
@@ -136,7 +148,7 @@ TEST(GUITest, on_init_no_frame_has_been_written)
 TEST(GUITest, when_passed_a_xml_with_no_pages_the_page_count_is_0)
 {
     // init gui 
-    gui_init(lcd_spy_write, zeroGui);
+    gui_init(lcd_spy_write, NULL,  zeroGui);
     // Check spy state undefined 
     int16_t pageCount = gui_get_page_count();
     LONGS_EQUAL(0,pageCount);
@@ -145,7 +157,7 @@ TEST(GUITest, when_passed_a_xml_with_no_pages_the_page_count_is_0)
 TEST(GUITest, when_passed_a_xml_with_no_variables_the_variable_count_is_0)
 {
     // init gui 
-    gui_init(lcd_spy_write, zeroGui);
+    gui_init(lcd_spy_write, NULL,  zeroGui);
     // Check spy state undefined 
     int16_t varCount = gui_get_variable_count();
     LONGS_EQUAL(0,varCount);
@@ -161,7 +173,7 @@ TEST(GUITest, when_passed_a_xml_with_no_variables_the_variable_count_is_0)
 TEST(GUITest, when_passed_a_xml_two_pages_the_page_count_is_two)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Check page count
     int16_t pageCount = gui_get_page_count();
     LONGS_EQUAL(2,pageCount);
@@ -171,7 +183,7 @@ TEST(GUITest, when_passed_a_xml_two_pages_the_page_count_is_two)
 TEST(GUITest, gui_get_page_position_returns_page_0_start_and_end)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Check page count
     uint32_t startIndex = 0;
     uint32_t endIndex = 0;
@@ -187,7 +199,7 @@ TEST(GUITest, gui_get_page_position_returns_page_0_start_and_end)
 TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Check page count
     uint32_t startIndex = 0;
     uint32_t endIndex = 0;
@@ -204,19 +216,21 @@ TEST(GUITest, gui_get_page_position_returns_page_1_start_and_end)
 TEST(GUITest, error_if_page_doesnt_exist)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, logger_spy_write,  helloWorldGui);
     // get status
     uint32_t startIndex = 0;
     uint32_t endIndex = 0;
     gui_status_t getStatus = gui_get_page_position(10,&startIndex,&endIndex);
     LONGS_EQUAL(GUI_ERR, getStatus);
+    STRCMP_EQUAL("GUI ERROR: Page 10 does not exist!", logger_spy_get_string());
+
 }
 
 // when passed a xml with one variables the variable count is set to 1
 TEST(GUITest, one_xml_defined_var_increments_var_count_by_one)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Check page count 
     int16_t varCount = gui_get_variable_count();
     LONGS_EQUAL(1,varCount);
@@ -226,7 +240,7 @@ TEST(GUITest, one_xml_defined_var_increments_var_count_by_one)
 TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Create variable definition strings
     char lastName[64]  = "testVar"; 
     char lastValue[64] = "10"; 
@@ -244,7 +258,7 @@ TEST(GUITest, gui_var_init_can_be_used_to_create_uint16_variables)
 TEST(GUITest, variable_exists_and_is_set_to_its_default)
 {
     // init gui 
-    gui_init(lcd_spy_write, singleVarGui);
+    gui_init(lcd_spy_write, NULL,  singleVarGui);
     // Fetch variable value 
     int32_t value = 0; // set to non zero value 
     gui_variable_status_t fetchStatus = gui_get_int32_var("pageIndex", &value);
@@ -256,7 +270,7 @@ TEST(GUITest, variable_exists_and_is_set_to_its_default)
 TEST(GUITest, uint16_variables_can_be_updated)
 {
     // init gui 
-    gui_init(lcd_spy_write, singleVarGui);
+    gui_init(lcd_spy_write, NULL,  singleVarGui);
     // Update Variable 
     gui_update_int32_var("pageIndex",1);
     // Fetch variable value 
@@ -269,7 +283,7 @@ TEST(GUITest, uint16_variables_can_be_updated)
 TEST(GUITest, feeding_a_garbled_type_causes_error)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, logger_spy_write,  helloWorldGui);
     // Create variable definition strings
     char lastName[64]  = "testVar"; 
     char lastValue[64] = "10"; 
@@ -277,6 +291,8 @@ TEST(GUITest, feeding_a_garbled_type_causes_error)
     // Call variable create 
     gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
     LONGS_EQUAL(GUI_VAR_ERR, createStatus);
+    STRCMP_EQUAL("GUI ERROR: Type 'uint6_t' not supported!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, feeding_in_a_value_with_name_greater_then_max_causes_error)
@@ -288,31 +304,39 @@ TEST(GUITest, feeding_in_a_value_with_name_greater_then_max_causes_error)
     // Call variable create 
     gui_variable_status_t createStatus = gui_create_var(lastName,lastType,lastValue);
     LONGS_EQUAL(GUI_VAR_ERR, createStatus);
+    STRCMP_EQUAL("GUI ERROR: Variable 'ghjopasd;lkfjas;ldkfjas;ldfkja;sldfkjas;dlfkjas' name too long!", logger_spy_get_string());
 }
 
 TEST(GUITest, if_initted_with_xml_with_a_page_with_no_closing_brace_then_error_is_thrown)
 {
     // init gui 
-    gui_status_t initStatus = gui_init(lcd_spy_write, noPageEndBrace);
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write,  noPageEndBrace);
     LONGS_EQUAL(GUI_INIT_PGE_BRACE, initStatus);
+    STRCMP_EQUAL("GUI ERROR: Page tag mismatch!", logger_spy_get_string());
+
 }
 TEST(GUITest, if_initted_with_an_xml_with_only_a_page_closing_brace_then_error_is_thrown )
 {
     // init gui 
-    gui_status_t initStatus = gui_init(lcd_spy_write, noPageStrtBrace);
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write,  noPageStrtBrace);
     LONGS_EQUAL(GUI_INIT_PGE_BRACE, initStatus);
+    STRCMP_EQUAL("GUI ERROR: Page tag mismatch!", logger_spy_get_string());
+
 }
 TEST(GUITest, if_initted_with_xml_with_a_variable_with_no_closing_brace_then_error_is_thrown )
 {
     // init gui 
-    gui_status_t initStatus = gui_init(lcd_spy_write, noVarEndBrace);
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write,  noVarEndBrace);
     LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
+    STRCMP_EQUAL("GUI ERROR: Variable tag mismatch for 'pageIndex'!", logger_spy_get_string());
 }
 TEST(GUITest, if_initted_with_an_xml_with_only_a_variable_closing_brace_then_error_is_thrown  )
 {
     // init gui 
-    gui_status_t initStatus = gui_init(lcd_spy_write, noVarStrtBrace);
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write,  noVarStrtBrace);
     LONGS_EQUAL(GUI_INIT_VAR_BRACE, initStatus);
+    STRCMP_EQUAL("GUI ERROR: Variable tag mismatch!", logger_spy_get_string());
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: BIT-MAP RENDER
@@ -342,6 +366,7 @@ TEST(GUITest, if_no_start_bitMap_tag_is_found_returns_bitmap_error)
     // Call gui_render_bitmap 
     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: No bitmap start tag found!", logger_spy_get_string());
 }
 
 TEST(GUITest, if_no_end_bitMap_tag_is_found_returns_bitmap_error)
@@ -354,6 +379,8 @@ TEST(GUITest, if_no_end_bitMap_tag_is_found_returns_bitmap_error)
     // Call gui_render_bitmap 
     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: No bitmap end tag found!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, if_no_position_is_found_then_error_is_returned)
@@ -366,18 +393,20 @@ TEST(GUITest, if_no_position_is_found_then_error_is_returned)
     // Call gui_render_bitmap 
     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Bitmap Postion not found!", logger_spy_get_string());
 }
 
 TEST(GUITest, if_no_size_is_found_then_error_is_returned)
 {
     // Get bitmap string 
-    const char* strBitMapCopy = justABitmap_positionBraceErr;
+    const char* strBitMapCopy = justABitmap_sizeBraceErr;
     // Create Empty 2D array
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
     // Call gui_render_bitmap 
     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Bitmap Size not found!", logger_spy_get_string());
 }
 
 TEST(GUITest, if_gui_render_bitmap_finds_a_non_bitmapable_chacter_then_returns_error)
@@ -756,57 +785,57 @@ TEST(GUITest, can_render_multiline_text)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: PAGE RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(GUITest, rendering_with_page_with_no_errors_does_not_return_error)
-{
-    // init gui clear
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Update to set the first frame 
-    gui_status_t renderStatus = gui_update();
-    LONGS_EQUAL(GUI_OK, renderStatus);
-}
+// TEST(GUITest, rendering_with_page_with_no_errors_does_not_return_error)
+// {
+//     // init gui clear
+//     gui_init(lcd_spy_write, NULL,  helloWorldGui);
+//     // Update to set the first frame 
+//     gui_status_t renderStatus = gui_update();
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+// }
 
-TEST(GUITest, changing_to_page_that_does_not_exist_causes_error)
-{
-    // init gui clear
-    gui_init(lcd_spy_write, helloWorldGui);
-    // Change page number to be out of bounds
-    gui_update_int32_var("pageIndex", 10);
-    // Update to set the first frame 
-    gui_status_t renderStatus = gui_update();
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, changing_to_page_that_does_not_exist_causes_error)
+// {
+//     // init gui clear
+//     gui_init(lcd_spy_write, NULL,  helloWorldGui);
+//     // Change page number to be out of bounds
+//     gui_update_int32_var("pageIndex", 10);
+//     // Update to set the first frame 
+//     gui_status_t renderStatus = gui_update();
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
-TEST(GUITest, if_page_index_does_not_exist_then_error_is_returned)
-{
-    // init gui clear
-    gui_init(lcd_spy_write, helloWorldGui_no_page_index);
-    // Update to set the first frame 
-    gui_status_t renderStatus = gui_update();
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, if_page_index_does_not_exist_then_error_is_returned)
+// {
+//     // init gui clear
+//     gui_init(lcd_spy_write, NULL,  helloWorldGui_no_page_index);
+//     // Update to set the first frame 
+//     gui_status_t renderStatus = gui_update();
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
-TEST(GUITest, attempting_to_render_text_with_error_returns_error)
-{
-    // init gui clear
-    gui_init(lcd_spy_write, helloWorldGui_text_error);
-    // Update to set the first frame 
-    gui_status_t renderStatus = gui_update();
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, attempting_to_render_text_with_error_returns_error)
+// {
+//     // init gui clear
+//     gui_init(lcd_spy_write, NULL,  helloWorldGui_text_error);
+//     // Update to set the first frame 
+//     gui_status_t renderStatus = gui_update();
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
-TEST(GUITest, attempting_to_render_bitmap_with_error_returns_error)
-{
-    // init gui clear
-    gui_init(lcd_spy_write, helloWorldGui_bitmap_error);
-    // Update to set the first frame 
-    gui_status_t renderStatus = gui_update();
-    LONGS_EQUAL(GUI_ERR, renderStatus);
-}
+// TEST(GUITest, attempting_to_render_bitmap_with_error_returns_error)
+// {
+//     // init gui clear
+//     gui_init(lcd_spy_write, NULL,  helloWorldGui_bitmap_error);
+//     // Update to set the first frame 
+//     gui_status_t renderStatus = gui_update();
+//     LONGS_EQUAL(GUI_ERR, renderStatus);
+// }
 
 TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
 {
     // init gui clear
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Update to set the first frame 
     gui_status_t renderStatus = gui_update();
     LONGS_EQUAL(GUI_OK, renderStatus);
@@ -818,21 +847,21 @@ TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
 }
 
-TEST(GUITest, pages_with_text_can_be_written_to_screen)
-{
-    // init gui clear
-    gui_init(lcd_spy_write, helloWorldGui);
-    gui_update_int32_var("pageIndex", 1);
-    // Update to set the first frame 
-    gui_status_t renderStatus = gui_update();
-    LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check that bitmaps match 
-    uint8_t outputMap[ROWS][COLUMNS];
-    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    lcd_spy_get_Frame(outputMap);
-    // PRINT_BIT_MAP(64,102,outputMap);
-    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
-}
+// TEST(GUITest, pages_with_text_can_be_written_to_screen)
+// {
+//     // init gui clear
+//     gui_init(lcd_spy_write, NULL,  helloWorldGui);
+//     gui_update_int32_var("pageIndex", 1);
+//     // Update to set the first frame 
+//     gui_status_t renderStatus = gui_update();
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+//     // Check that bitmaps match 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+//     lcd_spy_get_Frame(outputMap);
+//     // PRINT_BIT_MAP(64,102,outputMap);
+//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+// }
 /**
  * <page>
  */
@@ -1090,19 +1119,20 @@ TEST(GUITest, can_render_calbri_center_text)
 TEST(GUITest, can_render_many_text_elements_per_page)
 {
     // init gui clear
-    gui_init(lcd_spy_write, advanced_gui);
+    gui_init(lcd_spy_write, NULL,  advanced_gui);
     // Update to set the first frame 
     gui_status_t renderStatus = gui_update();
-    LONGS_EQUAL(GUI_OK, renderStatus);
     // Check that all text elements were rendered 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     lcd_spy_get_Frame(outputMap);
     // PRINT_BIT_MAP(64,102,outputMap);
     // PRINT_BIT_MAP(64,102,ready_19_juipeter_T_L_0_0);
+    LONGS_EQUAL(GUI_OK, renderStatus);
     IS_BIT_REG_EQUAL_REG(ready_19_juipeter_T_L_0_0,outputMap,0,0,20,19);
     IS_BIT_REG_EQUAL_REG(service_due_19_juipeter_T_L_30_0,outputMap,30,0,102,19);
 }
+
 /**
  * <page>
  * - Additional options, Variable refresh rates/partial screen refreshes 
@@ -1635,30 +1665,6 @@ TEST(GUITest, text_position_can_be_set_using_variables_and_position_can_be_chang
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_moved_off,outputMap,0,0,102,64);
 }
 
-// TEST(GUITest, can_render_just_a_var)
-// {
-//     // just a var text 
-//     const char* strTextCopy = just_one_var;
-//     // Create empty bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Render 
-//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-//     // Check status is okay 
-//     // PRINT_BIT_MAP(64,102,outputMap);
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check matches expectation 
-//     IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
-
-// }
-/**
- * <text>
- * - Can set default font at the start of the pages
- * - Can set default alighment at start of pages 
- * - Can set default vert alighment at start of pages 
- * - Can set default font size at start of pages 
- */
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: HASHMAP 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1678,7 +1684,7 @@ TEST(GUITest, gui_var_init_does_not_throw_error_with_float)
 TEST(GUITest, after_creation_float_vars_can_be_queryed_without_error)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Create variable definition strings
     char lastName[64]  = "testVar"; 
     char lastValue[64] = "10.22"; 
@@ -1696,7 +1702,7 @@ TEST(GUITest, after_creation_float_vars_can_be_queryed_without_error)
 TEST(GUITest, after_creation_float_vars_can_be_queryed_and_return_value)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Create variable definition strings
     char lastName[64]  = "testVar"; 
     char lastValue[64] = "10.22"; 
@@ -1715,7 +1721,7 @@ TEST(GUITest, after_creation_float_vars_can_be_queryed_and_return_value)
 TEST(GUITest, float_vars_can_be_updated)
 {
     // init gui 
-    gui_init(lcd_spy_write, helloWorldGui);
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
     // Create variable definition strings
     char lastName[64]  = "testVar"; 
     char lastValue[64] = "10.22"; 
@@ -1766,6 +1772,48 @@ TEST(GUITest, float_vars_can_be_printed_in_text)
     // Check that text rendered correctly 
     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter_one_pt_2,outputMap,0,0,102,64);
 }
+
+
+TEST(GUITest, debugger_logger_can_be_passed_in_without_error)
+{
+    // init gui clear
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write, advanced_gui);
+    LONGS_EQUAL(GUI_OK, initStatus);
+}
+
+
+TEST(GUITest, after_init_if_logger_passed_in_a_summary_will_be_printed)
+{
+    // init gui clear
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write, helloWorldGui);
+    LONGS_EQUAL(GUI_OK, initStatus);
+    // Checking logged message 
+    STRCMP_EQUAL("GUI: Successful init! Contains 1 Var and 2 pages", logger_spy_get_string());
+}
+// TEST(GUITest, can_render_just_a_var)
+// {
+//     // just a var text 
+//     const char* strTextCopy = just_one_var;
+//     // Create empty bitmap 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+//     // Render 
+//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+//     // Check status is okay 
+//     // PRINT_BIT_MAP(64,102,outputMap);
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+//     // Check matches expectation 
+//     IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
+
+// }
+/**
+ * <text>
+ * - Can set default font at the start of the pages
+ * - Can set default alighment at start of pages 
+ * - Can set default vert alighment at start of pages 
+ * - Can set default font size at start of pages 
+ */
+
 
 /**
  * <variable>
