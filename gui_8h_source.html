@@ -98,112 +98,112 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#define MAX_KEY_LENGTH 20        </span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define TEXT_ALIGNMENT_OPTIONS 3        </span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#define MAX_TAG_NAME_LENGTH 64   </span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">/****************/</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">/* PUBLIC TYPES */</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">/****************/</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">typedef</span> void (*write_function)(uint8_t bitMap[ROWS][COLUMNS], uint16_t columns, uint16_t rows);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">typedef</span> <span class="keyword">enum</span>{</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    GUI_OK,              </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    GUI_ERR,             </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    GUI_INIT_PGE_BRACE,  </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    GUI_INIT_VAR_BRACE,  </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}gui_status_t;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">typedef</span> <span class="keyword">enum</span>{</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    GUI_VAR_OK,    </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    GUI_VAR_ERR,   </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}gui_variable_status_t;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="foldopen" id="foldopen00054" data-start="{" data-end="};">
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="structpage__params__t.html">   54</a></span><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    uint32_t startIndex;   </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="structpage__params__t.html#af1805846bcad52e88c12a6e26c5db36f">   57</a></span>    uint32_t <a class="code hl_variable" href="structpage__params__t.html#af1805846bcad52e88c12a6e26c5db36f">endIndex</a>;     </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}<a class="code hl_struct" href="structpage__params__t.html">page_params_t</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define MAX_GUI_LOG_SIZE 128  </span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">/****************/</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">/* PUBLIC TYPES */</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">/****************/</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">typedef</span> void (*write_function)(uint8_t bitMap[ROWS][COLUMNS], uint16_t columns, uint16_t rows);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">typedef</span> void (*log_function)(<span class="keyword">const</span> <span class="keywordtype">char</span> *);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">typedef</span> <span class="keyword">enum</span>{</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    GUI_OK,              </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    GUI_ERR,             </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    GUI_INIT_PGE_BRACE,  </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    GUI_INIT_VAR_BRACE,  </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}gui_status_t;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">typedef</span> <span class="keyword">enum</span>{</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    GUI_VAR_OK,    </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    GUI_VAR_ERR,   </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}gui_variable_status_t;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="foldopen" id="foldopen00057" data-start="{" data-end="};">
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="structpage__params__t.html">   57</a></span><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>{</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    uint32_t startIndex;   </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="structpage__params__t.html#af1805846bcad52e88c12a6e26c5db36f">   60</a></span>    uint32_t <a class="code hl_variable" href="structpage__params__t.html#af1805846bcad52e88c12a6e26c5db36f">endIndex</a>;     </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}<a class="code hl_struct" href="structpage__params__t.html">page_params_t</a>;</div>
 </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    CENTERED,     </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    LEFT,         </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    RIGHT,        </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}text_alignment_enum_t;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    CENTER ,           </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    TOP    ,           </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    BOTTOM ,          </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>}text_vert_alignment_enum_t;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="foldopen" id="foldopen00083" data-start="{" data-end="};">
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="structtext__alignment__opt__t.html">   83</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    text_alignment_enum_t alignmentEnum; </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="structtext__alignment__opt__t.html#af2d45aecc10be4f755f4a8bcd81fbca0">   85</a></span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="structtext__alignment__opt__t.html#af2d45aecc10be4f755f4a8bcd81fbca0">alignmentName</a>;           </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>} <a class="code hl_struct" href="structtext__alignment__opt__t.html">text_alignment_opt_t</a>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    CENTERED,     </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    LEFT,         </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    RIGHT,        </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}text_alignment_enum_t;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    CENTER ,           </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    TOP    ,           </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    BOTTOM ,          </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}text_vert_alignment_enum_t;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="foldopen" id="foldopen00086" data-start="{" data-end="};">
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="structtext__alignment__opt__t.html">   86</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    text_alignment_enum_t alignmentEnum; </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="structtext__alignment__opt__t.html#af2d45aecc10be4f755f4a8bcd81fbca0">   88</a></span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="structtext__alignment__opt__t.html#af2d45aecc10be4f755f4a8bcd81fbca0">alignmentName</a>;           </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>} <a class="code hl_struct" href="structtext__alignment__opt__t.html">text_alignment_opt_t</a>;</div>
 </div>
-<div class="foldopen" id="foldopen00091" data-start="{" data-end="};">
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="structtext__vert__alignment__opt__t.html">   91</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    text_vert_alignment_enum_t alignmentEnum; </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="structtext__vert__alignment__opt__t.html#a12821e723bd8cda3fb602f6b4a03fcfc">   93</a></span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="structtext__vert__alignment__opt__t.html#a12821e723bd8cda3fb602f6b4a03fcfc">alignmentName</a>;                </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>} <a class="code hl_struct" href="structtext__vert__alignment__opt__t.html">text_vert_alignment_opt_t</a>;</div>
+<div class="foldopen" id="foldopen00094" data-start="{" data-end="};">
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="structtext__vert__alignment__opt__t.html">   94</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    text_vert_alignment_enum_t alignmentEnum; </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="structtext__vert__alignment__opt__t.html#a12821e723bd8cda3fb602f6b4a03fcfc">   96</a></span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="structtext__vert__alignment__opt__t.html#a12821e723bd8cda3fb602f6b4a03fcfc">alignmentName</a>;                </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>} <a class="code hl_struct" href="structtext__vert__alignment__opt__t.html">text_vert_alignment_opt_t</a>;</div>
 </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">/********************/</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">/* PUBLIC VARIABLES */</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment">/********************/</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">/********************************/</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">/* PUBLIC FUNCTION DECLARATIONS */</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment">/********************************/</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>gui_status_t gui_init(write_function p_lcdWrite, <span class="keyword">const</span> <span class="keywordtype">char</span>* xmlString);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>int16_t gui_get_page_count();</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>int16_t gui_get_variable_count();</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>gui_status_t gui_parse_xml();</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>gui_status_t gui_get_page_position(int16_t pageNumber, uint32_t * p_startIndex , uint32_t * p_endIndex);</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>gui_variable_status_t gui_create_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableName,<span class="keyword">const</span> <span class="keywordtype">char</span> *variableType,<span class="keyword">const</span> <span class="keywordtype">char</span> *variableValue);</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>gui_variable_status_t gui_get_int32_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableKey,int32_t *p_value);</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>gui_variable_status_t gui_get_float_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableKey,<span class="keywordtype">float</span> *p_value);</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>gui_variable_status_t gui_update_int32_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableKey,int32_t value);</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>gui_variable_status_t gui_update_float_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableKey,<span class="keywordtype">float</span> value);</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],<span class="keyword">const</span> <span class="keywordtype">char</span> *bitmapString);</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],<span class="keyword">const</span> <span class="keywordtype">char</span> *textObjectString);</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, <span class="keywordtype">char</span> character);</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t row, int16_t col, uint8_t bitMap[ROWS][COLUMNS], <span class="keywordtype">char</span> character,<span class="keywordtype">bool</span> b_bitMapInvert);</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>gui_status_t gui_update();</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>gui_status_t gui_execute_operand(<span class="keyword">const</span> <span class="keywordtype">char</span> *operandObjectString);</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>gui_status_t gui_parse_tag_str(<span class="keyword">const</span> <span class="keywordtype">char</span> *tagString,<span class="keyword">const</span> <span class="keywordtype">char</span> *tagName, <span class="keywordtype">char</span> result[MAX_TAG_DATA_LENGTH], <span class="keywordtype">bool</span> *b_isFound);</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>gui_status_t gui_parse_tag_val(<span class="keyword">const</span> <span class="keywordtype">char</span> *tagString,<span class="keyword">const</span> <span class="keywordtype">char</span> *tagName, int32_t *p_value,uint8_t numReturn, <span class="keywordtype">bool</span> *b_isFound);</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astructpage__params__t_html"><div class="ttname"><a href="structpage__params__t.html">page_params_t</a></div><div class="ttdoc">For storing page parameters.</div><div class="ttdef"><b>Definition</b> gui.h:55</div></div>
-<div class="ttc" id="astructpage__params__t_html_af1805846bcad52e88c12a6e26c5db36f"><div class="ttname"><a href="structpage__params__t.html#af1805846bcad52e88c12a6e26c5db36f">page_params_t::endIndex</a></div><div class="ttdeci">uint32_t endIndex</div><div class="ttdef"><b>Definition</b> gui.h:57</div></div>
-<div class="ttc" id="astructtext__alignment__opt__t_html"><div class="ttname"><a href="structtext__alignment__opt__t.html">text_alignment_opt_t</a></div><div class="ttdoc">Struct to create the text alignment dictionary.</div><div class="ttdef"><b>Definition</b> gui.h:83</div></div>
-<div class="ttc" id="astructtext__alignment__opt__t_html_af2d45aecc10be4f755f4a8bcd81fbca0"><div class="ttname"><a href="structtext__alignment__opt__t.html#af2d45aecc10be4f755f4a8bcd81fbca0">text_alignment_opt_t::alignmentName</a></div><div class="ttdeci">const char * alignmentName</div><div class="ttdef"><b>Definition</b> gui.h:85</div></div>
-<div class="ttc" id="astructtext__vert__alignment__opt__t_html"><div class="ttname"><a href="structtext__vert__alignment__opt__t.html">text_vert_alignment_opt_t</a></div><div class="ttdoc">Struct to create the vert text alignment dictionary.</div><div class="ttdef"><b>Definition</b> gui.h:91</div></div>
-<div class="ttc" id="astructtext__vert__alignment__opt__t_html_a12821e723bd8cda3fb602f6b4a03fcfc"><div class="ttname"><a href="structtext__vert__alignment__opt__t.html#a12821e723bd8cda3fb602f6b4a03fcfc">text_vert_alignment_opt_t::alignmentName</a></div><div class="ttdeci">const char * alignmentName</div><div class="ttdef"><b>Definition</b> gui.h:93</div></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">/********************/</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">/* PUBLIC VARIABLES */</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">/********************/</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment">/********************************/</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">/* PUBLIC FUNCTION DECLARATIONS */</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment">/********************************/</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>gui_status_t gui_init(write_function p_lcdWrite,log_function p_logFunction,<span class="keyword">const</span> <span class="keywordtype">char</span>* xmlString);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>int16_t gui_get_page_count();</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>int16_t gui_get_variable_count();</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>gui_status_t gui_parse_xml();</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>gui_status_t gui_get_page_position(int16_t pageNumber, uint32_t * p_startIndex , uint32_t * p_endIndex);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>gui_variable_status_t gui_create_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableName,<span class="keyword">const</span> <span class="keywordtype">char</span> *variableType,<span class="keyword">const</span> <span class="keywordtype">char</span> *variableValue);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>gui_variable_status_t gui_get_int32_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableKey,int32_t *p_value);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>gui_variable_status_t gui_get_float_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableKey,<span class="keywordtype">float</span> *p_value);</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>gui_variable_status_t gui_update_int32_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableKey,int32_t value);</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>gui_variable_status_t gui_update_float_var(<span class="keyword">const</span> <span class="keywordtype">char</span> *variableKey,<span class="keywordtype">float</span> value);</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],<span class="keyword">const</span> <span class="keywordtype">char</span> *bitmapString);</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],<span class="keyword">const</span> <span class="keywordtype">char</span> *textObjectString);</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>uint8_t gui_get_char_width(uint8_t fontNameIdx ,uint8_t fontSizeIdx, <span class="keywordtype">char</span> character);</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t row, int16_t col, uint8_t bitMap[ROWS][COLUMNS], <span class="keywordtype">char</span> character,<span class="keywordtype">bool</span> b_bitMapInvert);</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>gui_status_t gui_update();</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>gui_status_t gui_execute_operand(<span class="keyword">const</span> <span class="keywordtype">char</span> *operandObjectString);</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>gui_status_t gui_parse_tag_str(<span class="keyword">const</span> <span class="keywordtype">char</span> *tagString,<span class="keyword">const</span> <span class="keywordtype">char</span> *tagName, <span class="keywordtype">char</span> result[MAX_TAG_DATA_LENGTH], <span class="keywordtype">bool</span> *b_isFound);</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>gui_status_t gui_parse_tag_val(<span class="keyword">const</span> <span class="keywordtype">char</span> *tagString,<span class="keyword">const</span> <span class="keywordtype">char</span> *tagName, int32_t *p_value,uint8_t numReturn, <span class="keywordtype">bool</span> *b_isFound);</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="astructpage__params__t_html"><div class="ttname"><a href="structpage__params__t.html">page_params_t</a></div><div class="ttdoc">For storing page parameters.</div><div class="ttdef"><b>Definition</b> gui.h:58</div></div>
+<div class="ttc" id="astructpage__params__t_html_af1805846bcad52e88c12a6e26c5db36f"><div class="ttname"><a href="structpage__params__t.html#af1805846bcad52e88c12a6e26c5db36f">page_params_t::endIndex</a></div><div class="ttdeci">uint32_t endIndex</div><div class="ttdef"><b>Definition</b> gui.h:60</div></div>
+<div class="ttc" id="astructtext__alignment__opt__t_html"><div class="ttname"><a href="structtext__alignment__opt__t.html">text_alignment_opt_t</a></div><div class="ttdoc">Struct to create the text alignment dictionary.</div><div class="ttdef"><b>Definition</b> gui.h:86</div></div>
+<div class="ttc" id="astructtext__alignment__opt__t_html_af2d45aecc10be4f755f4a8bcd81fbca0"><div class="ttname"><a href="structtext__alignment__opt__t.html#af2d45aecc10be4f755f4a8bcd81fbca0">text_alignment_opt_t::alignmentName</a></div><div class="ttdeci">const char * alignmentName</div><div class="ttdef"><b>Definition</b> gui.h:88</div></div>
+<div class="ttc" id="astructtext__vert__alignment__opt__t_html"><div class="ttname"><a href="structtext__vert__alignment__opt__t.html">text_vert_alignment_opt_t</a></div><div class="ttdoc">Struct to create the vert text alignment dictionary.</div><div class="ttdef"><b>Definition</b> gui.h:94</div></div>
+<div class="ttc" id="astructtext__vert__alignment__opt__t_html_a12821e723bd8cda3fb602f6b4a03fcfc"><div class="ttname"><a href="structtext__vert__alignment__opt__t.html#a12821e723bd8cda3fb602f6b4a03fcfc">text_vert_alignment_opt_t::alignmentName</a></div><div class="ttdeci">const char * alignmentName</div><div class="ttdef"><b>Definition</b> gui.h:96</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
