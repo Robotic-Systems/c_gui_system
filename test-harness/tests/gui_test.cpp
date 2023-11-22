@@ -418,6 +418,7 @@ TEST(GUITest, if_gui_render_bitmap_finds_a_non_bitmapable_chacter_then_returns_e
     memset(outputMap, 99, COLUMNS * ROWS * sizeof(uint8_t));
     // Call gui_render_bitmap 
     gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+    STRCMP_EQUAL("GUI ERROR: Found un-Bitmappable chracter 'A' in bitmap!", logger_spy_get_string());
     LONGS_EQUAL(GUI_ERR, renderStatus);
 }
 
@@ -498,6 +499,7 @@ TEST(GUITest, text_render_returns_error_when_no_text_starting_brace_found)
     // Render text
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
+    STRCMP_EQUAL("GUI ERROR: No Text starting tag found!", logger_spy_get_string());
     LONGS_EQUAL(GUI_ERR, renderStatus);
 }
 
@@ -509,6 +511,7 @@ TEST(GUITest, text_render_returns_error_when_no_font_found)
     uint8_t outputMap[ROWS][COLUMNS];
     // Render text
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    STRCMP_EQUAL("GUI ERROR: Font name '' does not exist at size '19'!", logger_spy_get_string());
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, renderStatus);
 }
@@ -522,6 +525,8 @@ TEST(GUITest, text_render_returns_error_when_no_font_size)
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Font size tags not found!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, text_render_returns_error_when_no_alignment)
@@ -533,6 +538,9 @@ TEST(GUITest, text_render_returns_error_when_no_alignment)
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, renderStatus);
+        STRCMP_EQUAL("GUI ERROR: Alignment tags not found!", logger_spy_get_string());
+
+
 }
 
 TEST(GUITest, text_render_returns_error_when_no_position)
@@ -544,6 +552,7 @@ TEST(GUITest, text_render_returns_error_when_no_position)
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Position tags not found!", logger_spy_get_string());
 }
 
 TEST(GUITest, text_render_returns_error_when_no_content)
@@ -555,6 +564,7 @@ TEST(GUITest, text_render_returns_error_when_no_content)
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Content tags not found!", logger_spy_get_string());
 }
 
 TEST(GUITest, text_render_returns_error_when_font_does_not_exist)
@@ -566,6 +576,8 @@ TEST(GUITest, text_render_returns_error_when_font_does_not_exist)
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Font name 'spaceMan' does not exist!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, text_render_returns_error_when_font_size_not_exist)
@@ -577,6 +589,8 @@ TEST(GUITest, text_render_returns_error_when_font_size_not_exist)
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Font name 'jupiter' does not exist at size '20'!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, text_render_returns_error_when_alignment_is_not_defined)
@@ -588,6 +602,8 @@ TEST(GUITest, text_render_returns_error_when_alignment_is_not_defined)
     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Alignment 'backwards' is not defined!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, get_char_width_returns_corect_char_width_for_c)
@@ -638,6 +654,7 @@ TEST(GUITest, unknown_chacter_returns_error)
     // Write a character in top left corner 
     gui_status_t writeStatus = gui_write_char(1,0,0,0,outputMap,127,false);
     LONGS_EQUAL(GUI_ERR,writeStatus);
+    STRCMP_EQUAL("GUI ERROR: ASCII Char '127' is not supported!", logger_spy_get_string());
 }
 
 
@@ -785,52 +802,61 @@ TEST(GUITest, can_render_multiline_text)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ONE: PAGE RENDER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TEST(GUITest, rendering_with_page_with_no_errors_does_not_return_error)
-// {
-//     // init gui clear
-//     gui_init(lcd_spy_write, NULL,  helloWorldGui);
-//     // Update to set the first frame 
-//     gui_status_t renderStatus = gui_update();
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-// }
+TEST(GUITest, rendering_with_page_with_no_errors_does_not_return_error)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK, renderStatus);
 
-// TEST(GUITest, changing_to_page_that_does_not_exist_causes_error)
-// {
-//     // init gui clear
-//     gui_init(lcd_spy_write, NULL,  helloWorldGui);
-//     // Change page number to be out of bounds
-//     gui_update_int32_var("pageIndex", 10);
-//     // Update to set the first frame 
-//     gui_status_t renderStatus = gui_update();
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+}
 
-// TEST(GUITest, if_page_index_does_not_exist_then_error_is_returned)
-// {
-//     // init gui clear
-//     gui_init(lcd_spy_write, NULL,  helloWorldGui_no_page_index);
-//     // Update to set the first frame 
-//     gui_status_t renderStatus = gui_update();
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+TEST(GUITest, changing_to_page_that_does_not_exist_causes_error)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, logger_spy_write,  helloWorldGui);
+    // Change page number to be out of bounds
+    gui_update_int32_var("pageIndex", 10);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    STRCMP_EQUAL("GUI ERROR: Page '10' does not exist!", logger_spy_get_string());
 
-// TEST(GUITest, attempting_to_render_text_with_error_returns_error)
-// {
-//     // init gui clear
-//     gui_init(lcd_spy_write, NULL,  helloWorldGui_text_error);
-//     // Update to set the first frame 
-//     gui_status_t renderStatus = gui_update();
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+    LONGS_EQUAL(GUI_ERR, renderStatus);
 
-// TEST(GUITest, attempting_to_render_bitmap_with_error_returns_error)
-// {
-//     // init gui clear
-//     gui_init(lcd_spy_write, NULL,  helloWorldGui_bitmap_error);
-//     // Update to set the first frame 
-//     gui_status_t renderStatus = gui_update();
-//     LONGS_EQUAL(GUI_ERR, renderStatus);
-// }
+}
+
+TEST(GUITest, if_page_index_does_not_exist_then_error_is_returned)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, logger_spy_write,  helloWorldGui_no_page_index);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: PageIndex variable could not be found, please define!", logger_spy_get_string());
+
+}
+
+TEST(GUITest, attempting_to_render_text_with_error_returns_error)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, logger_spy_write,  helloWorldGui_text_error);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Could not render text on page '0'", logger_spy_get_string());
+
+}
+
+TEST(GUITest, attempting_to_render_bitmap_with_error_returns_error)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, logger_spy_write,  helloWorldGui_bitmap_error);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: Could not render bit-map on page '0'", logger_spy_get_string());
+}
 
 TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
 {
@@ -847,21 +873,22 @@ TEST(GUITest, pages_with_bitmap_can_be_written_to_screen)
     IS_BIT_MAP_EQUAL_BIT(beautifulBitMap,outputMap,0,0,32,32);
 }
 
-// TEST(GUITest, pages_with_text_can_be_written_to_screen)
-// {
-//     // init gui clear
-//     gui_init(lcd_spy_write, NULL,  helloWorldGui);
-//     gui_update_int32_var("pageIndex", 1);
-//     // Update to set the first frame 
-//     gui_status_t renderStatus = gui_update();
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check that bitmaps match 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     lcd_spy_get_Frame(outputMap);
-//     // PRINT_BIT_MAP(64,102,outputMap);
-//     IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
-// }
+TEST(GUITest, pages_with_text_can_be_written_to_screen)
+{
+    // init gui clear
+    gui_init(lcd_spy_write, NULL,  helloWorldGui);
+    gui_update_int32_var("pageIndex", 1);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that bitmaps match 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    lcd_spy_get_Frame(outputMap);
+    // PRINT_BIT_MAP(64,102,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(helloWorld_19_juipeter,outputMap,0,0,102,64);
+}
+
 /**
  * <page>
  */

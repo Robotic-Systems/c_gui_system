@@ -513,6 +513,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
 
             if (sscanf(strBitmap, "%hhd", &bit) != 1) 
             {
+                help_log("GUI ERROR: Found un-Bitmappable chracter '%c' in bitmap!", *strBitmap);
                 return GUI_ERR;   
             }
             strBitmap++;
@@ -546,6 +547,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
 {
     if (strncmp(textObjectString, "<text>", 6) != 0) 
     {
+        help_log("GUI ERROR: No Text starting tag found!");
         return GUI_ERR;
     }
 
@@ -589,6 +591,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 }
                 if(!b_haveFoundFont)
                 {
+                    help_log("GUI ERROR: Font name '%s' does not exist!", fontName);
                     return GUI_ERR;
                 }
 
@@ -613,6 +616,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             }
             if(!b_haveFoundFontSize)
             {
+                help_log("GUI ERROR: Font name '%s' does not exist at size '%d'!", fontName, fontSize);
                 return GUI_ERR;
             }
         }
@@ -636,6 +640,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             }
             if(!b_haveFoundAlignment)
             {
+                help_log("GUI ERROR: Alignment '%s' is not defined!", alignmentName);
                 return GUI_ERR;
             }
         }
@@ -720,6 +725,13 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     
     if(!b_haveFoundFont || !b_haveFoundFontSize || !b_haveFoundAlignment || !b_haveFoundPosition || !b_haveFoundContent || !b_haveFoundVertAlignment)
     {
+        if(!b_haveFoundPosition){help_log("GUI ERROR: Position tags not found!");}
+        if(!b_haveFoundFontSize){help_log("GUI ERROR: Font size tags not found!");}
+        if(!b_haveFoundAlignment){help_log("GUI ERROR: Alignment tags not found!");}
+        if(!b_haveFoundContent){help_log("GUI ERROR: Content tags not found!");}
+
+        
+
         return GUI_ERR;
     }
     // CHECK IF TEXT CONTAINS VARS
@@ -759,9 +771,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             }
         }
     }
-    // ToDo: remove this snprintf 
-    
-
     // WIDTH CALC
     size_t txtLen = strlen(coreText);
     int32_t txtPxWidth = 0; /** The pixel width of the string */
@@ -853,6 +862,7 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
     uint8_t arrayWidth = font_master_list[fontNameIdx].p_sizeArray[fontSizeIdx][95];
     if(charWidth == 0)
     {
+        help_log("GUI ERROR: ASCII Char '%d' is not supported!", character);
         return GUI_ERR;
     }
     // Char layer index
@@ -889,10 +899,12 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
 
 gui_status_t gui_update()
 {
-    int32_t pageNumber = 0; // set to non zero value 
+    int32_t pageNumber = 0; 
     gui_variable_status_t fetchStatus = gui_get_int32_var("pageIndex", &pageNumber);
     if((pageNumber > pageCount) || (fetchStatus != GUI_VAR_OK))
     {
+        if(fetchStatus != GUI_VAR_OK){help_log("GUI ERROR: PageIndex variable could not be found, please define!");}
+        if(pageNumber > pageCount){help_log("GUI ERROR: Page '%d' does not exist!", pageNumber);}
         return GUI_ERR;
     }
 
@@ -921,6 +933,7 @@ gui_status_t gui_update()
             gui_status_t renderStatus = gui_render_text(bitMap,xmlCopy);
             if(renderStatus != GUI_OK)
             {
+                help_log("GUI ERROR: Could not render text on page '%d'", pageNumber);
                 return GUI_ERR;
             }
         }
@@ -931,6 +944,7 @@ gui_status_t gui_update()
             gui_status_t renderStatus = gui_render_bitmap(bitMap,xmlCopy);
             if(renderStatus != GUI_OK)
             {
+                help_log("GUI ERROR: Could not render bit-map on page '%d'", pageNumber);
                 return GUI_ERR;
             }
         }
