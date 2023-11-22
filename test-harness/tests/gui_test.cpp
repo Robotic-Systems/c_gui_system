@@ -921,6 +921,9 @@ TEST(GUITest, if_missing_operand_tag_throws_error)
     int32_t value = 0;
     gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
+    // Test for error log
+    STRCMP_EQUAL("GUI ERROR: No Operand starting tag found!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, if_missing_if_tag_throws_error)
@@ -936,6 +939,8 @@ TEST(GUITest, if_missing_if_tag_throws_error)
     int32_t value = 0;
     gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
+    STRCMP_EQUAL("GUI ERROR: No If tag found!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, if_missing_operation_tag_throws_error)
@@ -951,6 +956,8 @@ TEST(GUITest, if_missing_operation_tag_throws_error)
     int32_t value = 0;
     gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
+    STRCMP_EQUAL("GUI ERROR: No Operation tag found", logger_spy_get_string());
+
 }
 
 TEST(GUITest, if_missing_var_tag_throws_error)
@@ -966,6 +973,8 @@ TEST(GUITest, if_missing_var_tag_throws_error)
     int32_t value = 0;
     gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
+    STRCMP_EQUAL("GUI ERROR: Operation Argument missing!", logger_spy_get_string());
+
 }
 
 TEST(GUITest, if_missing_value_tag_throws_error)
@@ -981,6 +990,7 @@ TEST(GUITest, if_missing_value_tag_throws_error)
     int32_t value = 0;
     gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
+    STRCMP_EQUAL("GUI ERROR: Operation Argument missing!", logger_spy_get_string());
 }
 
 TEST(GUITest, if_var_dne_throws_error)
@@ -990,6 +1000,7 @@ TEST(GUITest, if_var_dne_throws_error)
     gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Fail to fetch Var 'test1'!", logger_spy_get_string());
 }
 
 TEST(GUITest, comparing_two_vars_does_not_throw_error)
@@ -1017,6 +1028,7 @@ TEST(GUITest, if_statement_true_and_then_not_found_throws_error)
     int32_t value = 0;
     gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
+     STRCMP_EQUAL("GUI ERROR: Operand then tag not found!", logger_spy_get_string());
 }
 
 TEST(GUITest, if_statement_true_and_then_is_found_operation_takes_place)
@@ -1238,6 +1250,8 @@ TEST(GUITest, if_no_verticle_alignment_returns_error)
     // PRINT_BIT_MAP(64,102,outputMap);
     // PRINT_BIT_MAP(64,102,helloWorld_12_sans);
     LONGS_EQUAL(GUI_ERR, renderStatus);
+    STRCMP_EQUAL("GUI ERROR: vert-alignment not found", logger_spy_get_string());
+
 }
 
 TEST(GUITest, verticle_alignment_can_be_used_to_align_to_top)
@@ -1817,22 +1831,22 @@ TEST(GUITest, after_init_if_logger_passed_in_a_summary_will_be_printed)
     // Checking logged message 
     STRCMP_EQUAL("GUI: Successful init! Contains 1 Var and 2 pages", logger_spy_get_string());
 }
-// TEST(GUITest, can_render_just_a_var)
-// {
-//     // just a var text 
-//     const char* strTextCopy = just_one_var;
-//     // Create empty bitmap 
-//     uint8_t outputMap[ROWS][COLUMNS];
-//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-//     // Render 
-//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-//     // Check status is okay 
-//     // PRINT_BIT_MAP(64,102,outputMap);
-//     LONGS_EQUAL(GUI_OK, renderStatus);
-//     // Check matches expectation 
-//     IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
+TEST(GUITest, can_render_just_a_var)
+{
+    // just a var text 
+    const char* strTextCopy = just_one_var;
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render 
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // Check status is okay 
+    // PRINT_BIT_MAP(64,102,outputMap);
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check matches expectation 
+    IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
 
-// }
+}
 /**
  * <text>
  * - Can set default font at the start of the pages

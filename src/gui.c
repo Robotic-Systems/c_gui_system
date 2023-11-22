@@ -729,6 +729,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         if(!b_haveFoundFontSize){help_log("GUI ERROR: Font size tags not found!");}
         if(!b_haveFoundAlignment){help_log("GUI ERROR: Alignment tags not found!");}
         if(!b_haveFoundContent){help_log("GUI ERROR: Content tags not found!");}
+        if(!b_haveFoundVertAlignment){help_log("GUI ERROR: Vert-alignment not found");}
 
         
 
@@ -974,6 +975,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
 {
     if (strncmp(operandObjectString, "<operand>",9 ) != 0) 
     {
+        help_log("GUI ERROR: No Operand starting tag found!");
         return GUI_ERR;
     }
 
@@ -1020,6 +1022,11 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
                         {
                             b_haveFoundArg[itr_arg] = true;
                         }
+                        else
+                        {
+                            help_log("GUI ERROR: Fail to fetch Var '%s'!", varName);
+                            return GUI_ERR;
+                        }
                     }
                 }
                 // CHECKING FOR VALUE
@@ -1038,6 +1045,8 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
             // Checking all has been found 
             if(!b_haveFoundOperation||!b_haveFoundArg[0]||!b_haveFoundArg[1])
             {
+                if(!b_haveFoundOperation){help_log("GUI ERROR: No Operation tag found");}
+                else{help_log("GUI ERROR: Operation Argument missing!");}
                 return GUI_ERR; 
             }
 
@@ -1082,11 +1091,13 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
 
     if(b_isTrue && !b_haveFoundThen)
     {
+        help_log("GUI ERROR: Operand then tag not found!");
         return GUI_ERR; 
     }
 
     if(!b_haveFoundIf)
     {
+        help_log("GUI ERROR: No If tag found!");
         return GUI_ERR; 
     }
 
