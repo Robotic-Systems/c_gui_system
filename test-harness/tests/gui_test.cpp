@@ -1,5 +1,6 @@
 #include "CppUTest/TestHarness.h"
-
+#include <stdio.h>
+#include <chrono> 
 extern "C" 
 {
     #include "../spies/lcd_spy.h"
@@ -493,7 +494,7 @@ TEST(GUITest, text_render_does_not_return_error_when_xml_is_errorless)
 
 TEST(GUITest, text_render_returns_error_when_no_text_starting_brace_found)
 {
-     const char* strTextCopy = text_HelloWorld_error_start_brace;
+    const char* strTextCopy = text_HelloWorld_error_start_brace;
     // Create empty bitmap 
     uint8_t outputMap[ROWS][COLUMNS];
     // Render text
@@ -1979,18 +1980,63 @@ TEST(GUITest, greater_than_checks_can_be_false)
     LONGS_EQUAL(10, value);
 }
 /**
- * - Greater then checks can be done in operands 
  * - 
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST(GUITest, text_render_execution_speed) {
+    const char* strTextCopy = text_HelloWorld;
+    uint8_t outputMap[ROWS][COLUMNS];
+    double totalElapsedSeconds = 0.0;
+
+    for (int i = 0; i < 100; i++) {
+        clock_t start = clock();
+
+        gui_status_t renderStatus = gui_render_text(outputMap, strTextCopy);
+
+        clock_t end = clock();
+        double elapsedSeconds = (double)(end - start) / CLOCKS_PER_SEC;
+
+        totalElapsedSeconds += elapsedSeconds;
+        // Assuming renderStatus should be the same for all iterationsclear
+        LONGS_EQUAL(GUI_OK, renderStatus);
+    }
+
+    double averageElapsedSeconds = totalElapsedSeconds / 100.0;
+    CHECK_TEXT(averageElapsedSeconds < 0.00001, "Failed execution speed check"); // Example threshold for average execution time
+}
+
+TEST(GUITest, bitmap_render_execution_speed) {
+    const char* strBitMapCopy = justABitmap;
+    uint8_t outputMap[ROWS][COLUMNS];
+    double totalElapsedSeconds = 0.0;
+
+    for (int i = 0; i < 100; i++) {
+        clock_t start = clock();
+
+        gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+
+        clock_t end = clock();
+        double elapsedSeconds = (double)(end - start) / CLOCKS_PER_SEC;
+
+        totalElapsedSeconds += elapsedSeconds;
+        // Assuming renderStatus should be the same for all iterationsclear
+        LONGS_EQUAL(GUI_OK, renderStatus);
+    }
+
+    double averageElapsedSeconds = totalElapsedSeconds / 100.0;
+    char str[64]; 
+    snprintf(str, 64, "ERROR: %f > %f", averageElapsedSeconds, 0.00006); 
+    CHECK_TEXT(averageElapsedSeconds < 0.00006, str); // Example threshold for average execution time
+}
 /**
- * - Make error codes more highly specific and add an input that will print fault messages to 
  * - if not pages brace exists then no pages are created 
  * - if a page exists outside the <pages> tag an error is thrown 
  * - if a variable exists outside the <variables> tag an error is thrown  
  * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
  * - add in logger output support for xml formating checks and feedback 
  */
+

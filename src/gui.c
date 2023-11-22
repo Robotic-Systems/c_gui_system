@@ -1,4 +1,5 @@
 #include "gui.h"
+#include <stdarg.h>
 
 /***********************/
 /* PRIVATE DEFINITIONS */
@@ -446,21 +447,21 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     int32_t posY    = {0}; /** What row to place the top left corner of bitmap in  */
     bool b_haveFoundSize = false; 
     bool b_haveFoundPosi = false; 
+    
     while (*strBitmap != '\0')
     {
         // SIZE TAG CHECK 
         ////////////////// 
-        if (strncmp(strBitmap, "<size>", 6) == 0) 
+        if (!b_haveFoundSize && (strncmp(strBitmap, "<size>", 6) == 0)) 
         {
             if (sscanf(strBitmap, "<size>%d,%d</size>", &width, &height) == 2) 
             {
                 b_haveFoundSize = true;
             }
         }
-
         // POSITION TAG CHECK 
         ///////////////////// 
-        if (strncmp(strBitmap, "<position>", 10) == 0) 
+        else if (!b_haveFoundPosi && (strncmp(strBitmap, "<position>", 10) == 0)) 
         {
             int32_t posVars[2] = {0};
             gui_status_t posStatus = gui_parse_tag_val(strBitmap,"position",posVars,2,&b_haveFoundPosi);
@@ -495,11 +496,13 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
                 return GUI_ERR;
             }
         }
-        strBitmap++;
+        // strBitmap++;
+        SKIP_TO_WHITESPACE(strBitmap);
+        SKIP_TO(strBitmap,'<');
     }
 
     // Extracting bitmap data 
-    strBitmap += 6;
+    SKIP_TO_WHITESPACE(strBitmap);
     // Position & Height Logic 
     // Row iterator 
     for(int32_t itr_row = posY; itr_row < (height+posY); itr_row++)
@@ -569,13 +572,15 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     bool b_haveFoundVertAlignment = false; 
     bool b_haveFoundPosition  = false; 
     bool b_haveFoundContent   = false; 
+    bool b_haveFoundInvert = false;
     bool b_invert   = false; 
+
 
     while (*textObjectString != '\0')
     {
         // FONT TAG CHECK 
         ////////////////// 
-        if (strncmp(textObjectString, "<font>", 6) == 0) 
+        if ((!b_haveFoundFont) && (strncmp(textObjectString, "<font>", 6) == 0)) 
         {
             if (sscanf(textObjectString, "<font>%63[^<]", fontName) == 1) 
             {
@@ -600,7 +605,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         }
         // FONT-SIZE TAG CHECK 
         //////////////////////
-        if (strncmp(textObjectString, "<font-size>", 11) == 0) 
+        else if ((!b_haveFoundFontSize) && (strncmp(textObjectString, "<font-size>", 11) == 0))  
         {
             if ((sscanf(textObjectString, "<font-size>%hhu</font-size>", &fontSize) == 1)&&b_haveFoundFont) 
             {
@@ -620,10 +625,9 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 return GUI_ERR;
             }
         }
-
         // ALIGNMENT TAG CHECK 
         //////////////////////
-        if (strncmp(textObjectString, "<alignment>", 11) == 0) 
+        else if ((!b_haveFoundAlignment)&&(strncmp(textObjectString, "<alignment>", 11) == 0))  
         {
             char alignmentName[MAX_TAG_DATA_LENGTH] = {'\0'};
             if ((sscanf(textObjectString, "<alignment>%63[^<]", alignmentName) == 1)&&b_haveFoundFont) 
@@ -644,10 +648,9 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 return GUI_ERR;
             }
         }
-
         // VERT-ALIGNMENT TAG CHECK 
         ///////////////////////////
-        if (strncmp(textObjectString, "<vert-alignment>", 16) == 0) 
+        else if((!b_haveFoundVertAlignment) && ((strncmp(textObjectString, "<vert-alignment>", 16)) == 0)) 
         {
             char alignmentName[MAX_TAG_DATA_LENGTH] = {'\0'};
             if ((sscanf(textObjectString, "<vert-alignment>%63[^<]", alignmentName) == 1)&&b_haveFoundFont) 
@@ -667,10 +670,9 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 return GUI_ERR;
             }
         }
-
         // POSITION TAG CHECK 
         //////////////////////
-        if ((strncmp(textObjectString, "<position>", 10) == 0)&&(!b_haveFoundPosition)) 
+        else if ((!b_haveFoundPosition)&&(strncmp(textObjectString, "<position>", 10) == 0)) 
         {
             int32_t posVars[2] = {0};
             gui_status_t posStatus = gui_parse_tag_val(textObjectString,"position",posVars,2,&b_haveFoundPosition);
@@ -684,27 +686,24 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 posX = posVars[1];
             }
         }
-         
         // INVERT TAG CHECK 
         //////////////////////
-        if (strncmp(textObjectString, "<invert>", 8) == 0) 
+        else if ((!b_haveFoundInvert)&&(strncmp(textObjectString, "<invert>", 8) == 0)) 
         {
             int32_t invertInt = 0;
-            bool is_found = false;
-            gui_status_t invertStatus = gui_parse_tag_val(textObjectString,"invert",&invertInt,2,&is_found);
+            gui_status_t invertStatus = gui_parse_tag_val(textObjectString,"invert",&invertInt,2,&b_haveFoundInvert);
             if(invertStatus != GUI_OK)
             {
                 return invertStatus;
             }
-            if(is_found)
+            if(b_haveFoundInvert)
             {
                 b_invert = (invertInt>0);
             }
         }
-
         // CONTENT TAG CHECK 
         //////////////////////
-        if(!b_haveFoundContent)
+        else if((!b_haveFoundContent)&&(strncmp(textObjectString, "<content>", 9) == 0))
         {
             gui_status_t contentStatus = gui_parse_tag_str(textObjectString,"content",text,&b_haveFoundContent);
             if(contentStatus != GUI_OK)
@@ -712,14 +711,16 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 return contentStatus;
             }
         }
-        
         // END OF PAGE CHECK 
         ///////////////////
-        if (strncmp(textObjectString, "</text>", 7) == 0) 
+        else if (strncmp(textObjectString, "</text>", 7) == 0) 
         {
             break;
         }
-        textObjectString++;
+        // textObjectString++;
+        SKIP_TO_WHITESPACE(textObjectString);
+        SKIP_TO(textObjectString,'<');
+
     }
     
     
