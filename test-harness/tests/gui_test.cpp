@@ -1250,7 +1250,7 @@ TEST(GUITest, if_no_verticle_alignment_returns_error)
     // PRINT_BIT_MAP(64,102,outputMap);
     // PRINT_BIT_MAP(64,102,helloWorld_12_sans);
     LONGS_EQUAL(GUI_ERR, renderStatus);
-    STRCMP_EQUAL("GUI ERROR: vert-alignment not found", logger_spy_get_string());
+    STRCMP_EQUAL("GUI ERROR: Vert-alignment not found", logger_spy_get_string());
 
 }
 
@@ -1833,6 +1833,8 @@ TEST(GUITest, after_init_if_logger_passed_in_a_summary_will_be_printed)
 }
 TEST(GUITest, can_render_just_a_var)
 {
+    gui_init(lcd_spy_write, logger_spy_print, zeroGui);
+
     // just a var text 
     const char* strTextCopy = just_one_var;
     // Create empty bitmap 

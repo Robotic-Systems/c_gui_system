@@ -53,3 +53,7 @@ void logger_spy_set_time(char * time)
     strncpy(current_time, time, MAX_STR_LEN);
 }
 
+void logger_spy_print(const char * data)
+{
+    printf("%s\n",data);
+}

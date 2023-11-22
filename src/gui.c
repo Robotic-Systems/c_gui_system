@@ -1352,3 +1352,4 @@ void help_log(const char *message, ...)
     va_end(args);
     logWrite(formatted_message);
 }
+

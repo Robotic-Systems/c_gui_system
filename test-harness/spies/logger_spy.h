@@ -13,4 +13,6 @@ void logger_spy_write(const char * data);
 void logger_spy_write2(const char * data);
 void logger_spy_get_time(char * time);
 void logger_spy_set_time(char * time);
+void logger_spy_print(const char * data);
+
 #endif
