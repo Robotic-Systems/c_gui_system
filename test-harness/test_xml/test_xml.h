@@ -558,4 +558,32 @@ const char * operand_increment=
 " </else>\n"
 "</operand>\n";
 
+const char * operand_less_than=
+"<operand>\n"
+" <if>\n"
+"    <operation>\"less-than\"</operation>"
+"    <var>test1</var>\n"
+"    <value>11</value>\n"
+" </if>\n"
+" <then>\n"
+"    <do>\"add\"</do>\n"
+"    <var>test1</var>\n"
+"    <value>2</value>\n"
+" </then>\n"
+"</operand>\n";
+
+const char * operand_greater_than=
+"<operand>\n"
+" <if>\n"
+"    <operation>\"greater-than\"</operation>"
+"    <var>test1</var>\n"
+"    <value>11</value>\n"
+" </if>\n"
+" <then>\n"
+"    <do>\"add\"</do>\n"
+"    <var>test1</var>\n"
+"    <value>2</value>\n"
+" </then>\n"
+"</operand>\n";
+
 #endif

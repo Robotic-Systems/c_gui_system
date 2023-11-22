@@ -1918,9 +1918,67 @@ TEST(GUITest, vars_can_be_minused_using_operands_using_values)
     gui_get_int32_var("test1", &value);
     LONGS_EQUAL(8, value);
 }
+
+TEST(GUITest, less_than_checks_can_be_true)
+{
+    const char* strTextCopy = operand_less_than;
+    // Create the var used in test case
+    gui_create_var("test1","int32_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check value matches
+    int32_t value =0;
+    gui_get_int32_var("test1", &value);
+    LONGS_EQUAL(12, value);
+}
+
+TEST(GUITest, less_than_checks_can_be_false)
+{
+    const char* strTextCopy = operand_less_than;
+    // Create the var used in test case
+    gui_create_var("test1","int32_t","11");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check value matches
+    int32_t value =0;
+    gui_get_int32_var("test1", &value);
+    LONGS_EQUAL(11, value);
+}
+
+TEST(GUITest, greater_than_checks_can_be_true)
+{
+    const char* strTextCopy = operand_greater_than;
+    // Create the var used in test case
+    gui_create_var("test1","int32_t","12");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check value matches
+    int32_t value =0;
+    gui_get_int32_var("test1", &value);
+    LONGS_EQUAL(14, value);
+}
+
+TEST(GUITest, greater_than_checks_can_be_false)
+{
+    const char* strTextCopy = operand_greater_than;
+    // Create the var used in test case
+    gui_create_var("test1","int32_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check value matches
+    int32_t value =0;
+    gui_get_int32_var("test1", &value);
+    LONGS_EQUAL(10, value);
+}
 /**
- * - Values can be deincremented using operands
- * - Less then checks can be done in operands 
  * - Greater then checks can be done in operands 
  * - 
 */

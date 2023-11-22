@@ -999,11 +999,15 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
             // Incrementing past <if> and skipping whitespace
             SKIP_TO_WHITESPACE(operandObjectString);
             SKIP_WHITESPACE(operandObjectString);
+            
             // Checking operation is present
             if (!strncmp(operandObjectString, "<operation>", 11)) 
             {
                 b_haveFoundOperation = true;
             }
+            // Extract operation name 
+            char operName[MAX_KEY_LENGTH];
+            sscanf(operandObjectString, "<operation>%63[^</]", operName);
             // Going past the operation decleration to the 
             // variable/value decleration
             for(int itr_arg = 0; itr_arg <2; itr_arg ++)
@@ -1042,7 +1046,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
                     break; 
                 }
             }
-            // Checking all has been found 
+            // Checking all has been found clear
             if(!b_haveFoundOperation||!b_haveFoundArg[0]||!b_haveFoundArg[1])
             {
                 if(!b_haveFoundOperation){help_log("GUI ERROR: No Operation tag found");}
@@ -1051,7 +1055,19 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
             }
 
             // Evaluating statement 
-            b_isTrue = (arguments[0] == arguments[1]);
+            if(!strncmp(operName,"\"equal\"",8))
+            {
+                b_isTrue = (arguments[0] == arguments[1]);
+            }
+            else if(!strncmp(operName,"\"less-than\"",12))
+            {
+                b_isTrue = (arguments[0] < arguments[1]);
+            }
+            else if(!strncmp(operName,"\"greater-than\"",23))
+            {
+                b_isTrue = (arguments[0] > arguments[1]);
+            }
+            
             
 
         }
