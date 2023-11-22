@@ -88,7 +88,7 @@ log_function logWrite      = NULL; /** Function pointer that can be used to writ
 /* PRIVATE FUNCTION DECLARATIONS */
 /*********************************/
 uint32_t hash_index(const char * key);                   /** Generates a hash index from a key */
-gui_status_t help_set_var_equal(const char *operandObjectString); /** Sets the var name it finds first equal to the next value or var it finds*/
+gui_status_t help_operand_do(const char *operandObjectString); /** Sets the var name it finds first equal to the next value or var it finds*/
 void help_log(const char *message, ...);                  /** Function to be used to log messages */
 
 /********************************/
@@ -1070,7 +1070,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
             if (b_isTrue && !strncmp(operandObjectString, "<then>", 6)) 
             {
                 b_haveFoundThen = true;
-                if (help_set_var_equal(operandObjectString) != GUI_OK)
+                if (help_operand_do(operandObjectString) != GUI_OK)
                 {
                     return GUI_ERR;
                 }
@@ -1078,7 +1078,7 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
             }
             else if (!b_isTrue && !strncmp(operandObjectString, "<else>", 6)) 
             {
-                if (help_set_var_equal(operandObjectString) != GUI_OK)
+                if (help_operand_do(operandObjectString) != GUI_OK)
                 {
                     return GUI_ERR;
                 }
@@ -1299,15 +1299,29 @@ gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_
     }
     return GUI_OK;
 }
-gui_status_t help_set_var_equal(const char *operandObjectString)
+gui_status_t help_operand_do(const char *operandObjectString)
 {
     // Incrementing past <then> and skipping whitespace
     SKIP_TO_WHITESPACE(operandObjectString);
     SKIP_WHITESPACE(operandObjectString);
+    // Check for do tag
+    char oporName[MAX_KEY_LENGTH];
+    if(sscanf(operandObjectString, "<do>%63[^</]", oporName)!=1)
+    {
+        return GUI_ERR; 
+    }
+    SKIP_TO_WHITESPACE(operandObjectString);
+    SKIP_WHITESPACE(operandObjectString);
     // Check for the var and extract name 
     char varName[MAX_KEY_LENGTH];
-    // Extracting value 
+    uint32_t varValue = 0;
+    // Extracting var name
     if ((sscanf(operandObjectString, "<var>%63[^</]", varName) != 1)) 
+    {
+        return GUI_ERR; 
+    }
+    gui_variable_status_t fetchStatus = gui_get_int32_var(varName, &varValue);
+    if(fetchStatus!=GUI_VAR_OK)
     {
         return GUI_ERR; 
     }
@@ -1329,8 +1343,26 @@ gui_status_t help_set_var_equal(const char *operandObjectString)
             return GUI_ERR; 
         }
     } 
-
-    gui_variable_status_t updateStatus = gui_update_int32_var(varName,value);
+    uint32_t returnVal = 0;
+    if(!strncmp(oporName,"\"set-equal\"",63))
+    {
+        returnVal = value;
+    }
+    else if(!strncmp(oporName,"\"add\"",63))
+    {
+        returnVal = varValue + value;
+    }
+    else if(!strncmp(oporName,"\"minus\"",63))
+    {
+        returnVal = varValue - value;
+    }
+    else
+    {
+        help_log("GUI ERROR: do code %s not defined", oporName);
+        return GUI_ERR;
+    }
+    // Writing back to var 
+    gui_variable_status_t updateStatus = gui_update_int32_var(varName,returnVal);
     if(updateStatus != GUI_VAR_OK)
     {
         return GUI_ERR;

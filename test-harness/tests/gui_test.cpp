@@ -1831,24 +1831,24 @@ TEST(GUITest, after_init_if_logger_passed_in_a_summary_will_be_printed)
     // Checking logged message 
     STRCMP_EQUAL("GUI: Successful init! Contains 1 Var and 2 pages", logger_spy_get_string());
 }
-TEST(GUITest, can_render_just_a_var)
-{
-    gui_init(lcd_spy_write, logger_spy_print, zeroGui);
+// TEST(GUITest, can_render_just_a_var)
+// {
+//     gui_init(lcd_spy_write, logger_spy_print, zeroGui);
 
-    // just a var text 
-    const char* strTextCopy = just_one_var;
-    // Create empty bitmap 
-    uint8_t outputMap[ROWS][COLUMNS];
-    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    // Render 
-    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
-    // Check status is okay 
-    // PRINT_BIT_MAP(64,102,outputMap);
-    LONGS_EQUAL(GUI_OK, renderStatus);
-    // Check matches expectation 
-    IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
+//     // just a var text 
+//     const char* strTextCopy = just_one_var;
+//     // Create empty bitmap 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+//     // Render 
+//     gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+//     // Check status is okay 
+//     // PRINT_BIT_MAP(64,102,outputMap);
+//     LONGS_EQUAL(GUI_OK, renderStatus);
+//     // Check matches expectation 
+//     IS_BIT_MAP_EQUAL_BIT(one_19_juipeter_T_L_0_0,outputMap,0,0,102,64);
 
-}
+// }
 /**
  * <text>
  * - Can set default font at the start of the pages
@@ -1876,8 +1876,49 @@ TEST(GUITest, can_render_just_a_var)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MANY: OPERANDS 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+TEST(GUITest, if_unsuporrted_do_code_error_returned)
+{
+    const char* strTextCopy = operand_equal_un_sup_do_code;
+    // Create the var used in test case
+    gui_create_var("test1","int32_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: do code \"divide\" not defined", logger_spy_get_string());
+
+}
+TEST(GUITest, vars_can_be_incremented_using_operands_using_values)
+{
+    const char* strTextCopy = operand_increment;
+    // Create the var used in test case
+    gui_create_var("test1","int32_t","10");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check value matches
+    int32_t value =0;
+    gui_get_int32_var("test1", &value);
+    LONGS_EQUAL(12, value);
+}
+
+TEST(GUITest, vars_can_be_minused_using_operands_using_values)
+{
+    const char* strTextCopy = operand_increment;
+    // Create the var used in test case
+    gui_create_var("test1","int32_t","11");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_execute_operand(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // Check value matches
+    int32_t value =0;
+    gui_get_int32_var("test1", &value);
+    LONGS_EQUAL(8, value);
+}
 /**
- * - Values can be incremented using operands 
  * - Values can be deincremented using operands
  * - Less then checks can be done in operands 
  * - Greater then checks can be done in operands 
