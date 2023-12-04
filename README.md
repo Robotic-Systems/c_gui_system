@@ -53,6 +53,7 @@ Note that EVERY gui required the page index variable to be defined as a variable
 Variables are user defined variables that can be displayed on the gui, used to position text or used in operands. Variables are defined in the xml the user created and are then when the gui xml is first parsed are then stored in a hashmap. Variables can have type int32_t or float all other variable tyupes are not supported. Variables are the first thing defined in the xml string as can be seen in the example above. 
 
 To interact with a variable from outside the gui driver the following functions can be used:
+
 '''
     // For uint32_t variables 
     gui_variable_status_t fetchStatus = gui_update_int32_var("pageIndex", 10);
@@ -64,6 +65,7 @@ To interact with a variable from outside the gui driver the following functions 
 '''C
 
 To refrenve variables within the xml in operands and position tags they must be enclosed in <var></var> tags like follows:
+
 '''
 <text>\n
     <font>jupiter</font>\n
@@ -74,6 +76,7 @@ To refrenve variables within the xml in operands and position tags they must be 
     <content>\"Hello World!\"</content>\n
 </text>\n
 '''xml
+
 In this two uint32_t vars xPos and yPos can be used to update the texts position in between renders.
 
 ## Pages
@@ -91,6 +94,7 @@ Text elements have many options associated with them and they will be explained 
  - <position> Where the text will be positioned, if you have the alignment options top and left then this position will be the postion on the screen of the top left pixel ect ect.......
  - <content> What you actually want the text to be 
 To display variables in text the following syntax can be followed:
+
 '''
 <text>
     <font>jupiter</font>
@@ -101,10 +105,12 @@ To display variables in text the following syntax can be followed:
     <content>\"one: \%d\",<var>test1</var></content>
 </text>
 '''xml 
+
 This will display whatever is stored in 'test1' as in text. The same bastic formatting rules as for c printf.
 
 #### Fonts
 To add additional fonts there is a python tool called tff2bitmap.py which when pointed to a valid .tff or .otf font file can create a header file that can be dragged into the project for use. To use the newly created front you first need to add the font to the font_master_list in user_gui.c which should look somthing like follows:
+
 '''
 #include "user_gui.h"
 // FONT INCLUSIONS
@@ -118,12 +124,14 @@ font_list_t font_master_list[NUM_FONT_TYPES] = {
     {"jupiter",{19},{widthArray},{&fontMap[0][0][0]}}
 };
 '''C
+
 If you look in your newly created headder file you should find a width_array and fontMap that can be easily added.
 A good resouce for finding fonts can be found at the following:
 https://www.1001fonts.com/carlito-font.html
 
 ### Bitmap's
 Bitmaps are another element that can be added to pages, the xml to add a bitmap is as follows:
+
 '''
 <page>
 <bitMap>
@@ -166,11 +174,13 @@ Bitmaps are another element that can be added to pages, the xml to add a bitmap 
 </bitMap>
 </page>
 '''xml 
+
 This page when rendered would contain the following bitmap with its top left corner positioned at 0,0. The <size> tag is the dimesions of the bitmap.
 
 
 ### Operands
 Operands take the form as follows:
+
 '''
 <operand>
  <if>
@@ -194,6 +204,7 @@ In this the var test1 is compared to 10 and if equal it will <then> "add" 2 to t
 - <operation> The evaluation to take place, can have value \"equal\", \"less-than\" or \"greater-than\". 
 - <do> Operation to be done if line is parsed, can have value \"add\", \"minus\" OR \"set-equal\"
 Note that once a statement has been evaulated then every <then> (if true) or <else> (if false) found until the end operand tag is found will be operated on i.e 
+
 '''
 <operand>
  <if>
@@ -213,4 +224,5 @@ Note that once a statement has been evaulated then every <then> (if true) or <el
  </then>
 </operand>
 '''xml 
+
 if the <if> statement is true then evey then test1 will be set equal to test2 and then test2 will be set equal to 22. 
