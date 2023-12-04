@@ -13,7 +13,7 @@ This is a simple 'xml' based gui system for use in embedded projects. I was crea
 - [Fonts](#Fonts)
 - [Bitmap's](#Bitmap's)
 - [Operands](#Operands)
-- [Lists](#Lists)
+
 An example of how to initalise the gui system is as follows :
 
 '''
