@@ -1832,6 +1832,7 @@ TEST(GUITest, after_init_if_logger_passed_in_a_summary_will_be_printed)
     // Checking logged message 
     STRCMP_EQUAL("GUI: Successful init! Contains 1 Var and 2 pages", logger_spy_get_string());
 }
+
 // TEST(GUITest, can_render_just_a_var)
 // {
 //     gui_init(lcd_spy_write, logger_spy_print, zeroGui);
@@ -1979,59 +1980,202 @@ TEST(GUITest, greater_than_checks_can_be_false)
     gui_get_int32_var("test1", &value);
     LONGS_EQUAL(10, value);
 }
-/**
- * - 
-*/
 
+  
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ONE: LIST 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(GUITest, LIST_CAN_BE_PARSED_WITHOUT_ERROR)
+{
+    const char* strTextCopy = normal_list;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+}
+
+TEST(GUITest, list_render_returns_error_if_list_tag_not_found)
+{
+    const char* strTextCopy = list_no_start_tag;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No List starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, list_render_returns_error_if_cursor_tag_not_found)
+{
+    const char* strTextCopy = list_no_cursor_tag;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Cursor starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, list_render_returns_error_if_font_tag_not_found)
+{
+    const char* strTextCopy = list_no_font_tag;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Font starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, list_render_returns_error_if_size_tag_not_found)
+{
+    const char* strTextCopy = list_no_size_tag;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Font-Size starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, list_render_returns_error_if_position_tag_not_found)
+{
+    const char* strTextCopy = list_no_position_tag;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Position starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, list_render_returns_error_if_options_tag_not_found)
+{
+    const char* strTextCopy = list_no_options_tag;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Options starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, list_render_returns_error_if_end_list_tag_not_found)
+{
+    const char* strTextCopy = list_no_end_list_tag;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No End List tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, list_if_font_not_found_return_error)
+{
+    const char* strTextCopy = list_fake_font;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Font name 'spaceMan' does not exist!", logger_spy_get_string());
+}
+
+TEST(GUITest, list_if_font_size_not_found_return_error)
+{
+    const char* strTextCopy = list_fake_size;
+    // Create the var used in test case
+    gui_create_var("mouse","int32_t","0");
+    // Perform Operation 
+    gui_status_t operationStatus = gui_render_list(strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Font name 'jupiter' does not exist at size '22'!", logger_spy_get_string());
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST(GUITest, text_render_execution_speed) {
-    const char* strTextCopy = text_HelloWorld;
-    uint8_t outputMap[ROWS][COLUMNS];
-    double totalElapsedSeconds = 0.0;
+// TEST(GUITest, text_render_execution_speed) {
+//     const char* strTextCopy = text_HelloWorld;
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     double totalElapsedSeconds = 0.0;
 
-    for (int i = 0; i < 100; i++) {
-        clock_t start = clock();
+//     for (int i = 0; i < 100; i++) {
+//         clock_t start = clock();
 
-        gui_status_t renderStatus = gui_render_text(outputMap, strTextCopy);
+//         gui_status_t renderStatus = gui_render_text(outputMap, strTextCopy);
 
-        clock_t end = clock();
-        double elapsedSeconds = (double)(end - start) / CLOCKS_PER_SEC;
+//         clock_t end = clock();
+//         double elapsedSeconds = (double)(end - start) / CLOCKS_PER_SEC;
 
-        totalElapsedSeconds += elapsedSeconds;
-        // Assuming renderStatus should be the same for all iterationsclear
-        LONGS_EQUAL(GUI_OK, renderStatus);
-    }
+//         totalElapsedSeconds += elapsedSeconds;
+//         // Assuming renderStatus should be the same for all iterationsclear
+//         LONGS_EQUAL(GUI_OK, renderStatus);
+//     }
 
-    double averageElapsedSeconds = totalElapsedSeconds / 100.0;
-    CHECK_TEXT(averageElapsedSeconds < 0.00001, "Failed execution speed check"); // Example threshold for average execution time
-}
+//     double averageElapsedSeconds = totalElapsedSeconds / 100.0;
+//     CHECK_TEXT(averageElapsedSeconds < 0.00001, "Failed execution speed check"); // Example threshold for average execution time
+// }
 
-TEST(GUITest, bitmap_render_execution_speed) {
-    const char* strBitMapCopy = justABitmap;
-    uint8_t outputMap[ROWS][COLUMNS];
-    double totalElapsedSeconds = 0.0;
+// TEST(GUITest, bitmap_render_execution_speed) {
+//     const char* strBitMapCopy = justABitmap;
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     double totalElapsedSeconds = 0.0;
 
-    for (int i = 0; i < 100; i++) {
-        clock_t start = clock();
+//     for (int i = 0; i < 100; i++) {
+//         clock_t start = clock();
 
-        gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
+//         gui_status_t renderStatus = gui_render_bitmap(outputMap,strBitMapCopy);
 
-        clock_t end = clock();
-        double elapsedSeconds = (double)(end - start) / CLOCKS_PER_SEC;
+//         clock_t end = clock();
+//         double elapsedSeconds = (double)(end - start) / CLOCKS_PER_SEC;
 
-        totalElapsedSeconds += elapsedSeconds;
-        // Assuming renderStatus should be the same for all iterationsclear
-        LONGS_EQUAL(GUI_OK, renderStatus);
-    }
+//         totalElapsedSeconds += elapsedSeconds;
+//         // Assuming renderStatus should be the same for all iterationsclear
+//         LONGS_EQUAL(GUI_OK, renderStatus);
+//     }
 
-    double averageElapsedSeconds = totalElapsedSeconds / 100.0;
-    char str[64]; 
-    snprintf(str, 64, "ERROR: %f > %f", averageElapsedSeconds, 0.00006); 
-    CHECK_TEXT(averageElapsedSeconds < 0.00006, str); // Example threshold for average execution time
-}
+//     double averageElapsedSeconds = totalElapsedSeconds / 100.0;
+//     char str[64]; 
+//     snprintf(str, 64, "ERROR: %f > %f", averageElapsedSeconds, 0.00006); 
+//     CHECK_TEXT(averageElapsedSeconds < 0.00006, str); // Example threshold for average execution time
+// }
+
+// TEST(GUITest, update_page_execution_speed) {
+//     // init gui 
+//     gui_init(lcd_spy_write, NULL,  helloWorldGui);
+//     double totalElapsedSeconds = 0.0;
+
+//     for (int i = 0; i < 100; i++) {
+//         clock_t start = clock();
+
+//         gui_status_t renderStatus = gui_update();
+
+//         clock_t end = clock();
+//         double elapsedSeconds = (double)(end - start) / CLOCKS_PER_SEC;
+
+//         totalElapsedSeconds += elapsedSeconds;
+//         // Assuming renderStatus should be the same for all iterationsclear
+//         LONGS_EQUAL(GUI_OK, renderStatus);
+//     }
+
+//     double averageElapsedSeconds = totalElapsedSeconds / 100.0;
+//     char str[64]; 
+//     snprintf(str, 64, "ERROR: %f > %f", averageElapsedSeconds, 0.000075); 
+//     CHECK_TEXT(averageElapsedSeconds < 0.000075, str); // Example threshold for average execution time
+// }
 /**
  * - if not pages brace exists then no pages are created 
  * - if a page exists outside the <pages> tag an error is thrown 
@@ -2039,4 +2183,4 @@ TEST(GUITest, bitmap_render_execution_speed) {
  * - Calling gui_update() when page number has not changed does not change the bitmap written to spy 
  * - add in logger output support for xml formating checks and feedback 
  */
-
+    

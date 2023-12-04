@@ -90,6 +90,9 @@ log_function logWrite      = NULL; /** Function pointer that can be used to writ
 /*********************************/
 uint32_t hash_index(const char * key);                   /** Generates a hash index from a key */
 gui_status_t help_operand_do(const char *operandObjectString); /** Sets the var name it finds first equal to the next value or var it finds*/
+gui_status_t help_find_font(const char *fontObjectString,bool *b_haveFoundFont,char *fontName,uint8_t *fontIndex); /** Returns the font name in the passed in string */
+gui_status_t help_find_font_size(const char *fontSizeObjectString, bool *b_haveFoundFontSize, bool b_haveFoundFont, uint8_t fontIndex, uint8_t *fontSize, uint8_t *fontSizeIndex);
+
 void help_log(const char *message, ...);                  /** Function to be used to log messages */
 
 /********************************/
@@ -545,7 +548,91 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     return GUI_ERR;
 }
     
+gui_status_t gui_render_list(const char *listObjectString)
+{
+    if (strncmp(listObjectString, "<list>", 6) != 0) 
+    {
+        help_log("GUI ERROR: No List starting tag found!");
+        return GUI_ERR;
+    }
+    // INIT VARS 
+    //////////////////////
+    uint8_t fontSize  = {0};
+    uint8_t fontSizeIndex  = {0};
+    int8_t fontIndex = 0;
+    char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
+    bool b_haveFoundCursor = false;
+    bool b_haveFoundFont   = false;
+    bool b_haveFoundFontSize   = false;
+    bool b_haveFoundPosi   = false;
+    bool b_haveFoundOpt    = false;
+    bool b_haveFoundEnd    = false;
+    
 
+
+    while(*listObjectString != '\0')
+    {
+        // CURSOR TAG CHECK 
+        ///////////////////
+        if(!b_haveFoundCursor && (strncmp(listObjectString, "<cursor>",7) == 0))
+        {
+            b_haveFoundCursor = true;
+        }
+        // FONT TAG CHECK 
+        ///////////////////
+        else if(!b_haveFoundFont && (strncmp(listObjectString, "<font>",6) == 0))
+        {
+            if(GUI_ERR == help_find_font(listObjectString,&b_haveFoundFont,fontName, &fontIndex))
+            {
+                return GUI_ERR;
+            }
+        }
+        // SIZE TAG CHECK 
+        ///////////////////
+        else if(!b_haveFoundFontSize && (strncmp(listObjectString, "<font-size>",11) == 0))
+        {
+            if(GUI_ERR == help_find_font_size(listObjectString,&b_haveFoundFontSize, b_haveFoundFont,fontIndex,&fontSize,&fontSizeIndex))
+            {
+                return GUI_ERR;
+            }
+        }
+        // POSITION TAG CHECK 
+        /////////////////////
+        else if(!b_haveFoundPosi && (strncmp(listObjectString, "<position>",10) == 0))
+        {
+            b_haveFoundPosi= true;
+        }
+        // OPTIONS TAG CHECK 
+        ////////////////////
+        else if(!b_haveFoundOpt && (strncmp(listObjectString, "<options>",9) == 0))
+        {
+            b_haveFoundOpt= true;
+        }
+        // END TAG CHECK 
+        ////////////////
+        else if(!b_haveFoundEnd && (strncmp(listObjectString, "</list>",7) == 0))
+        {
+            b_haveFoundEnd = true;
+        }
+        SKIP_TO_WHITESPACE(listObjectString);
+        SKIP_TO(listObjectString,'<');
+    }
+    
+    // ERROR CHECK 
+    //////////////
+
+    if(!b_haveFoundCursor || !b_haveFoundFont || !b_haveFoundFontSize || !b_haveFoundPosi || !b_haveFoundOpt || !b_haveFoundEnd)
+    {
+        if(!b_haveFoundCursor){help_log("GUI ERROR: No Cursor starting tag found!");}
+        if(!b_haveFoundFont){help_log("GUI ERROR: No Font starting tag found!");}
+        if(!b_haveFoundFontSize){help_log("GUI ERROR: No Font-Size starting tag found!");}
+        if(!b_haveFoundPosi){help_log("GUI ERROR: No Position starting tag found!");}
+        if(!b_haveFoundOpt){help_log("GUI ERROR: No Options starting tag found!");}
+        if(!b_haveFoundEnd){help_log("GUI ERROR: No End List tag found!");}
+        return GUI_ERR;
+    }
+    return GUI_OK;
+}
 gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjectString)
 {
     if (strncmp(textObjectString, "<text>", 6) != 0) 
@@ -582,46 +669,17 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         ////////////////// 
         if ((!b_haveFoundFont) && (strncmp(textObjectString, "<font>", 6) == 0)) 
         {
-            if (sscanf(textObjectString, "<font>%63[^<]", fontName) == 1) 
+            if(GUI_ERR == help_find_font(textObjectString,&b_haveFoundFont,fontName, &fontIndex))
             {
-                // check font master list for the font namme 
-                for(uint8_t iter_font = 0; iter_font < NUM_FONT_TYPES; iter_font ++)
-                {
-                    if(strncmp(fontName, font_master_list[iter_font].fontName, strlen(fontName)) == 0)
-                    {
-                        fontIndex = iter_font;
-                        b_haveFoundFont = true;
-                        break;
-                    }
-                }
-                if(!b_haveFoundFont)
-                {
-                    help_log("GUI ERROR: Font name '%s' does not exist!", fontName);
-                    return GUI_ERR;
-                }
-
-                
+                return GUI_ERR;
             }
         }
         // FONT-SIZE TAG CHECK 
         //////////////////////
         else if ((!b_haveFoundFontSize) && (strncmp(textObjectString, "<font-size>", 11) == 0))  
         {
-            if ((sscanf(textObjectString, "<font-size>%hhu</font-size>", &fontSize) == 1)&&b_haveFoundFont) 
+            if(GUI_ERR == help_find_font_size(textObjectString,&b_haveFoundFontSize, b_haveFoundFont,fontIndex,&fontSize,&fontSizeIndex))
             {
-                for(uint8_t iter_fontSize = 0; iter_fontSize < MAX_FONT_SIZES; iter_fontSize ++)
-                {
-                    if(font_master_list[fontIndex].sizes[iter_fontSize] == fontSize)
-                    {
-                        b_haveFoundFontSize = true;
-                        fontSizeIndex = iter_fontSize;
-                        break;
-                    }
-                }   
-            }
-            if(!b_haveFoundFontSize)
-            {
-                help_log("GUI ERROR: Font name '%s' does not exist at size '%d'!", fontName, fontSize);
                 return GUI_ERR;
             }
         }
@@ -731,9 +789,6 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         if(!b_haveFoundAlignment){help_log("GUI ERROR: Alignment tags not found!");}
         if(!b_haveFoundContent){help_log("GUI ERROR: Content tags not found!");}
         if(!b_haveFoundVertAlignment){help_log("GUI ERROR: Vert-alignment not found");}
-
-        
-
         return GUI_ERR;
     }
     // CHECK IF TEXT CONTAINS VARS
@@ -899,79 +954,6 @@ gui_status_t gui_write_char(uint8_t fontNameIdx, uint8_t fontSizeIdx, int16_t ro
     return GUI_OK;
 }
 
-gui_status_t gui_update()
-{
-    int32_t pageNumber = 0; 
-    gui_variable_status_t fetchStatus = gui_get_int32_var("pageIndex", &pageNumber);
-    if((pageNumber > pageCount) || (fetchStatus != GUI_VAR_OK))
-    {
-        if(fetchStatus != GUI_VAR_OK){help_log("GUI ERROR: PageIndex variable could not be found, please define!");}
-        if(pageNumber > pageCount){help_log("GUI ERROR: Page '%d' does not exist!", pageNumber);}
-        return GUI_ERR;
-    }
-
-
-    // GETTING PAGE INFO 
-    ////////////////////
-    uint32_t startIndex = 0;
-    uint32_t endIndex   = 0;
-    gui_status_t pageStatus = gui_get_page_position(pageNumber,&startIndex,&endIndex);
-    if(pageStatus != GUI_OK)
-    {
-        
-        return GUI_ERR; 
-    }
-    // PARSING PAGES 
-    ////////////////////
-    uint8_t bitMap[ROWS][COLUMNS];
-    memset(bitMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    const char*xmlCopy = guiXml + startIndex;
-    while(*xmlCopy < endIndex)
-    {
-        // TEXT TAG CHECK
-        /////////////////
-        if(!strncmp(xmlCopy, "<text>", 6))
-        {
-            gui_status_t renderStatus = gui_render_text(bitMap,xmlCopy);
-            if(renderStatus != GUI_OK)
-            {
-                help_log("GUI ERROR: Could not render text on page '%d'", pageNumber);
-                return GUI_ERR;
-            }
-        }
-        // BITMAP TAG CHECK 
-        ////////////////// 
-        if(!strncmp(xmlCopy, "<bitMap>", 8))
-        {
-            gui_status_t renderStatus = gui_render_bitmap(bitMap,xmlCopy);
-            if(renderStatus != GUI_OK)
-            {
-                help_log("GUI ERROR: Could not render bit-map on page '%d'", pageNumber);
-                return GUI_ERR;
-            }
-        }
-
-        // OPERAND TAG CHECK
-        ////////////////////
-        if(!strncmp(xmlCopy, "<operand>", 9))
-        {
-            gui_status_t renderStatus = gui_execute_operand(xmlCopy);
-            if(renderStatus != GUI_OK)
-            {
-                return GUI_ERR;
-            }
-        }
-
-        xmlCopy++;
-        if(!strncmp(xmlCopy, "</page>", 7))
-        {
-            break;
-        }
-    }
-    bitMapWrite(bitMap, COLUMNS,ROWS);
-    return GUI_OK;
-}
-
 gui_status_t gui_execute_operand(const char *operandObjectString)
 {
     if (strncmp(operandObjectString, "<operand>",9 ) != 0) 
@@ -1120,7 +1102,78 @@ gui_status_t gui_execute_operand(const char *operandObjectString)
 
     return GUI_OK; 
 }
+gui_status_t gui_update()
+{
+    int32_t pageNumber = 0; 
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pageIndex", &pageNumber);
+    if((pageNumber > pageCount) || (fetchStatus != GUI_VAR_OK))
+    {
+        if(fetchStatus != GUI_VAR_OK){help_log("GUI ERROR: PageIndex variable could not be found, please define!");}
+        if(pageNumber > pageCount){help_log("GUI ERROR: Page '%d' does not exist!", pageNumber);}
+        return GUI_ERR;
+    }
 
+
+    // GETTING PAGE INFO 
+    ////////////////////
+    uint32_t startIndex = 0;
+    uint32_t endIndex   = 0;
+    gui_status_t pageStatus = gui_get_page_position(pageNumber,&startIndex,&endIndex);
+    if(pageStatus != GUI_OK)
+    {
+        
+        return GUI_ERR; 
+    }
+    // PARSING PAGES 
+    ////////////////////
+    uint8_t bitMap[ROWS][COLUMNS];
+    memset(bitMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    const char*xmlCopy = guiXml + startIndex;
+    while(*xmlCopy < endIndex)
+    {
+        // TEXT TAG CHECK
+        /////////////////
+        if(!strncmp(xmlCopy, "<text>", 6))
+        {
+            gui_status_t renderStatus = gui_render_text(bitMap,xmlCopy);
+            if(renderStatus != GUI_OK)
+            {
+                help_log("GUI ERROR: Could not render text on page '%d'", pageNumber);
+                return GUI_ERR;
+            }
+        }
+        // BITMAP TAG CHECK 
+        ////////////////// 
+        else if(!strncmp(xmlCopy, "<bitMap>", 8))
+        {
+            gui_status_t renderStatus = gui_render_bitmap(bitMap,xmlCopy);
+            if(renderStatus != GUI_OK)
+            {
+                help_log("GUI ERROR: Could not render bit-map on page '%d'", pageNumber);
+                return GUI_ERR;
+            }
+        }
+        // OPERAND TAG CHECK
+        ////////////////////
+        else if(!strncmp(xmlCopy, "<operand>", 9))
+        {
+            gui_status_t renderStatus = gui_execute_operand(xmlCopy);
+            if(renderStatus != GUI_OK)
+            {
+                return GUI_ERR;
+            }
+        }
+        else if(!strncmp(xmlCopy, "</page>", 7))
+        {
+            break;
+        }
+        SKIP_TO_WHITESPACE(xmlCopy);
+        SKIP_TO(xmlCopy,'<');
+
+    }
+    bitMapWrite(bitMap, COLUMNS,ROWS);
+    return GUI_OK;
+}
 gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char rtnText[MAX_TAG_DATA_LENGTH], bool *b_isFound)
 {
     // CREATING START TAG
@@ -1387,6 +1440,59 @@ gui_status_t help_operand_do(const char *operandObjectString)
     return GUI_OK;
 }
 
+gui_status_t help_find_font(const char *fontObjectString,bool *b_haveFoundFont,char *fontName,uint8_t *fontIndex)
+{
+    if (sscanf(fontObjectString, "<font>%63[^<]", fontName) == 1) 
+    {
+        // check font master list for the font namme 
+        for(uint8_t iter_font = 0; iter_font < NUM_FONT_TYPES; iter_font ++)
+        {
+            if(strncmp(fontName, font_master_list[iter_font].fontName, strlen(fontName)) == 0)
+            {
+                *fontIndex = iter_font;
+                *b_haveFoundFont = true;
+                break;
+            }
+        }
+        if(!(*b_haveFoundFont))
+        {
+            help_log("GUI ERROR: Font name '%s' does not exist!", fontName);
+            return GUI_ERR;
+        }
+        return GUI_OK;
+    }
+    return GUI_ERR;
+}
+
+
+
+gui_status_t help_find_font_size(const char *fontSizeObjectString,bool *b_haveFoundFontSize, bool b_haveFoundFont,uint8_t fontIndex,uint8_t *fontSize,uint8_t *fontSizeIndex)
+{
+
+    if ((sscanf(fontSizeObjectString, "<font-size>%hhu</font-size>", fontSize) == 1) && !(*b_haveFoundFontSize)) 
+    {          
+        for(uint8_t iter_fontSize = 0; iter_fontSize < MAX_FONT_SIZES; iter_fontSize ++)
+        {
+            if(font_master_list[fontIndex].sizes[iter_fontSize] == *fontSize)
+            {
+                *b_haveFoundFontSize = true;
+                *fontSizeIndex = iter_fontSize;
+                break;
+            }
+        }   
+    }
+    char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
+    if(b_haveFoundFont)
+    {
+      strcpy(fontName, font_master_list[fontIndex].fontName);
+    }
+    if(!(*b_haveFoundFontSize))
+    {
+        help_log("GUI ERROR: Font name '%s' does not exist at size '%d'!", fontName, *fontSize);
+        return GUI_ERR;
+    }
+    return GUI_OK;
+}
 
 void help_log(const char *message, ...)
 {

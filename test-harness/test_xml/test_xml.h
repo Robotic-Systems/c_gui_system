@@ -586,4 +586,14 @@ const char * operand_greater_than=
 " </then>\n"
 "</operand>\n";
 
+const char * normal_list=
+"<list>\n"
+" <cursor><var>mouse<var></cursor>\n"
+" <font>jupiter</font>\n"
+" <font-size>19</font-size>\n"
+" <position>32,51</position>\n"
+" <options>1. Set-up\n2. Fast Set\n 3. Slow Set\n</options>\n"
+"</list>\n";
+
+
 #endif

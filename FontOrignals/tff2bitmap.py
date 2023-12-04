@@ -3,13 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Configuration
-font_size = 15  # Font size
-font_name = "sans_pro"
+font_size = 10  # Font size
+font_name = "_5pts"
 text_num = "0123456789"  # Text to convert to a bitmap
 text_lc = "abcdefghijklmnopqrstuvwxyz"
 text_uc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 text_sym = " `~!@#$%^&*()-_=+[]{}|;':\\\",./<>?"
-font_path = r"FontOrignals\source-sans-pro.regular.ttf"  # Path to your font file
+font_path = r"FontOrignals\5₧5.ttf"  # Path to your font file
 
 output_file = "output_bitmap.png"  # Output image file
 
