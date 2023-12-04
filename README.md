@@ -1,10 +1,3 @@
-tool for creating bitmaps: https://tools.withcode.uk/bitmap/
-
-TODO:
-- Explain diffrence between error and test xml's
-- Explainer about what needs to be added to the gui user file 
-
-
 # c_gui_system
 This is a simple 'xml' based gui system for use in embedded projects. I was created in order to give a simplified development path when creating gui's that display data and for configering menus. The gui system is made up of the following componenets:
 - [Variables](#Variables)
