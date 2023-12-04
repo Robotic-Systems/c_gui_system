@@ -201,7 +201,7 @@ In this the var test1 is compared to 10 and if equal it will <then> "add" 2 to t
 - <do> Operation to be done if line is parsed, can have value \"add\", \"minus\" OR \"set-equal\"
 Note that once a statement has been evaulated then every <then> (if true) or <else> (if false) found until the end operand tag is found will be operated on i.e 
 
-```
+```xml
 <operand>
  <if>
     <operation>\"equal\"</operation>
