@@ -9,7 +9,7 @@ This is a simple 'xml' based gui system for use in embedded projects. I was crea
 
 An example of how to initalise the gui system is as follows :
 
-'''
+```C
 // Create a simple hello world xml 
 const char* helloWorldGui = 
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -36,7 +36,7 @@ const char* helloWorldGui =
 
 // Init GUI 
 gui_status_t initStatus = gui_init(lcd_write_function, printf, guiXml);
-'''C
+```
 
 The the init function takes three inputs,
  - A fucntion pointer that can print bitmaps to the write function 
@@ -50,7 +50,7 @@ Variables are user defined variables that can be displayed on the gui, used to p
 
 To interact with a variable from outside the gui driver the following functions can be used:
 
-'''
+```C
     // For uint32_t variables 
     gui_variable_status_t fetchStatus = gui_update_int32_var("pageIndex", 10);
     gui_variable_status_t fetchStatus = gui_get_int32_var("pageIndex", &value);
@@ -58,11 +58,11 @@ To interact with a variable from outside the gui driver the following functions 
     // For float variables 
     gui_variable_status_t updateStatus = gui_update_float_var("testVar",-2.2);
     gui_variable_status_t fetchStatus = gui_get_float_var("testVar", &value);
-'''C
+```
 
 To refrenve variables within the xml in operands and position tags they must be enclosed in <var></var> tags like follows:
 
-'''
+```xml
 <text>\n
     <font>jupiter</font>\n
     <font-size>19</font-size>\n
@@ -71,7 +71,7 @@ To refrenve variables within the xml in operands and position tags they must be 
     <position><var>xPos</var>,<var>yPos</var></position>\n
     <content>\"Hello World!\"</content>\n
 </text>\n
-'''xml
+```
 
 In this two uint32_t vars xPos and yPos can be used to update the texts position in between renders.
 
@@ -91,7 +91,7 @@ Text elements have many options associated with them and they will be explained 
  - <content> What you actually want the text to be 
 To display variables in text the following syntax can be followed:
 
-'''
+```xml
 <text>
     <font>jupiter</font>
     <font-size>19</font-size>
@@ -100,14 +100,14 @@ To display variables in text the following syntax can be followed:
     <position>0,0</position>
     <content>\"one: \%d\",<var>test1</var></content>
 </text>
-'''xml 
+```
 
 This will display whatever is stored in 'test1' as in text. The same bastic formatting rules as for c printf.
 
 #### Fonts
 To add additional fonts there is a python tool called tff2bitmap.py which when pointed to a valid .tff or .otf font file can create a header file that can be dragged into the project for use. To use the newly created front you first need to add the font to the font_master_list in user_gui.c which should look somthing like follows:
 
-'''
+```C
 #include "user_gui.h"
 // FONT INCLUSIONS
 ///////////////////
@@ -119,7 +119,7 @@ font_list_t font_master_list[NUM_FONT_TYPES] = {
     {"sans",{12,18}, {widthArray_size12,widthArray_size18}, {&fontMap_size12[0][0][0],&fontMap_size18[0][0][0]}},
     {"jupiter",{19},{widthArray},{&fontMap[0][0][0]}}
 };
-'''C
+```
 
 If you look in your newly created headder file you should find a width_array and fontMap that can be easily added.
 A good resouce for finding fonts can be found at the following:
@@ -128,7 +128,7 @@ https://www.1001fonts.com/carlito-font.html
 ### Bitmap's
 Bitmaps are another element that can be added to pages, the xml to add a bitmap is as follows:
 
-'''
+```xml
 <page>
 <bitMap>
  <size>32,32</size>
@@ -169,7 +169,7 @@ Bitmaps are another element that can be added to pages, the xml to add a bitmap 
  </data>
 </bitMap>
 </page>
-'''xml 
+```
 
 This page when rendered would contain the following bitmap with its top left corner positioned at 0,0. The <size> tag is the dimesions of the bitmap.
 
@@ -177,7 +177,7 @@ This page when rendered would contain the following bitmap with its top left cor
 ### Operands
 Operands take the form as follows:
 
-'''
+```xml
 <operand>
  <if>
     <operation>\"equal\"</operation>
@@ -194,14 +194,14 @@ Operands take the form as follows:
     <value>3</value>
  </else>\n"
 </operand>\n";
-'''xml
+```
 
 In this the var test1 is compared to 10 and if equal it will <then> "add" 2 to test 1, <else> it will minus 3 from test 1. Operands can be added to a page in any location and will be evaluated as soon ad they are hit. The tags associated with operands are as follows:
 - <operation> The evaluation to take place, can have value \"equal\", \"less-than\" or \"greater-than\". 
 - <do> Operation to be done if line is parsed, can have value \"add\", \"minus\" OR \"set-equal\"
 Note that once a statement has been evaulated then every <then> (if true) or <else> (if false) found until the end operand tag is found will be operated on i.e 
 
-'''
+```
 <operand>
  <if>
     <operation>\"equal\"</operation>
@@ -219,6 +219,6 @@ Note that once a statement has been evaulated then every <then> (if true) or <el
     <value>22</value>
  </then>
 </operand>
-'''xml 
+```
 
 if the <if> statement is true then evey then test1 will be set equal to test2 and then test2 will be set equal to 22. 
