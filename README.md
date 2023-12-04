@@ -14,7 +14,8 @@ This is a simple 'xml' based gui system for use in embedded projects. I was crea
 - [Bitmap's](#Bitmap's)
 - [Operands](#Operands)
 - [Lists](#Lists)
-An example of how to initalise the gui system is as follows 
+An example of how to initalise the gui system is as follows :
+
 '''
 // Create a simple hello world xml 
 const char* helloWorldGui = 
@@ -39,9 +40,11 @@ const char* helloWorldGui =
 "        </text>\n"
 "    </page>\n"
 "</pages>";
+
 // Init GUI 
 gui_status_t initStatus = gui_init(lcd_write_function, printf, guiXml);
 '''C
+
 The the init function takes three inputs,
  - A fucntion pointer that can print bitmaps to the write function 
  - A function pointer that can be used to print log messages, printf can just be used if you don't have a specific logger you want to use 
