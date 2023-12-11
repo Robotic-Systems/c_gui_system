@@ -1,3 +1,12 @@
+/**
+ * @file gui.h
+ * @author Patrick Kingwill 
+ * @brief 
+ * @version 0.1
+ * @date 2023-12-12
+ * 
+ * 
+ */
 #ifndef GUI_HEADER_H
 #define GUI_HEADER_H
 

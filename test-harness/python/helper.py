@@ -5,7 +5,7 @@ def resize_image(input_image_path, output_text_path, width, height):
     image = Image.open(input_image_path)
     
     # Resize the image to the specified width and height
-    image = image.resize((width, height), Image.ANTIALIAS)
+    image = image.resize((width, height))
     
     # Convert the image to greyscale
     image = image.convert('1')
@@ -19,9 +19,9 @@ def resize_image(input_image_path, output_text_path, width, height):
             text_file.write('\n')
 
 if __name__ == "__main__":
-    input_image_path = r'C:\Users\Pat\Downloads\rabbit.png'  # Change this to your input image file
+    input_image_path = r'C:\Users\Pat\Downloads\Screenshot 2023-12-12 063949.png'  # Change this to your input image file
     output_text_path = 'output.txt'  # Output text file
-    target_width = 102  # Change to the desired width
-    target_height = 64  # Change to the desired height
+    target_width = 50  # Change to the desired width
+    target_height = 50  # Change to the desired height
 
     resize_image(input_image_path, output_text_path, target_width, target_height)
