@@ -2176,15 +2176,60 @@ TEST(GUITest, list_moving_cursor_to_off_screen_option_scrolls)
 {
     const char* strTextCopy = normal_list;
     // Create the var used in test case
-    gui_create_var("cursor","int32_t","4");
+    gui_create_var("cursor","int32_t","3");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
-    PRINT_BIT_MAP(64,102,outputMap);
     LONGS_EQUAL(GUI_OK, operationStatus);
-    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_3,outputMap,0,0,102,64);
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_4,outputMap,0,0,102,64);
+    
+    // Scroll One more option down 
+    LONGS_EQUAL(GUI_VAR_OK, gui_update_int32_var("cursor", 4));
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_render_list(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_5,outputMap,0,0,102,64);
+}
+
+TEST(GUITest, list_setting_cursor_greater_then_avaliable_waps)
+{
+    const char* strTextCopy = normal_list;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","5");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(64,102,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_1,outputMap,0,0,102,64);
+    int32_t value = 0;
+    gui_get_int32_var("cursor", &value);
+    LONGS_EQUAL(0,value);
+
+}
+
+TEST(GUITest, list_can_be_added_to_gui)
+{
+    // init gui with null 
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write, advanced_gui);
+    LONGS_EQUAL(GUI_OK,initStatus);
+    // Change page number to be out of bounds
+    gui_update_int32_var("pageIndex", 1);
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK,renderStatus);
+    // Make sure worked 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    lcd_spy_get_Frame(outputMap);
+    // PRINT_BIT_MAP(64,102,outputMap);
+
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_1,outputMap,0,0,102,64);
 }
 
 

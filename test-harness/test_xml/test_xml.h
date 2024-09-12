@@ -80,6 +80,11 @@ const char* advanced_gui =
 "        <type>int32_t</type>\n"
 "        <value>0</value>\n"
 "    </variable>\n"
+"    <variable>\n"
+"        <name>cursor</name>\n"
+"        <type>int32_t</type>\n"
+"        <value>0</value>\n"
+"    </variable>\n"
 "</variables>\n"
 "<pages>\n" 
 "    <page>\n"
@@ -100,6 +105,16 @@ const char* advanced_gui =
 "            <position>30,0</position>\n"
 "            <content>\"Service Due\"</content>\n"
 "        </text>\n"
+"    </page>\n"
+"    <page>\n"
+"        <name>2</name>\n"
+"        <list>\n"
+"         <cursor><var>cursor</var></cursor>\n"
+"         <font>jupiter</font>\n"
+"         <font-size>19</font-size>\n"
+"         <position>0,0</position>\n"
+"         <options>1.Set-up\n2.Fast Set\n3.Slow Set\n4.Max Pull\n5.Max Break</options>\n"
+"        </list>\n"
 "    </page>\n"
 "</pages>\n\0";
 
@@ -592,7 +607,7 @@ const char * normal_list=
 " <font>jupiter</font>\n"
 " <font-size>19</font-size>\n"
 " <position>0,0</position>\n"
-" <options>1.Set-up\n2.Fast Set\n3.Slow Set\n4.Max Pull</options>\n"
+" <options>1.Set-up\n2.Fast Set\n3.Slow Set\n4.Max Pull\n5.Max Break</options>\n"
 "</list>\n";
 
 
