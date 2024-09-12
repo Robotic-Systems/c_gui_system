@@ -1989,9 +1989,11 @@ TEST(GUITest, LIST_CAN_BE_PARSED_WITHOUT_ERROR)
 {
     const char* strTextCopy = normal_list;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
 }
@@ -2000,9 +2002,11 @@ TEST(GUITest, list_render_returns_error_if_list_tag_not_found)
 {
     const char* strTextCopy = list_no_start_tag;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No List starting tag found!", logger_spy_get_string());
@@ -2012,9 +2016,11 @@ TEST(GUITest, list_render_returns_error_if_cursor_tag_not_found)
 {
     const char* strTextCopy = list_no_cursor_tag;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No Cursor starting tag found!", logger_spy_get_string());
@@ -2024,21 +2030,25 @@ TEST(GUITest, list_render_returns_error_if_font_tag_not_found)
 {
     const char* strTextCopy = list_no_font_tag;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
-    STRCMP_EQUAL("GUI ERROR: No Font starting tag found!", logger_spy_get_string());
+    STRCMP_EQUAL("GUI ERROR: Font name '' does not exist at size '19'!", logger_spy_get_string());
 }
 
 TEST(GUITest, list_render_returns_error_if_size_tag_not_found)
 {
     const char* strTextCopy = list_no_size_tag;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No Font-Size starting tag found!", logger_spy_get_string());
@@ -2048,9 +2058,11 @@ TEST(GUITest, list_render_returns_error_if_position_tag_not_found)
 {
     const char* strTextCopy = list_no_position_tag;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No Position starting tag found!", logger_spy_get_string());
@@ -2060,9 +2072,11 @@ TEST(GUITest, list_render_returns_error_if_options_tag_not_found)
 {
     const char* strTextCopy = list_no_options_tag;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No Options starting tag found!", logger_spy_get_string());
@@ -2072,9 +2086,11 @@ TEST(GUITest, list_render_returns_error_if_end_list_tag_not_found)
 {
     const char* strTextCopy = list_no_end_list_tag;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No End List tag found!", logger_spy_get_string());
@@ -2084,9 +2100,11 @@ TEST(GUITest, list_if_font_not_found_return_error)
 {
     const char* strTextCopy = list_fake_font;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus =  gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: Font name 'spaceMan' does not exist!", logger_spy_get_string());
@@ -2096,13 +2114,80 @@ TEST(GUITest, list_if_font_size_not_found_return_error)
 {
     const char* strTextCopy = list_fake_size;
     // Create the var used in test case
-    gui_create_var("mouse","int32_t","0");
+    gui_create_var("cursor","int32_t","0");
     // Perform Operation 
-    gui_status_t operationStatus = gui_render_list(strTextCopy);
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: Font name 'jupiter' does not exist at size '22'!", logger_spy_get_string());
 }
+
+TEST(GUITest, list_can_be_rendered)
+{
+    const char* strTextCopy = normal_list;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(64,102,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_1,outputMap,0,0,102,64);
+
+}
+
+TEST(GUITest, list_moving_cursor_highligts_next_text)
+{
+    const char* strTextCopy = normal_list;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_1,outputMap,0,0,102,64);
+
+    // Adding one to cursor 
+    LONGS_EQUAL(GUI_VAR_OK, gui_update_int32_var("cursor", 1));
+    // Perform Operation 
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_render_list(outputMap,strTextCopy);
+
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_2,outputMap,0,0,102,64);
+
+    // Adding one to cursor 
+    LONGS_EQUAL(GUI_VAR_OK, gui_update_int32_var("cursor", 2));
+    // Perform Operation 
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_render_list(outputMap,strTextCopy);
+
+    // PRINT_BIT_MAP(64,102,outputMap);
+
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_3,outputMap,0,0,102,64);
+}
+
+TEST(GUITest, list_moving_cursor_to_off_screen_option_scrolls)
+{
+    const char* strTextCopy = normal_list;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","4");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
+    // Check status is okay 
+    PRINT_BIT_MAP(64,102,outputMap);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_3,outputMap,0,0,102,64);
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

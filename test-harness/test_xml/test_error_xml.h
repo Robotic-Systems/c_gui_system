@@ -428,7 +428,7 @@ const char * operand_equal_un_sup_do_code=
 
 
 const char * list_no_start_tag=
-" <cursor><var>mouse<var></cursor>\n"
+" <cursor><var>cursor</var></cursor>\n"
 " <font>jupiter</font>\n"
 " <font-size>19</font-size>\n"
 " <position>32,51</position>\n"
@@ -445,7 +445,7 @@ const char * list_no_cursor_tag=
 
 const char * list_no_font_tag=
 "<list>\n"
-" <cursor><var>mouse<var></cursor>\n"
+" <cursor><var>cursor</var></cursor>\n"
 " <font-size>19</font-size>\n"
 " <position>32,51</position>\n"
 " <options>1. Set-up\n2. Fast Set\n 3. Slow Set\n</options>\n"
@@ -453,7 +453,7 @@ const char * list_no_font_tag=
 
 const char * list_no_size_tag=
 "<list>\n"
-" <cursor><var>mouse<var></cursor>\n"
+" <cursor><var>cursor</var></cursor>\n"
 " <font>jupiter</font>\n"
 " <position>32,51</position>\n"
 " <options>1. Set-up\n2. Fast Set\n 3. Slow Set\n</options>\n"
@@ -461,7 +461,7 @@ const char * list_no_size_tag=
 
 const char * list_no_position_tag=
 "<list>\n"
-" <cursor><var>mouse<var></cursor>\n"
+" <cursor><var>cursor</var></cursor>\n"
 " <font>jupiter</font>\n"
 " <font-size>19</font-size>\n"
 " <options>1. Set-up\n2. Fast Set\n 3. Slow Set\n</options>\n"
@@ -469,7 +469,7 @@ const char * list_no_position_tag=
 
 const char * list_no_options_tag=
 "<list>\n"
-" <cursor><var>mouse<var></cursor>\n"
+" <cursor><var>cursor</var></cursor>\n"
 " <font>jupiter</font>\n"
 " <font-size>19</font-size>\n"
 " <position>32,51</position>\n"
@@ -477,7 +477,7 @@ const char * list_no_options_tag=
 
 const char * list_no_end_list_tag=
 "<list>\n"
-" <cursor><var>mouse<var></cursor>\n"
+" <cursor><var>cursor</var></cursor>\n"
 " <font>jupiter</font>\n"
 " <font-size>19</font-size>\n"
 " <position>32,51</position>\n"
@@ -485,7 +485,7 @@ const char * list_no_end_list_tag=
 
 const char * list_fake_font=
 "<list>\n"
-" <cursor><var>mouse<var></cursor>\n"
+" <cursor><var>cursor</var></cursor>\n"
 " <font>spaceMan</font>\n"
 " <font-size>19</font-size>\n"
 " <position>32,51</position>\n"
@@ -494,7 +494,7 @@ const char * list_fake_font=
 
 const char * list_fake_size=
 "<list>\n"
-" <cursor><var>mouse<var></cursor>\n"
+" <cursor><var>cursor</var></cursor>\n"
 " <font>jupiter</font>\n"
 " <font-size>22</font-size>\n"
 " <position>32,51</position>\n"
