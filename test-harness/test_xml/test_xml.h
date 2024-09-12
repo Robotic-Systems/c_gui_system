@@ -610,5 +610,13 @@ const char * normal_list=
 " <options>1.Set-up\n2.Fast Set\n3.Slow Set\n4.Max Pull\n5.Max Break</options>\n"
 "</list>\n";
 
+const char * small_text_list=
+"<list>\n"
+" <cursor><var>cursor</var></cursor>\n"
+" <font>_5pt</font>\n"
+" <font-size>15</font-size>\n"
+" <position>0,0</position>\n"
+" <options>1.Set-up\n2.Fast Set\n3.Slow Set\n4.Max Pull\n5.Max Break</options>\n"
+"</list>\n";
 
 #endif

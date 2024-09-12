@@ -13,7 +13,7 @@
 /**
  * @brief The amount of defined font types 
  */
-#define NUM_FONT_TYPES 2
+#define NUM_FONT_TYPES 3
 #define MAX_FONT_SIZES 5
 
 /**

@@ -2135,7 +2135,6 @@ TEST(GUITest, list_can_be_rendered)
     gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
-    // PRINT_BIT_MAP(64,102,outputMap);
     IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_1,outputMap,0,0,102,64);
 
 }
@@ -2166,9 +2165,6 @@ TEST(GUITest, list_moving_cursor_highligts_next_text)
     // Perform Operation 
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     gui_render_list(outputMap,strTextCopy);
-
-    // PRINT_BIT_MAP(64,102,outputMap);
-
     IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_3,outputMap,0,0,102,64);
 }
 
@@ -2210,6 +2206,39 @@ TEST(GUITest, list_setting_cursor_greater_then_avaliable_waps)
     int32_t value = 0;
     gui_get_int32_var("cursor", &value);
     LONGS_EQUAL(0,value);
+}
+
+TEST(GUITest, list_setting_cursor_negitice_avaliable_wraps)
+{
+    const char* strTextCopy = normal_list;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","-1");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(64,102,outputMap);`
+    IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_5,outputMap,0,0,102,64);
+    int32_t value = 0;
+    gui_get_int32_var("cursor", &value);
+    LONGS_EQUAL(4,value);
+}
+
+TEST(GUITest, list_when_option_half_cut_off_scroll_works)
+{
+    const char* strTextCopy = small_text_list;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","3");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_list(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(64,102,outputMap);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_list_option_4,outputMap,0,0,102,64);
 
 }
 
@@ -2232,6 +2261,12 @@ TEST(GUITest, list_can_be_added_to_gui)
     IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_1,outputMap,0,0,102,64);
 }
 
+/* TODO
+    - Add in roll over to last option
+    - FIx the screen not scrolling when only a little bit of next option gets cut off 
+    - 
+
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 

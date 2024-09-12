@@ -560,7 +560,7 @@ gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObje
     uint8_t fontSize  = {0};
     uint8_t fontSizeIndex  = {0};
     int8_t fontIndex = 0;
-    uint32_t cursorValue = 0;
+    int32_t cursorValue = 0;
     char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
     char options[MAX_TAG_DATA_LENGTH] = {'\0'};
 
@@ -655,17 +655,30 @@ gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObje
         }
         txtPxWidth += gui_get_char_width(fontIndex ,fontSizeIndex, options[itr_text]);
     }
+    // HANDLING WRAPPING
     if (cursorValue > (numberOfOptions-1))
     {
         cursorValue = 0;
         gui_update_int32_var("cursor",cursorValue);
     }
-    uint32_t selectedOptionDistance = cursorValue*(fontSize+3)+fontSize;
-    uint32_t maxDisplayOptions = (ROWS/(fontSize+3))+1;
+    else if (cursorValue < 0)
+    {
+        cursorValue = numberOfOptions-1;
+        gui_update_int32_var("cursor",cursorValue);
+    }
+    // uint32_t selectedOptionTop = cursorValue*(fontSize+3)+fontSize;
+    uint32_t selectedOptionBottom = cursorValue*(fontSize+3)+2*fontSize;
+    uint32_t maxDisplayOptions = (ROWS/(fontSize+3));
     int16_t optionOffset = 0;
+
     char* optionsString = options;
-    if (selectedOptionDistance > ROWS)
+    if (selectedOptionBottom > ROWS)
     {   
+        // Checking if option is obscured 
+        // if (((selectedOptionDistance+fontSize)-ROWS)>0)
+        // {
+
+        // }
         uint32_t rowsToRemove = cursorValue-maxDisplayOptions+1;
         for(int itr_options = 0; itr_options<rowsToRemove; itr_options++)
         {
@@ -1224,7 +1237,6 @@ gui_status_t gui_update()
         ////////////////// 
         else if(!strncmp(xmlCopy, "<list>", 6))
         {
-            printf("LISTIING");
             gui_status_t renderStatus = gui_render_list(bitMap,xmlCopy);
             if(renderStatus != GUI_OK)
             {
