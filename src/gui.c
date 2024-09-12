@@ -548,7 +548,7 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     return GUI_ERR;
 }
     
-gui_status_t gui_render_list(const char *listObjectString)
+gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObjectString)
 {
     if (strncmp(listObjectString, "<list>", 6) != 0) 
     {
@@ -560,7 +560,10 @@ gui_status_t gui_render_list(const char *listObjectString)
     uint8_t fontSize  = {0};
     uint8_t fontSizeIndex  = {0};
     int8_t fontIndex = 0;
+    uint32_t cursorValue = 0;
     char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
+    char options[MAX_TAG_DATA_LENGTH] = {'\0'};
+
     bool b_haveFoundCursor = false;
     bool b_haveFoundFont   = false;
     bool b_haveFoundFontSize   = false;
@@ -576,7 +579,11 @@ gui_status_t gui_render_list(const char *listObjectString)
         ///////////////////
         if(!b_haveFoundCursor && (strncmp(listObjectString, "<cursor>",7) == 0))
         {
-            b_haveFoundCursor = true;
+            gui_status_t cursorStatus = gui_parse_tag_val(listObjectString,"cursor",&cursorValue,1,&b_haveFoundCursor);
+            if(cursorStatus != GUI_OK)
+            {
+                return cursorStatus;
+            }
         }
         // FONT TAG CHECK 
         ///////////////////
@@ -606,7 +613,11 @@ gui_status_t gui_render_list(const char *listObjectString)
         ////////////////////
         else if(!b_haveFoundOpt && (strncmp(listObjectString, "<options>",9) == 0))
         {
-            b_haveFoundOpt= true;
+            gui_status_t optionStatus = gui_parse_tag_str(listObjectString,"options",options,&b_haveFoundOpt);
+            if(optionStatus != GUI_OK)
+            {
+                return optionStatus;
+            }
         }
         // END TAG CHECK 
         ////////////////
@@ -620,7 +631,6 @@ gui_status_t gui_render_list(const char *listObjectString)
     
     // ERROR CHECK 
     //////////////
-
     if(!b_haveFoundCursor || !b_haveFoundFont || !b_haveFoundFontSize || !b_haveFoundPosi || !b_haveFoundOpt || !b_haveFoundEnd)
     {
         if(!b_haveFoundCursor){help_log("GUI ERROR: No Cursor starting tag found!");}
@@ -631,8 +641,65 @@ gui_status_t gui_render_list(const char *listObjectString)
         if(!b_haveFoundEnd){help_log("GUI ERROR: No End List tag found!");}
         return GUI_ERR;
     }
+
+    // WIDTH CALC
+    size_t txtLen = strlen(options);
+    int32_t txtPxWidth = 0; /** The pixel width of the string */
+    int16_t numberOfOptions = 1; 
+    for(int itr_text = 0; itr_text < txtLen; itr_text++)
+    {
+        if((options[itr_text] == '\"') || (options[itr_text] == '\n'))
+        {
+            numberOfOptions += 1;
+            continue;
+        }
+        txtPxWidth += gui_get_char_width(fontIndex ,fontSizeIndex, options[itr_text]);
+    }
+    if (cursorValue > (numberOfOptions-1))
+    {
+        cursorValue = 0;
+        gui_update_int32_var("cursor",cursorValue);
+    }
+    uint32_t selectedOptionDistance = cursorValue*(fontSize+3)+fontSize;
+    uint32_t maxDisplayOptions = (ROWS/(fontSize+3))+1;
+    int16_t optionOffset = 0;
+    char* optionsString = options;
+    if (selectedOptionDistance > ROWS)
+    {   
+        uint32_t rowsToRemove = cursorValue-maxDisplayOptions+1;
+        for(int itr_options = 0; itr_options<rowsToRemove; itr_options++)
+        {
+            optionsString = strchr(optionsString,'\n')+1;
+            optionOffset += 1;
+        } 
+    }
+    // WRITING LOOP 
+    int16_t colPos = 0;
+    int16_t rowPos = 0;
+    int16_t optionRendering = 0;
+    txtLen = strlen(optionsString);
+    for(int itr_text = 0; itr_text < txtLen; itr_text++)
+    {
+        if(optionsString[itr_text] == '\"')
+        {
+            continue;
+        }
+        if(optionsString[itr_text] == '\n')
+        {
+            rowPos += fontSize+3; /** ToDo- Add the leading calculation here */
+            colPos = 0;
+            optionRendering += 1;
+            continue;
+        }
+        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, optionsString[itr_text],(cursorValue == (optionRendering+optionOffset))) != GUI_OK)
+        {
+            return GUI_ERR;
+        }
+        colPos += gui_get_char_width(fontIndex ,fontSizeIndex, optionsString[itr_text]);
+    }
     return GUI_OK;
 }
+
 gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjectString)
 {
     if (strncmp(textObjectString, "<text>", 6) != 0) 
@@ -1150,6 +1217,18 @@ gui_status_t gui_update()
             if(renderStatus != GUI_OK)
             {
                 help_log("GUI ERROR: Could not render bit-map on page '%d'", pageNumber);
+                return GUI_ERR;
+            }
+        }
+        // LIST TAG CHECK 
+        ////////////////// 
+        else if(!strncmp(xmlCopy, "<list>", 6))
+        {
+            printf("LISTIING");
+            gui_status_t renderStatus = gui_render_list(bitMap,xmlCopy);
+            if(renderStatus != GUI_OK)
+            {
+                help_log("GUI ERROR: Could not render list on page '%d'", pageNumber);
                 return GUI_ERR;
             }
         }

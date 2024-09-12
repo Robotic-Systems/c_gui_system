@@ -296,10 +296,10 @@ gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_
 
 /**
  * @brief Renderes a list xml, with the text that is selected by the cursor var is inverted
- * 
+ * @param [in] bitMap - The output bit map 
  * @param [in] listObjectString - String that contains the list definition 
  * @return gui_status_t 
  */
-gui_status_t gui_render_list(const char *listObjectString);
+gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObjectString);
 
 #endif
