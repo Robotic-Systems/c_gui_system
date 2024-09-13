@@ -2261,6 +2261,103 @@ TEST(GUITest, list_can_be_added_to_gui)
     IS_BIT_MAP_EQUAL_BIT(juipiter_list_option_1,outputMap,0,0,102,64);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ONE: INT ENTER 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(GUITest, interger_entery_can_be_passed_without_error)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","0");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+}
+
+TEST(GUITest, intentery_returns_error_if_no_entery_tag)
+{
+    const char* strTextCopy = enter_no_intEnter_tag;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","0");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Int Enter starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentery_returns_error_if_no_cursor_tag)
+{
+    const char* strTextCopy = enter_var_no_cursor;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","0");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Cursor starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentery_returns_error_if_no_font_tag)
+{
+    const char* strTextCopy = enter_var_no_font;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","0");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Font starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentery_returns_error_if_no_size_tag)
+{
+    const char* strTextCopy = enter_var_no_size;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","0");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Font-Size starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentery_returns_error_if_no_position_tag)
+{
+    const char* strTextCopy = enter_var_no_position;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","0");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Position starting tag found!", logger_spy_get_string());
+}
 /* TODO
     - Add in roll over to last option
     - FIx the screen not scrolling when only a little bit of next option gets cut off 

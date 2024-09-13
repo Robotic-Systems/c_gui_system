@@ -500,4 +500,64 @@ const char * list_fake_size=
 " <position>32,51</position>\n"
 " <options>1. Set-up\n2. Fast Set\n 3. Slow Set\n</options>\n"
 "</list>\n";
+
+const char * enter_no_intEnter_tag=
+" <cursor><var>cursor</var></cursor>\n"
+" <font>_5pt</font>\n"
+" <font-size>15</font-size>\n"
+" <position>0,0</position>\n"
+" <heading>Set Pull Power</heading>\n"
+" <digits>2</digits>\n"
+" <max>10</max>\n"
+" <min>0</min>\n"
+" <variable><var>pull_power</var></variable>\n"
+"</intEnter>\n";
+
+const char * enter_var_no_cursor=
+"<intEnter>\n"
+" <font>_5pt</font>\n"
+" <font-size>15</font-size>\n"
+" <position>0,0</position>\n"
+" <heading>Set Pull Power</heading>\n"
+" <digits>2</digits>\n"
+" <max>10</max>\n"
+" <min>0</min>\n"
+" <variable><var>pull_power</var></variable>\n"
+"</intEnter>\n";
+
+const char * enter_var_no_font=
+"<intEnter>\n"
+" <cursor><var>cursor</var></cursor>\n"
+" <font-size>15</font-size>\n"
+" <position>0,0</position>\n"
+" <heading>Set Pull Power</heading>\n"
+" <digits>2</digits>\n"
+" <max>10</max>\n"
+" <min>0</min>\n"
+" <variable><var>pull_power</var></variable>\n"
+"</intEnter>\n";
+
+const char * enter_var_no_size=
+"<intEnter>\n"
+" <cursor><var>cursor</var></cursor>\n"
+" <font>_5pt</font>\n"
+" <position>0,0</position>\n"
+" <heading>Set Pull Power</heading>\n"
+" <digits>2</digits>\n"
+" <max>10</max>\n"
+" <min>0</min>\n"
+" <variable><var>pull_power</var></variable>\n"
+"</intEnter>\n";
+
+const char * enter_var_no_position=
+"<intEnter>\n"
+" <cursor><var>cursor</var></cursor>\n"
+" <font>_5pt</font>\n"
+" <font-size>15</font-size>\n"
+" <heading>Set Pull Power</heading>\n"
+" <digits>2</digits>\n"
+" <max>10</max>\n"
+" <min>0</min>\n"
+" <variable><var>pull_power</var></variable>\n"
+"</intEnter>\n";
 #endif
