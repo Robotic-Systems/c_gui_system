@@ -222,3 +222,16 @@ Note that once a statement has been evaulated then every <then> (if true) or <el
 ```
 
 if the <if> statement is true then evey then test1 will be set equal to test2 and then test2 will be set equal to 22. 
+
+### LISTS 
+Lists create text options that can be cycled through using a cursor. The definition of a list takes the form as follows:
+```XML
+"<list>\n"
+" <cursor><var>cursor</var></cursor>\n"
+" <font>_5pt</font>\n"
+" <font-size>15</font-size>\n"
+" <position>0,0</position>\n"
+" <options>1.Set-up\n2.Fast Set\n3.Slow Set\n4.Max Pull\n5.Max Break</options>\n"
+"</list>\n"
+```
+They can be added to any page element and combined with operands to control gui behaviour.

@@ -287,12 +287,13 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
  * 
  * @param [in] tagString  - The string that could contain the tag that you need to find  
  * @param [in] tagName  - the name of the tag that is being parsed for, i.e if you want to parse for a "<content>" tag you should pass in "content"
+ * @param [out] varName  - The Name of the var tag found if one was found 
  * @param [out] p_value  - The resultant extracted value 
  * @param [out] numReturn  - Number of values to return, if less then number of return found error is caused
  * @param [out] b_isFound  - Succsess boolean that returns true if the tag was found 
  * @return gui_status_t  - Tag parsing execution status 
  */
-gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_t *p_value,uint8_t numReturn, bool *b_isFound);
+gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName,char *varName, int32_t *p_value,uint8_t numReturn, bool *b_isFound);
 
 /**
  * @brief Renderes a list xml, with the text that is selected by the cursor var is inverted
@@ -302,4 +303,11 @@ gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_
  */
 gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObjectString);
 
+/**
+ * @brief Renderes a menu to update an integer displayed on screen 
+ * @param [in] bitMap - The output bit map 
+ * @param [in] intergerEnterString - String that contains the integer enter string
+ * @return gui_status_t 
+ */
+gui_status_t gui_render_int32_entry(uint8_t bitMap[ROWS][COLUMNS], const char *intergerEnterString);
 #endif

@@ -467,7 +467,8 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
         else if (!b_haveFoundPosi && (strncmp(strBitmap, "<position>", 10) == 0)) 
         {
             int32_t posVars[2] = {0};
-            gui_status_t posStatus = gui_parse_tag_val(strBitmap,"position",posVars,2,&b_haveFoundPosi);
+            char returnTagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+            gui_status_t posStatus = gui_parse_tag_val(strBitmap,"position",returnTagName,posVars,2,&b_haveFoundPosi);
             if(posStatus != GUI_OK)
             {
                 return posStatus;
@@ -547,7 +548,299 @@ gui_status_t gui_render_bitmap(uint8_t bitMap[ROWS][COLUMNS],const char *bitmapS
     help_log("GUI ERROR: No bitmap end tag found!");
     return GUI_ERR;
 }
-    
+
+gui_status_t gui_render_int32_entry(uint8_t bitMap[ROWS][COLUMNS], const char *intergerEnterString)
+{
+     if (strncmp(intergerEnterString, "<intEntry>", 10) != 0) 
+    {
+        help_log("GUI ERROR: No Int Enter starting tag found!");
+        return GUI_ERR;
+    }
+
+        // INIT VARS 
+    //////////////////////
+    uint8_t fontSize  = {0};
+    uint8_t fontSizeIndex  = {0};
+    int8_t fontIndex = 0;
+    int32_t cursorValue = 0;
+    int32_t entryValue = 0;
+    int32_t digitsValue = 0;
+    int32_t maxValue = 0;
+    int32_t minValue = 0;
+    int32_t incrementerValue = 0;
+
+
+
+    char entryVarTagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+    char incremeneterTagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+    char returnTagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+    char heading[MAX_TAG_DATA_LENGTH] = {'\0'};
+    char fontName[MAX_TAG_DATA_LENGTH] = {'\0'};
+    char valueString[MAX_TAG_DATA_LENGTH] = {'\0'};
+
+    // char options[MAX_TAG_DATA_LENGTH] = {'\0'};
+
+    bool b_haveFoundCursor = false;
+    bool b_haveFoundFont   = false;
+    bool b_haveFoundFontSize   = false;
+    bool b_haveFoundPosi   = false;
+    bool b_haveFoundDigits = false;
+    bool b_haveFoundMax = false;
+    bool b_haveFoundMin = false;
+    bool b_haveFoundVar = false;
+    bool b_haveFoundEnd = false;
+    bool b_haveFoundHeading = false;
+    bool b_haveFoundIncrementer = false;
+
+
+
+    while(*intergerEnterString != '\0')
+    {
+        // CURSOR TAG CHECK 
+        ///////////////////
+        if(!b_haveFoundCursor && (strncmp(intergerEnterString, "<cursor>",7) == 0))
+        {
+            gui_status_t cursorStatus = gui_parse_tag_val(intergerEnterString,"cursor",returnTagName,&cursorValue,1,&b_haveFoundCursor);
+            if(cursorStatus != GUI_OK)
+            {
+                return cursorStatus;
+            }
+        }
+         // FONT TAG CHECK 
+        ///////////////////
+        else if(!b_haveFoundFont && (strncmp(intergerEnterString, "<font>",6) == 0))
+        {
+            if(GUI_ERR == help_find_font(intergerEnterString,&b_haveFoundFont,fontName, &fontIndex))
+            {
+                return GUI_ERR;
+            }
+        }
+        // SIZE TAG CHECK 
+        ///////////////////
+        else if(!b_haveFoundFontSize && (strncmp(intergerEnterString, "<font-size>",11) == 0))
+        {
+            if(GUI_ERR == help_find_font_size(intergerEnterString,&b_haveFoundFontSize, b_haveFoundFont,fontIndex,&fontSize,&fontSizeIndex))
+            {
+                return GUI_ERR;
+            }
+        }
+        // POSITION TAG CHECK 
+        /////////////////////
+        else if(!b_haveFoundPosi && (strncmp(intergerEnterString, "<position>",10) == 0))
+        {
+            b_haveFoundPosi= true;
+        }
+        // DIGITS TAG CHECK 
+        /////////////////////
+        else if(!b_haveFoundDigits && (strncmp(intergerEnterString, "<digits>",8) == 0))
+        {
+            char returnTagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+            gui_status_t digitsStatus = gui_parse_tag_val(intergerEnterString,"digits",returnTagName,&digitsValue,1,&b_haveFoundDigits);
+            if(digitsStatus != GUI_OK)
+            {
+                return digitsStatus;
+            }
+        }
+        // MAX TAG CHECK 
+        /////////////////////
+        else if(!b_haveFoundMax && (strncmp(intergerEnterString, "<max>",5) == 0))
+        {
+            gui_status_t maxStatus = gui_parse_tag_val(intergerEnterString,"max",returnTagName,&maxValue,1,&b_haveFoundMax);
+            if(maxStatus != GUI_OK)
+            {
+                return maxStatus;
+            }
+        }
+        // MIN TAG CHECK 
+        /////////////////////
+        else if(!b_haveFoundMin && (strncmp(intergerEnterString, "<min>",5) == 0))
+        {
+            gui_status_t minStatus = gui_parse_tag_val(intergerEnterString,"min",returnTagName,&minValue,1,&b_haveFoundMin);
+            if(minStatus != GUI_OK)
+            {
+                return minStatus;
+            }
+        }
+        // HEADING TAG CHECK 
+        ////////////////////
+        else if(!b_haveFoundHeading && (strncmp(intergerEnterString, "<heading>",9) == 0))
+        {
+            if (sscanf(intergerEnterString, "<heading>%63[^<]", heading) == 1)
+            {
+                b_haveFoundHeading = true;
+            } 
+        }
+        // VAR TAG CHECK 
+        /////////////////////
+        else if(!b_haveFoundVar && (strncmp(intergerEnterString, "<variable>",10) == 0))
+        {
+            gui_status_t variableStatus = gui_parse_tag_val(intergerEnterString,"variable",entryVarTagName,&entryValue,1,&b_haveFoundVar);
+            if(variableStatus != GUI_OK)
+            {
+                return variableStatus;
+            }
+        }
+        // INCREMENETER TAG CHECK 
+        /////////////////////////
+        else if(!b_haveFoundIncrementer && (strncmp(intergerEnterString, "<incrementer>",13) == 0))
+        {
+            gui_status_t variableStatus = gui_parse_tag_val(intergerEnterString,"incrementer",incremeneterTagName,&incrementerValue,1,&b_haveFoundIncrementer);
+            if(variableStatus != GUI_OK)
+            {
+                return variableStatus;
+            }
+        }
+        // END TAG CHECK 
+        ////////////////
+        else if(!b_haveFoundEnd && (strncmp(intergerEnterString, "</intEntry>",11) == 0))
+        {
+            b_haveFoundEnd = true;
+        }
+        SKIP_TO_WHITESPACE(intergerEnterString);
+        SKIP_TO(intergerEnterString,'<');
+    }
+
+
+    if(!b_haveFoundIncrementer||!b_haveFoundHeading||!b_haveFoundEnd||!b_haveFoundCursor||!b_haveFoundFont||!b_haveFoundFontSize||!b_haveFoundPosi||!b_haveFoundDigits||!b_haveFoundMax||!b_haveFoundMin||!b_haveFoundVar)
+
+    {
+        if(!b_haveFoundCursor){help_log("GUI ERROR: No Cursor starting tag found!");}
+        if(!b_haveFoundFont){help_log("GUI ERROR: No Font starting tag found!");}
+        if(!b_haveFoundFontSize){help_log("GUI ERROR: No Font-Size starting tag found!");}
+        if(!b_haveFoundPosi){help_log("GUI ERROR: No Position starting tag found!");}
+        if(!b_haveFoundDigits){help_log("GUI ERROR: No Digits starting tag found!");}
+        if(!b_haveFoundMax){help_log("GUI ERROR: No Max starting tag found!");}
+        if(!b_haveFoundMin){help_log("GUI ERROR: No Min starting tag found!");}
+        if(!b_haveFoundVar){help_log("GUI ERROR: No Variable starting tag found!");}
+        if(!b_haveFoundEnd){help_log("GUI ERROR: No End Interger Entery tag found!");}
+        if(!b_haveFoundHeading){help_log("GUI ERROR: Heading Not Found!");}
+        if(!b_haveFoundIncrementer){help_log("GUI ERROR: Incremeneter not found!");}
+
+        return GUI_ERR;
+    }
+
+    // RENDER HEADING 
+    /////////////////
+    // WIDTH CALC
+    size_t txtLen = strlen(heading);
+    int32_t txtPxWidth = 0; /** The pixel width of the string */
+    for(int itr_text = 0; itr_text < txtLen; itr_text++)
+    {
+        if((heading[itr_text] == '\"') || (heading[itr_text] == '\n'))
+        {
+            continue;
+        }
+        txtPxWidth += gui_get_char_width(fontIndex ,fontSizeIndex, heading[itr_text]);
+    }
+    // RENDER LOOP
+    int16_t colPos = 0;
+    int16_t rowPos = 0;
+    for(int itr_text = 0; itr_text < txtLen; itr_text++)
+    {
+        if(heading[itr_text] == '\"')
+        {
+            continue;
+        }
+        if(heading[itr_text] == '\n')
+        {
+            rowPos += fontSize+3; /** ToDo- Add the leading calculation here */
+            colPos = 0;
+            continue;
+        }
+        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, heading[itr_text],0) != GUI_OK)
+        {
+            return GUI_ERR;
+        }
+        colPos += gui_get_char_width(fontIndex ,fontSizeIndex, heading[itr_text]);
+    }
+    // RENDER DIGIT
+    ///////////////
+    // INCREMENTING NUMBER
+    if ((incrementerValue != 0) && (cursorValue > 0) && (cursorValue < (digitsValue+1)))
+    {
+        if (digitsValue==2)
+        {
+            if (cursorValue == 1)
+            {
+                entryValue += 10*incrementerValue;
+            }
+            else if(cursorValue == 2)
+            {
+               entryValue += 1*incrementerValue; 
+            }
+        }
+        else if (digitsValue == 3)
+        {
+            if (cursorValue == 1)
+            {
+                entryValue += 100*incrementerValue;
+            }
+            else if(cursorValue == 2)
+            {
+               entryValue += 10*incrementerValue; 
+            }
+            else if(cursorValue == 3)
+            {
+               entryValue += 1*incrementerValue; 
+            }
+        }
+        gui_update_int32_var(incremeneterTagName,0);
+        gui_update_int32_var(entryVarTagName,entryValue);
+
+    }
+    // MIN MAX VAR CHECK 
+    if(entryValue>maxValue)
+    {
+        gui_update_int32_var(entryVarTagName,maxValue);
+        entryValue = maxValue;
+    }
+    else if (entryValue<minValue)
+    {
+        gui_update_int32_var(entryVarTagName,minValue);
+        entryValue = minValue;
+    }
+
+    // FORMATTING NUMBER
+    char fmt[20];
+    sprintf(fmt, "%%0%dd", digitsValue);
+    snprintf(valueString, sizeof(valueString), fmt, entryValue);
+
+
+    txtLen = strlen(valueString);
+    txtPxWidth = 0; /** The pixel width of the string */
+    for(int itr_text = 0; itr_text < txtLen; itr_text++)
+    {
+        if((valueString[itr_text] == '\"') || (valueString[itr_text] == '\n'))
+        {
+            continue;
+        }
+        txtPxWidth += gui_get_char_width(fontIndex ,fontSizeIndex, valueString[itr_text]);
+    }
+    // RENDER LOOP
+    rowPos += fontSize+3; /** ToDo- Add the leading calculation here */
+    colPos = (int16_t)((COLUMNS/2)-txtPxWidth/2);
+    for(int itr_text = 0; itr_text < txtLen; itr_text++)
+    {
+        if(valueString[itr_text] == '\"')
+        {
+            continue;
+        }
+        if(valueString[itr_text] == '\n')
+        {
+            rowPos += fontSize+3; /** ToDo- Add the leading calculation here */
+            colPos = 0;
+            continue;
+        }
+        if(gui_write_char(fontIndex ,fontSizeIndex, rowPos, colPos, bitMap, valueString[itr_text],((cursorValue-1)==itr_text)) != GUI_OK)
+        {
+            return GUI_ERR;
+        }
+        colPos += gui_get_char_width(fontIndex ,fontSizeIndex, valueString[itr_text])+2;
+    }
+
+    return GUI_OK;
+}
+
 gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObjectString)
 {
     if (strncmp(listObjectString, "<list>", 6) != 0) 
@@ -570,6 +863,7 @@ gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObje
     bool b_haveFoundPosi   = false;
     bool b_haveFoundOpt    = false;
     bool b_haveFoundEnd    = false;
+
     
 
 
@@ -579,7 +873,8 @@ gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObje
         ///////////////////
         if(!b_haveFoundCursor && (strncmp(listObjectString, "<cursor>",7) == 0))
         {
-            gui_status_t cursorStatus = gui_parse_tag_val(listObjectString,"cursor",&cursorValue,1,&b_haveFoundCursor);
+            char returnTagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+            gui_status_t cursorStatus = gui_parse_tag_val(listObjectString,"cursor",returnTagName,&cursorValue,1,&b_haveFoundCursor);
             if(cursorStatus != GUI_OK)
             {
                 return cursorStatus;
@@ -674,11 +969,6 @@ gui_status_t gui_render_list(uint8_t bitMap[ROWS][COLUMNS], const char *listObje
     char* optionsString = options;
     if (selectedOptionBottom > ROWS)
     {   
-        // Checking if option is obscured 
-        // if (((selectedOptionDistance+fontSize)-ROWS)>0)
-        // {
-
-        // }
         uint32_t rowsToRemove = cursorValue-maxDisplayOptions+1;
         for(int itr_options = 0; itr_options<rowsToRemove; itr_options++)
         {
@@ -813,7 +1103,8 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         else if ((!b_haveFoundPosition)&&(strncmp(textObjectString, "<position>", 10) == 0)) 
         {
             int32_t posVars[2] = {0};
-            gui_status_t posStatus = gui_parse_tag_val(textObjectString,"position",posVars,2,&b_haveFoundPosition);
+            char returnTagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+            gui_status_t posStatus = gui_parse_tag_val(textObjectString,"position",returnTagName,posVars,2,&b_haveFoundPosition);
             if(posStatus != GUI_OK)
             {
                 return posStatus;
@@ -828,8 +1119,9 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
         //////////////////////
         else if ((!b_haveFoundInvert)&&(strncmp(textObjectString, "<invert>", 8) == 0)) 
         {
+            char returnTagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
             int32_t invertInt = 0;
-            gui_status_t invertStatus = gui_parse_tag_val(textObjectString,"invert",&invertInt,2,&b_haveFoundInvert);
+            gui_status_t invertStatus = gui_parse_tag_val(textObjectString,"invert",returnTagName,&invertInt,1,&b_haveFoundInvert);
             if(invertStatus != GUI_OK)
             {
                 return invertStatus;
@@ -1357,7 +1649,7 @@ gui_status_t gui_parse_tag_str(const char *tagString,const char *tagName, char r
 }
 
 
-gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_t *p_value,uint8_t numReturn, bool *b_isFound)
+gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName,char *varName, int32_t *p_value,uint8_t numReturn, bool *b_isFound)
 {
     // CREATING START TAG
     char startTag[MAX_TAG_NAME_LENGTH];
@@ -1417,23 +1709,23 @@ gui_status_t gui_parse_tag_val(const char *tagString,const char *tagName, int32_
                 size_t varEndPos = varEndTok - TxtData;
                 size_t varExtractedLength = varEndPos - varStartPos;
 
-                char varTag[MAX_TAG_DATA_LENGTH];
-                strncpy(varTag, TxtData + varStartPos, varExtractedLength);
-                varTag[varExtractedLength] = '\0'; // Null-terminate the string
+                strncpy(varName, TxtData + varStartPos, varExtractedLength);
+                varName[varExtractedLength] = '\0'; // Null-terminate the string
 
                 // FETCHING VAR
                 gui_variable_status_t fetchStatus = GUI_VAR_ERR;
                 if(numReturn > 1)
                 {
-                    fetchStatus = gui_get_int32_var(varTag, &p_value[itr_var]);
+                    fetchStatus = gui_get_int32_var(varName, &p_value[itr_var]);
                 }
                 else 
                 {
-                    fetchStatus = gui_get_int32_var(varTag, p_value);
+                    fetchStatus = gui_get_int32_var(varName, p_value);
                 }
                 
                 if (fetchStatus != GUI_VAR_OK)
                 {
+                    help_log("GUI ERROR: Variable '%s' does not exist!", varName);
                     return GUI_ERR;
                 }
             }
