@@ -2287,7 +2287,7 @@ TEST(GUITest, interger_entery_can_be_passed_without_error)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
-
+    gui_create_var("inc","int32_t","0");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2302,6 +2302,7 @@ TEST(GUITest, intentry_returns_error_if_no_entery_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2317,6 +2318,8 @@ TEST(GUITest, intentry_returns_error_if_no_cursor_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2332,6 +2335,8 @@ TEST(GUITest, intentry_returns_error_if_no_font_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2347,6 +2352,8 @@ TEST(GUITest, intentry_returns_error_if_no_size_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2362,6 +2369,8 @@ TEST(GUITest, intentry_returns_error_if_no_position_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2377,6 +2386,8 @@ TEST(GUITest, intentry_returns_error_if_no_digits_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2392,6 +2403,8 @@ TEST(GUITest, intentry_returns_error_if_no_max_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2407,6 +2420,8 @@ TEST(GUITest, intentry_returns_error_if_no_min_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2422,6 +2437,8 @@ TEST(GUITest, intentry_returns_error_if_no_variable_tag)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2437,6 +2454,8 @@ TEST(GUITest, intentry_render_returns_error_if_end_intentry_tag_not_found)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2452,6 +2471,8 @@ TEST(GUITest, intentry_if_font_not_found_return_error)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");    // Perform Operation 
+    gui_create_var("inc","int32_t","0");
+
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
     gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
@@ -2466,6 +2487,8 @@ TEST(GUITest, intentry_if_font_size_not_found_return_error)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
 
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
@@ -2481,6 +2504,7 @@ TEST(GUITest, intentry_if_variable_does_not_exist_return_error)
     const char* strTextCopy = enter_var_set_page;
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
+    gui_create_var("inc","int32_t","0");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2496,6 +2520,8 @@ TEST(GUITest, intentry_if_heading_does_not_exist_return_error)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
 
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
@@ -2506,12 +2532,48 @@ TEST(GUITest, intentry_if_heading_does_not_exist_return_error)
     STRCMP_EQUAL("GUI ERROR: Heading Not Found!", logger_spy_get_string());
 }
 
+TEST(GUITest, intentry_if_incrementer_does_not_exist_return_error)
+{
+    const char* strTextCopy = enter_var_no_incrementer;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Incremeneter not found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_if_incrementer_not_defined_exist_return_error)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Variable 'inc' does not exist!", logger_spy_get_string());
+}
+
+
 TEST(GUITest, intentry_can_be_rendered)
 {
     const char* strTextCopy = enter_var_set_page;
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2528,6 +2590,8 @@ TEST(GUITest, intentry_when_cursor_1_first_dig_highlighted)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","1");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2549,6 +2613,8 @@ TEST(GUITest, intentry_when_cursor_greater_then_number_of_vars_nothing_selected)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","3");
     gui_create_var("pull_power","int32_t","20");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2564,6 +2630,8 @@ TEST(GUITest, intEntry_when_value_set_over_max_is_locked)
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
     gui_create_var("pull_power","int32_t","28");
+    gui_create_var("inc","int32_t","0");
+
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
@@ -2576,6 +2644,111 @@ TEST(GUITest, intEntry_when_value_set_over_max_is_locked)
     LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
     LONGS_EQUAL(20, value);
 }
+
+TEST(GUITest, intEntry_when_value_set_under_min_is_locked)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","-28");
+    gui_create_var("inc","int32_t","0");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_option_0_2_dig,outputMap,0,0,102,64);
+    int32_t value = 0;
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pull_power", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(0, value);
+}
+
+TEST(GUITest, intEntry_when_incrementer_1_digit_increased_msb)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","1");
+    gui_create_var("pull_power","int32_t","10");
+    gui_create_var("inc","int32_t","1");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_option_1,outputMap,0,0,102,64);
+    int32_t value = 0;
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pull_power", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(20, value);
+}
+
+TEST(GUITest, intEntry_when_incrementer_1_digit_decrease_msb)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","1");
+    gui_create_var("pull_power","int32_t","10");
+    gui_create_var("inc","int32_t","-1");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_option_2_min_2dig,outputMap,0,0,102,64);
+    int32_t value = 0;
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pull_power", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(0, value);
+}
+
+TEST(GUITest, intEntry_when_incrementer_1_digit_increased_lsb)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","2");
+    gui_create_var("pull_power","int32_t","19");
+    gui_create_var("inc","int32_t","1");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_option_2,outputMap,0,0,102,64);
+    int32_t value = 0;
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pull_power", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(20, value);
+    
+}
+
+TEST(GUITest, intEntry_when_incrementer_1_digit_decrease_lsb)
+{
+    const char* strTextCopy = enter_var_set_page_big_min_max;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","3");
+    gui_create_var("pull_power","int32_t","21");
+    gui_create_var("inc","int32_t","-1");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_option_3_3_dig,outputMap,0,0,102,64);
+    int32_t value = 0;
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pull_power", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(20, value);
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -503,6 +503,7 @@ const char * list_fake_size=
 
 const char * enter_no_intEntry_tag=
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
@@ -515,6 +516,7 @@ const char * enter_no_intEntry_tag=
 
 const char * enter_var_no_cursor=
 "<intEntry>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
@@ -528,6 +530,7 @@ const char * enter_var_no_cursor=
 const char * enter_var_no_font=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
 " <heading>Set Pull Power</heading>\n"
@@ -540,6 +543,7 @@ const char * enter_var_no_font=
 const char * enter_var_no_size=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <position>0,0</position>\n"
 " <heading>Set Pull Power</heading>\n"
@@ -552,6 +556,7 @@ const char * enter_var_no_size=
 const char * enter_var_no_position=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <heading>Set Pull Power</heading>\n"
@@ -564,6 +569,7 @@ const char * enter_var_no_position=
 const char * enter_var_no_digits_tag=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
@@ -576,6 +582,7 @@ const char * enter_var_no_digits_tag=
 const char * enter_var_no_max_tag=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
@@ -588,6 +595,7 @@ const char * enter_var_no_max_tag=
 const char * enter_var_no_min_tag=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
@@ -600,6 +608,7 @@ const char * enter_var_no_min_tag=
 const char * enter_var_no_variable_tag=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
@@ -612,6 +621,7 @@ const char * enter_var_no_variable_tag=
 const char * enter_var_no_end_tag=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
@@ -626,6 +636,7 @@ const char * enter_var_no_end_tag=
 const char * enter_var_fake_font=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>spaceMan</font>\n"
 " <font-size>19</font-size>\n"
 " <position>0,0</position>\n"
@@ -639,6 +650,7 @@ const char * enter_var_fake_font=
 const char * enter_var_fake_font_size=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>jupiter</font>\n"
 " <font-size>22</font-size>\n"
 " <position>0,0</position>\n"
@@ -652,11 +664,25 @@ const char * enter_var_fake_font_size=
 const char * enter_var_no_heading=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>15</font-size>\n"
 " <position>0,0</position>\n"
 " <digits>2</digits>\n"
 " <max>10</max>\n"
+" <min>0</min>\n"
+" <variable><var>pull_power</var></variable>\n"
+"</intEntry>\n";
+
+const char * enter_var_no_incrementer=
+"<intEntry>\n"
+" <cursor><var>cursor</var></cursor>\n"
+" <font>_5pt</font>\n"
+" <font-size>10</font-size>\n"
+" <position>0,0</position>\n"
+" <heading>Set Pull Power</heading>\n"
+" <digits>2</digits>\n"
+" <max>20</max>\n"
 " <min>0</min>\n"
 " <variable><var>pull_power</var></variable>\n"
 "</intEntry>\n";

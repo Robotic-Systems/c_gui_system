@@ -622,6 +622,7 @@ const char * small_text_list=
 const char * enter_var_set_page=
 "<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
 " <font>_5pt</font>\n"
 " <font-size>10</font-size>\n"
 " <position>0,0</position>\n"
@@ -632,5 +633,18 @@ const char * enter_var_set_page=
 " <variable><var>pull_power</var></variable>\n"
 "</intEntry>\n";
 
+const char * enter_var_set_page_big_min_max=
+"<intEntry>\n"
+" <cursor><var>cursor</var></cursor>\n"
+" <incrementer><var>inc</var></incrementer>\n"
+" <font>_5pt</font>\n"
+" <font-size>10</font-size>\n"
+" <position>0,0</position>\n"
+" <heading>Set Pull Power</heading>\n"
+" <digits>3</digits>\n"
+" <max>25</max>\n"
+" <min>0</min>\n"
+" <variable><var>pull_power</var></variable>\n"
+"</intEntry>\n";
 
 #endif
