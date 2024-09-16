@@ -620,16 +620,17 @@ const char * small_text_list=
 "</list>\n";
 
 const char * enter_var_set_page=
-"<intEnter>\n"
+"<intEntry>\n"
 " <cursor><var>cursor</var></cursor>\n"
 " <font>_5pt</font>\n"
-" <font-size>15</font-size>\n"
+" <font-size>10</font-size>\n"
 " <position>0,0</position>\n"
 " <heading>Set Pull Power</heading>\n"
 " <digits>2</digits>\n"
-" <max>10</max>\n"
+" <max>20</max>\n"
 " <min>0</min>\n"
 " <variable><var>pull_power</var></variable>\n"
-"</intEnter>\n";
+"</intEntry>\n";
+
 
 #endif

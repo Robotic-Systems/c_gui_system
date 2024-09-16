@@ -1516,10 +1516,11 @@ TEST(GUITest, passing_gui_parse_tag_val_an_errorless_xml_returns_ok)
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert>1</invert>\n";
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
 
     LONGS_EQUAL(GUI_OK, parseStatus);
 }
@@ -1528,10 +1529,12 @@ TEST(GUITest, passing_a_string_that_does_not_contain_start_tag_returns_boolean_f
 {
     // Create string to parse 
     const char* strTextCopy =  "1</invert>\n";
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(false, is_found, "BOOLEAN MISMATCH");
 }
@@ -1540,10 +1543,12 @@ TEST(GUITest, passing_a_string_that_does_contain_start_tag_returns_boolean_true_
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert>1</invert>\n";
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
 }
@@ -1552,10 +1557,12 @@ TEST(GUITest, if_end_tag_is_not_found_returns_error_var)
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert>1\n";
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
 }
@@ -1564,10 +1571,11 @@ TEST(GUITest, gui_parse_tag_returns_value_between_tags)
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert>1</invert>\n";
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
     LONGS_EQUAL_TEXT(1, value, "VALUE");
@@ -1577,10 +1585,11 @@ TEST(GUITest, if_a_var_is_refrenced_in_val_that_dne_error_returned_var)
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert><var>test</var></invert>\n";
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
 }
@@ -1590,10 +1599,11 @@ TEST(GUITest, if_a_var_is_refrenced_in_val_the_value_is_returned)
     // Create string to parse 
     const char* strTextCopy =  "<invert><var>test</var></invert>\n";
     gui_create_var("test","int32_t","1");
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
     LONGS_EQUAL_TEXT(1, value, "VALUE");
@@ -1604,10 +1614,12 @@ TEST(GUITest, error_returned_if_end_tag_is_more_then_max_len_away_var)
     // Create string to parse 
     const char* strTextCopy =  "<invert><var>test</var>                                                                                                                </invert>\n";
     gui_create_var("test","int32_t","1");
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
 
 }
@@ -1616,11 +1628,13 @@ TEST(GUITest, error_if_var_end_tolken_found_first_var)
 {
     // Create string to parse 
     const char* strTextCopy =  "<invert></var>test<var></invert>\n";
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
+
     gui_create_var("test","int32_t","1");
     // Call gui parse tag 
     int32_t value = 0;
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",&value,1,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"invert",tagName,&value,1,&is_found);
     LONGS_EQUAL_TEXT(GUI_ERR, parseStatus,"STATUS CODE MISMATCH");
 }
 
@@ -1628,11 +1642,12 @@ TEST(GUITest, can_be_used_to_return_two_values)
 {
     // Create string to parse 
     const char* strTextCopy =  "<position>32,51</position>\n";
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
     gui_create_var("test","int32_t","1");
     // Call gui parse tag 
     int32_t value[2] = {0};
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",tagName,value,2,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
     // printf("%d\n", value[0]);
@@ -1646,10 +1661,11 @@ TEST(GUITest, can_be_used_to_return_one_vars)
     // Create string to parse 
     const char* strTextCopy =  "<position><var>test</var>,51</position>\n";
     gui_create_var("test","int32_t","99");
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
     // Call gui parse tag 
     int32_t value[2] = {0};
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",tagName,value,2,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
     LONGS_EQUAL_TEXT(99, value[0], "VALUE");
@@ -1659,13 +1675,14 @@ TEST(GUITest, can_be_used_to_return_one_vars)
 TEST(GUITest, can_be_used_to_return_two_vars)
 {
     // Create string to parse 
+    char tagName[MAX_TAG_DATA_LENGTH]  = {'\0'};
     const char* strTextCopy =  "<position><var>test1</var>,<var>test2</var></position>\n";
     gui_create_var("test1","int32_t","99");
     gui_create_var("test2","int32_t","88");
     // Call gui parse tag 
     int32_t value[2] = {0};
     bool is_found = false;
-    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",value,2,&is_found);
+    gui_status_t parseStatus = gui_parse_tag_val(strTextCopy,"position",tagName,value,2,&is_found);
     LONGS_EQUAL_TEXT(GUI_OK, parseStatus,"STATUS CODE MISMATCH");
     LONGS_EQUAL_TEXT(true, is_found, "BOOLEAN MISMATCH");
     LONGS_EQUAL_TEXT(99, value[0], "VALUE");
@@ -2269,102 +2286,296 @@ TEST(GUITest, interger_entery_can_be_passed_without_error)
     const char* strTextCopy = enter_var_set_page;
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
-    gui_create_var("pull_power","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
 
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_OK, operationStatus);
 }
 
-TEST(GUITest, intentery_returns_error_if_no_entery_tag)
+TEST(GUITest, intentry_returns_error_if_no_entery_tag)
 {
-    const char* strTextCopy = enter_no_intEnter_tag;
+    const char* strTextCopy = enter_no_intEntry_tag;
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
-    gui_create_var("pull_power","int32_t","0");
-
+    gui_create_var("pull_power","int32_t","20");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No Int Enter starting tag found!", logger_spy_get_string());
 }
 
-TEST(GUITest, intentery_returns_error_if_no_cursor_tag)
+TEST(GUITest, intentry_returns_error_if_no_cursor_tag)
 {
     const char* strTextCopy = enter_var_no_cursor;
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
-    gui_create_var("pull_power","int32_t","0");
-
+    gui_create_var("pull_power","int32_t","20");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No Cursor starting tag found!", logger_spy_get_string());
 }
 
-TEST(GUITest, intentery_returns_error_if_no_font_tag)
+TEST(GUITest, intentry_returns_error_if_no_font_tag)
 {
     const char* strTextCopy = enter_var_no_font;
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
-    gui_create_var("pull_power","int32_t","0");
-
+    gui_create_var("pull_power","int32_t","20");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
-    STRCMP_EQUAL("GUI ERROR: No Font starting tag found!", logger_spy_get_string());
+    STRCMP_EQUAL("GUI ERROR: Font name '' does not exist at size '15'!", logger_spy_get_string());
 }
 
-TEST(GUITest, intentery_returns_error_if_no_size_tag)
+TEST(GUITest, intentry_returns_error_if_no_size_tag)
 {
     const char* strTextCopy = enter_var_no_size;
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
-    gui_create_var("pull_power","int32_t","0");
-
+    gui_create_var("pull_power","int32_t","20");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No Font-Size starting tag found!", logger_spy_get_string());
 }
 
-TEST(GUITest, intentery_returns_error_if_no_position_tag)
+TEST(GUITest, intentry_returns_error_if_no_position_tag)
 {
     const char* strTextCopy = enter_var_no_position;
     // Create the var used in test case
     gui_create_var("cursor","int32_t","0");
-    gui_create_var("pull_power","int32_t","0");
-
+    gui_create_var("pull_power","int32_t","20");
     // Perform Operation 
     uint8_t outputMap[ROWS][COLUMNS];
     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
-    gui_status_t operationStatus = gui_render_int32_enter(outputMap,strTextCopy);
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
     // Check status is okay 
     LONGS_EQUAL(GUI_ERR, operationStatus);
     STRCMP_EQUAL("GUI ERROR: No Position starting tag found!", logger_spy_get_string());
 }
-/* TODO
-    - Add in roll over to last option
-    - FIx the screen not scrolling when only a little bit of next option gets cut off 
-    - 
 
-*/
+TEST(GUITest, intentry_returns_error_if_no_digits_tag)
+{
+    const char* strTextCopy = enter_var_no_digits_tag;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Digits starting tag found!", logger_spy_get_string());
+}
 
+TEST(GUITest, intentry_returns_error_if_no_max_tag)
+{
+    const char* strTextCopy = enter_var_no_max_tag;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Max starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_returns_error_if_no_min_tag)
+{
+    const char* strTextCopy = enter_var_no_min_tag;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Min starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_returns_error_if_no_variable_tag)
+{
+    const char* strTextCopy = enter_var_no_variable_tag;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No Variable starting tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_render_returns_error_if_end_intentry_tag_not_found)
+{
+    const char* strTextCopy = enter_var_no_end_tag;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: No End Interger Entery tag found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_if_font_not_found_return_error)
+{
+    const char* strTextCopy = enter_var_fake_font;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Font name 'spaceMan' does not exist!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_if_font_size_not_found_return_error)
+{
+    const char* strTextCopy = enter_var_fake_font_size;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Font name 'jupiter' does not exist at size '22'!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_if_variable_does_not_exist_return_error)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Variable 'pull_power' does not exist!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_if_heading_does_not_exist_return_error)
+{
+    const char* strTextCopy = enter_var_no_heading;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_ERR, operationStatus);
+    STRCMP_EQUAL("GUI ERROR: Heading Not Found!", logger_spy_get_string());
+}
+
+TEST(GUITest, intentry_can_be_rendered)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","20");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_nooption,outputMap,0,0,102,64);
+}
+
+TEST(GUITest, intentry_when_cursor_1_first_dig_highlighted)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","1");
+    gui_create_var("pull_power","int32_t","20");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_option_1,outputMap,0,0,102,64);
+
+    gui_update_int32_var("cursor",2);
+    operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_option_2,outputMap,0,0,102,64);
+}
+
+TEST(GUITest, intentry_when_cursor_greater_then_number_of_vars_nothing_selected)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","3");
+    gui_create_var("pull_power","int32_t","20");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_nooption,outputMap,0,0,102,64);
+}
+
+TEST(GUITest, intEntry_when_value_set_over_max_is_locked)
+{
+    const char* strTextCopy = enter_var_set_page;
+    // Create the var used in test case
+    gui_create_var("cursor","int32_t","0");
+    gui_create_var("pull_power","int32_t","28");
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    gui_status_t operationStatus = gui_render_int32_entry(outputMap,strTextCopy);
+    LONGS_EQUAL(GUI_OK, operationStatus);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_nooption,outputMap,0,0,102,64);
+    int32_t value = 0;
+    gui_variable_status_t fetchStatus = gui_get_int32_var("pull_power", &value);
+    LONGS_EQUAL(GUI_VAR_OK, fetchStatus);
+    LONGS_EQUAL(20, value);
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
