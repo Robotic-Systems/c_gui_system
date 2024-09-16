@@ -2749,6 +2749,21 @@ TEST(GUITest, intEntry_when_incrementer_1_digit_decrease_lsb)
 }
 
 
+TEST(GUITest, bsr_text_display_bug)
+{
+    const char* strTextCopy = bsr_bug_page_500_display;
+    // Create the var used in test case
+    gui_init(lcd_spy_write, logger_spy_write, strTextCopy);
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK,renderStatus);
+    // Perform Operation 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    lcd_spy_get_Frame(outputMap);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    IS_BIT_MAP_EQUAL_BIT(bsr_bug_,outputMap,0,0,102,64);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

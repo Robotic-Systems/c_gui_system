@@ -1187,7 +1187,9 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
                 if(*ptr_fmt =='d')
                 {
                     int32_t var = (int32_t)atoi(quoteToken);
-                    sprintf(coreText, coreText, var);
+                    char temp[64];
+                    sprintf(temp, "%s", coreText); 
+                    sprintf(coreText, temp, var);
                     break;
                 }
                 else if (*ptr_fmt =='f')
@@ -1200,6 +1202,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             }
         }
     }
+
     // WIDTH CALC
     size_t txtLen = strlen(coreText);
     int32_t txtPxWidth = 0; /** The pixel width of the string */
