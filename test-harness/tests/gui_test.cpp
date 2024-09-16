@@ -2764,6 +2764,27 @@ TEST(GUITest, bsr_text_display_bug)
     IS_BIT_MAP_EQUAL_BIT(bsr_bug_,outputMap,0,0,102,64);
 }
 
+TEST(GUITest, intentry_can_be_render_to_page)
+{
+    // init gui with null 
+    gui_status_t initStatus = gui_init(lcd_spy_write, logger_spy_write, advanced_gui);
+    LONGS_EQUAL(GUI_OK,initStatus);
+    // Change page number to be out of bounds
+    gui_update_int32_var("pageIndex", 2);
+    gui_update_int32_var("cursor", 3);
+
+
+    // Update to set the first frame 
+    gui_status_t renderStatus = gui_update();
+    LONGS_EQUAL(GUI_OK,renderStatus);
+    // Make sure worked 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    lcd_spy_get_Frame(outputMap);
+    // PRINT_BIT_MAP(64,102,outputMap);
+
+    IS_BIT_MAP_EQUAL_BIT(_5pt_intEntry_option_3_3_dig,outputMap,0,0,102,64);
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OTHER 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

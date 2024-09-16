@@ -715,7 +715,6 @@ gui_status_t gui_render_int32_entry(uint8_t bitMap[ROWS][COLUMNS], const char *i
         if(!b_haveFoundEnd){help_log("GUI ERROR: No End Interger Entery tag found!");}
         if(!b_haveFoundHeading){help_log("GUI ERROR: Heading Not Found!");}
         if(!b_haveFoundIncrementer){help_log("GUI ERROR: Incremeneter not found!");}
-
         return GUI_ERR;
     }
 
@@ -1536,6 +1535,17 @@ gui_status_t gui_update()
             if(renderStatus != GUI_OK)
             {
                 help_log("GUI ERROR: Could not render list on page '%d'", pageNumber);
+                return GUI_ERR;
+            }
+        }
+        // INTENTRY TAG CHECK 
+        ///////////////////// 
+        else if(!strncmp(xmlCopy, "<intEntry>", 10))
+        {
+            gui_status_t renderStatus = gui_render_int32_entry(bitMap,xmlCopy);
+            if(renderStatus != GUI_OK)
+            {
+                help_log("GUI ERROR: Could not render intentry on page '%d'", pageNumber);
                 return GUI_ERR;
             }
         }
