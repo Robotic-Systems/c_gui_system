@@ -783,6 +783,25 @@ gui_status_t gui_render_int32_entry(uint8_t bitMap[ROWS][COLUMNS], const char *i
                entryValue += 1*incrementerValue; 
             }
         }
+        else if (digitsValue == 4)
+        {
+            if (cursorValue == 1)
+            {
+                entryValue += 1000*incrementerValue;
+            }
+            else if(cursorValue == 2)
+            {
+               entryValue += 100*incrementerValue; 
+            }
+            else if(cursorValue == 3)
+            {
+               entryValue += 10*incrementerValue; 
+            }
+            else if(cursorValue == 4)
+            {
+               entryValue += 1*incrementerValue; 
+            }
+        }
         gui_update_int32_var(incremeneterTagName,0);
         gui_update_int32_var(entryVarTagName,entryValue);
 
@@ -1061,7 +1080,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
             {
                 for(uint8_t iter_txtOpt = 0; iter_txtOpt < TEXT_ALIGNMENT_OPTIONS; iter_txtOpt ++)
                 {
-                    if(strncmp(txtAlignmentDic[iter_txtOpt].alignmentName, alignmentName, strlen(fontName)) == 0)
+                    if(strncmp(txtAlignmentDic[iter_txtOpt].alignmentName, alignmentName, strlen(alignmentName)) == 0)
                     {
                         b_haveFoundAlignment = true;
                         alignmentOpt = txtAlignmentDic[iter_txtOpt].alignmentEnum;
