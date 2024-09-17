@@ -1,6 +1,6 @@
 #include "gui.h"
 #include <stdarg.h>
-
+#include <math.h>
 /***********************/
 /* PRIVATE DEFINITIONS */
 /***********************/
@@ -1185,7 +1185,7 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     // Core text 
     char *quoteToken = strtok(text, "\"");
     char coreText[64];
-    char formatSpecifier[10];
+    // char formatSpecifier[10];
 
     if(quoteToken != NULL)
     {
@@ -1197,27 +1197,21 @@ gui_status_t gui_render_text(uint8_t bitMap[ROWS][COLUMNS],const char *textObjec
     if(quoteToken != NULL)
     {
         SKIP_WHITESPACE(quoteToken);
-        if(sscanf(coreText, "%*[^:]%*[: ]%9s", formatSpecifier))
-        {
-            char *ptr_fmt = formatSpecifier;
-            while(*ptr_fmt != '\0')
-            {
-                if(*ptr_fmt =='d')
-                {
-                    int32_t var = (int32_t)atoi(quoteToken);
-                    char temp[64];
-                    sprintf(temp, "%s", coreText); 
-                    sprintf(coreText, temp, var);
-                    break;
-                }
-                else if (*ptr_fmt =='f')
-                {
-                    float var = (float)atof(quoteToken);
-                    sprintf(coreText, coreText, var);
-                    break;
-                }
-                ++ptr_fmt;
-            }
+        float num = strtof(quoteToken, NULL);
+
+        double int_part = floor(num);
+        // Compare float and integer parts
+        if (fabs(num - int_part) < 1e-9) {
+            int32_t var = (int32_t)atoi(quoteToken);
+            char temp[64];
+            sprintf(temp, "%s", coreText); 
+            sprintf(coreText, temp, var);
+
+        } else {
+            float var = (float)atof(quoteToken);
+            char temp[64];
+            sprintf(temp, "%s", coreText); 
+            sprintf(coreText, temp, var);
         }
     }
 

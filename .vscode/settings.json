@@ -3,6 +3,7 @@
         "stdint.h": "c",
         "user_gui.h": "c",
         "font__5pts_.h": "c",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "sstream": "c"
     }
 }
