@@ -2870,3 +2870,41 @@ TEST(GUITest, bsr_text_display_bug)
     // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
     IS_BIT_MAP_EQUAL_BIT(bsr_bug_,outputMap,0,0,102,64);
 }
+
+
+// TEST(GUITest, bsr_float_display_seg)
+// {
+//     const char* strTextCopy = bsr_bug_hard_fault;
+//     // Create the var used in test case
+//     gui_init(lcd_spy_write, logger_spy_write, strTextCopy);
+//     // printf("%s\n", logger_spy_get_string());
+//     gui_status_t renderStatus = gui_update();
+//     // printf("%s\n", logger_spy_get_string());
+//     LONGS_EQUAL(GUI_OK,renderStatus);
+//     // Perform Operation 
+//     uint8_t outputMap[ROWS][COLUMNS];
+//     memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+//     lcd_spy_get_Frame(outputMap);
+//     // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+//     IS_BIT_MAP_EQUAL_BIT(bsr_bug_,outputMap,0,0,102,64);
+
+// }
+
+TEST(GUITest, can_write_text_after_var)
+{
+    // Fetch the xml text extract 
+    const char* strTextCopy = text_with_int_units;
+    gui_create_var("variable","float","22.1");
+
+
+    // Create empty bitmap 
+    uint8_t outputMap[ROWS][COLUMNS];
+    memset(outputMap, 0, COLUMNS * ROWS * sizeof(uint8_t));
+    // Render text
+    gui_status_t renderStatus =  gui_render_text(outputMap,strTextCopy);
+    // PRINT_BIT_MAP(ROWS, COLUMNS, outputMap);
+    // Check status is okay 
+    LONGS_EQUAL(GUI_OK, renderStatus);
+    // Check that text rendered correctly 
+    IS_BIT_MAP_EQUAL_BIT(addint_units_to_display,outputMap,0,0,102,64);
+}
